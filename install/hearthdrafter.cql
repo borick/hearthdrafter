@@ -1,8 +1,11 @@
+/* make the db */
 CREATE KEYSPACE IF NOT EXISTS hearthdrafter
   WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 1 };
   
+/* use it :) */
 USE hearthdrafter;
 
+/* users table */
 CREATE TABLE IF NOT EXISTS users (
   user_name text PRIMARY KEY,
   password text,
@@ -14,7 +17,8 @@ CREATE TABLE IF NOT EXISTS cards (
   name text PRIMARY KEY,
   mana int,
   race text,
-  score int
+  score int,
+  synergy map<text, float>
 );
 
 /*adjustments for card scores, based on class*/
@@ -36,3 +40,5 @@ CREATE TABLE IF NOT EXISTS tiers (
   id timeuuid PRIMARY KEY,
   cards map <text, int>
 );
+
+
