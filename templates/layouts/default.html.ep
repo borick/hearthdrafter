@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+<head>
+<link rel="stylesheet" type="text/css" media="screen" href="/css/main.css" />
+<script type="text/javascript">
+</script>
+</head>
+<body>
+
+<div id="header">
+  <ul class="toc">
+    <li></li>
+  </ul>
+</div>
+
+<div id="main">
+  <div id="content">
+    <%= content %>
+  </div>
+</div>
+
+<div id="footer">
+   <ul>
+      <li></li>
+   </ul>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js"></script>
+
+</body>
+</html>
