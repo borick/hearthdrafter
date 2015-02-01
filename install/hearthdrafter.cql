@@ -19,12 +19,12 @@ CREATE TABLE IF NOT EXISTS cards (
   type text,
   rarity text,
   playerClass text,
+  score int,
+  synergy map<text, float>,
   attack int,
   health int,
   race text,
-  mechanics list<text>,
-  score int,
-  synergy map<text, float>
+  mechanics list<text>
 );
 
 /*adjustments for card scores, based on class*/
@@ -48,11 +48,3 @@ CREATE TABLE IF NOT EXISTS user_synergies (
   synergy map<text, float>,
   PRIMARY KEY(user_name, card_name)
 );
-
-/*allows for the creation of multiple card tiers*/
-CREATE TABLE IF NOT EXISTS card_tiers (
-  id timeuuid PRIMARY KEY,
-  cards map <text, int>
-);
-
-

@@ -21,3 +21,4 @@ cpanm Mojolicious::Plugin::Authentication
 echo Installing Additional Perl Libs...
 cpanm File::Slurp
 cpanm JSON
+cpanm LWP::Simple

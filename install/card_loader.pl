@@ -24,12 +24,12 @@ my $card_data_file = 'data/AllSets.json';
 my $card_data_text = read_file($card_data_file);
 my $cards = decode_json $card_data_text;
 my @sets_to_load = ('Basic', 'Classic', 'Curse of Naxxramas', 'Goblins vs Gnomes');
-
+my $counter = 0;
 for my $set (@sets_to_load) {
     for my $card (@{$cards->{$set}}) {
-        if ($card->{'id'} =~ /^..._...$/) {
-        
-            print "Processing: ",$card->{'name'}, ' ', $card->{'id'}, "\n";           
+        if ($card->{'id'} =~ /^..._...$/) {    
+            print "Processing: ",$card->{'name'}, ' ', $card->{'id'}, ", #$counter\n";           
+            print Dumper($card);
             my $query = $ds->prepare("INSERT INTO cards (card_name, cost, type, rarity, playerClass, attack, health, race) VALUES (?, ?, ?, ?, ?, ?, ?, ?)")->get;
             $query->execute([$card->{'name'},
                              $card->{'cost'},
@@ -51,5 +51,7 @@ for my $set (@sets_to_load) {
                 $query->execute($values)->get;
             }
         }
+        $counter += 1;
     }
+    $counter += 1;
 }
