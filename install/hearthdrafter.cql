@@ -14,7 +14,8 @@ CREATE TABLE IF NOT EXISTS users (
 
 /*card info*/
 CREATE TABLE IF NOT EXISTS cards (
-  card_name text PRIMARY KEY,
+  id text PRIMARY KEY,
+  card_name text,
   cost int,
   type text,
   rarity text,

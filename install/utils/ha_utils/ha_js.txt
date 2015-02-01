@@ -1,6 +1,0 @@
-Snippet:
-
-for (var i = 0; i < app.cards.models.length; i++) {
-    console.log(app.cards.models[i].id)
-}
-
