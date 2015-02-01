@@ -27,9 +27,8 @@ my @sets_to_load = ('Basic', 'Classic', 'Curse of Naxxramas', 'Goblins vs Gnomes
 my $counter = 0;
 for my $set (@sets_to_load) {
     for my $card (@{$cards->{$set}}) {
-        if ($card->{'id'} =~ /^..._...$/ || $card->{'id'} =~ /^NEW1_...$/) {    
+        if (($card->{'id'} =~ /^..._...$/ || $card->{'id'} =~ /^NEW1_...$/ || $card->{'id'} =~ /^tt_...$/) && $card->{'type'} ne 'Hero Power' && $card->{'collectible'}) {    
             print "Processing: ",$card->{'name'}, ' ', $card->{'id'}, ", #$counter\n";           
-            print Dumper($card);
             my $query = $ds->prepare("INSERT INTO cards (id, card_name, cost, type, rarity, playerClass, attack, health, race) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)")->get;
             $query->execute([$card->{'id'},
                              $card->{'name'},
@@ -43,16 +42,17 @@ for my $set (@sets_to_load) {
             my $mechanics = $card->{'mechanics'};
             if (defined($mechanics)) {
                 my @mech = @$mechanics;
-                my $cmd = "UPDATE cards SET mechanics = mechanics + ? WHERE id = ?";
+                my $cmd = "UPDATE cards SET mechanics = mechanics + ? WHERE card_name = ?";
                 print $cmd,"\n";
                 $query = $ds->prepare($cmd)->get;
                 my $values = [];
                 push($values, \@mech);
-                push($values, $card->{'id'});
+                push($values, $card->{'name'});
                 $query->execute($values)->get;
             }
+            $counter += 1;
         }
-        $counter += 1;
+        
     }
-    $counter += 1;
 }
+print "Processed $counter results.\n";

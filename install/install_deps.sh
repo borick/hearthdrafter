@@ -22,3 +22,5 @@ echo Installing Additional Perl Libs...
 cpanm File::Slurp
 cpanm JSON
 cpanm LWP::Simple
+cpanm WWW::Mechanize::PhantomJS
+cpanm Term::ReadKey
