@@ -1,4 +1,5 @@
 package HearthDrafter::Home;
+
 use Mojo::Base 'Mojolicious::Controller';
 
 sub index {

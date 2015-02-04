@@ -67,9 +67,22 @@ CREATE TYPE IF NOT EXISTS cards_3 (
   card_2 TEXT,
   card_3 TEXT
 );
-CREATE TABLE IF NOT EXISTS cards_chosen (
+CREATE TYPE card_reward (
+  name TEXT,
+  rarity TEXT,
+  golden BOOLEAN
+);
+CREATE TABLE IF NOT EXISTS arena_history (
   user_name TEXT,
   selection MAP<FROZEN <cards_3>, TEXT>,
+  class TEXT,
   tid TIMEUUID,
+  deck_score INT,
+  win INT,
+  loss INT,
+  gold INT,
+  dust INT,
+  packs INT,
+  cards LIST<FROZEN<card_reward>>,
   PRIMARY KEY(user_name, tid)
 );
