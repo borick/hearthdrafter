@@ -44,6 +44,10 @@ sub startup {
     $r->get('/home')->to('home#home');
     $r->get('/register')->to('home#register');
     $r->post('/register')->to('home#register_post');
+    #drafting
+    $r->get('/draft')->to('draft#select_class');
+    $r->get('/draft/:class')->to('draft#selection', class => 'unknown');
+    
     
 }
 

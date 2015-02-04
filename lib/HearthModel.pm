@@ -5,6 +5,7 @@ use Moo;
 use Net::Async::CassandraCQL;
 use Protocol::CassandraCQL qw( CONSISTENCY_ONE );
 use IO::Async::Loop;
+use HearthModel::Class;
 use HearthModel::User;
 
 has cass => (
@@ -12,6 +13,10 @@ has cass => (
 );
 
 has user => (
+    is => 'rw',
+);
+
+has class => (
     is => 'rw',
 );
 
@@ -27,6 +32,7 @@ sub connect {
     $cass->connect->get;
     $self->cass($cass);
     $self->user(HearthModel::User->new(cass=>$cass));
+    $self->class(HearthModel::Class->new(cass=>$cass));
 }
 
 1;

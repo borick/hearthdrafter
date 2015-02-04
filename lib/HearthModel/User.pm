@@ -29,7 +29,9 @@ sub load {
     my ($self, $user_name) = @_;
     my $query = $self->cass->prepare("SELECT * FROM users WHERE user_name = ?")->get;
     my ( undef, $result ) = $query->execute([$user_name])->get;
-    return $result->{rows}->[0];
+    my %user_data = ();
+    $user_data{user_name} = $result->{rows}->[0]->[0];
+    return \%user_data;
 }
 
 sub check_password {
