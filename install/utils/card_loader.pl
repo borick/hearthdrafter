@@ -34,8 +34,8 @@ for my $set (@sets_to_load) {
         if (($card->{'id'} =~ /^..._...$/ || $card->{'id'} =~ /^NEW1_...$/ || $card->{'id'} =~ /^tt_...$/) && $card->{'type'} ne 'Hero Power' && $card->{'collectible'}) {    
             print "Processing: ",$card->{'name'}, ' ', $card->{'id'}, ", #$counter\n";
             
-            print 'Text: ' . $card->{text} . "\n" if exists($card->{text});
-            print Dumper($card->{mechanics}) if exists($card->{mechanics});
+            print 'Text: ' . $card->{text} . "\n" if exists($card->{text}) and $debug >= 2;
+            print Dumper($card->{mechanics}) if exists($card->{mechanics}) and $debug >= 2;
             
             my $query = $ds->prepare("INSERT INTO cards (id, card_name, cost, type, rarity, playerClass, attack, health, race) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)")->get;
             $query->execute([$card->{'id'},
