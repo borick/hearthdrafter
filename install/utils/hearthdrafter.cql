@@ -48,3 +48,22 @@ CREATE TABLE IF NOT EXISTS user_synergies (
   synergy map<text, float>,
   PRIMARY KEY(user_name, card_name)
 );
+
+/*misc user settings will be created as needed*/
+CREATE TABLE IF NOT EXISTS user_settings (
+  user_name text
+  //settings added dynamically
+)
+
+/*arena histories*/
+CREATE TYPE IF NOT EXISTS cards_3 (
+  card_1 text,
+  card_2 text,
+  card_3 text
+);
+CREATE TABLE IF NOT EXISTS cards_chosen (
+  user_name text,
+  selection map<frozen <cards_3>, text>,
+  tid timeuuid,
+  PRIMARY KEY(user_name, tid)
+);

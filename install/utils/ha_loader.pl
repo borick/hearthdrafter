@@ -10,6 +10,16 @@ use Net::Async::CassandraCQL;
 use Protocol::CassandraCQL qw( CONSISTENCY_ONE );
 use IO::Async::Loop;
 
+my $loop = IO::Async::Loop->new;
+my $ds = Net::Async::CassandraCQL->new(
+   host => "localhost",
+   keyspace => "hearthdrafter",
+   default_consistency => CONSISTENCY_ONE,
+);
+$loop->add($ds);
+my $c = $ds->connect->get;
+my $debug = 0;
+
 my %class_ids = (1 => 'druid',
                  2 => 'hunter',
                  3 => 'mage',
@@ -30,25 +40,16 @@ for my $file (@files) {
         
         my $class_id = $1;
         $class_maps{$class_id} = {} if !exists($class_maps{$class_id});
-        
         my $text = read_file($file);
         my $data = decode_json $text;
         for my $result (@{$data->{results}}) {
+            print Dumper($result) if $debug;
             my $dat = $result->{card};                
             $class_maps{$class_id}->{$dat->{name}} = int($dat->{score}*100);
             $counter += 1;
         }
     }
 }
-
-my $loop = IO::Async::Loop->new;
-my $ds = Net::Async::CassandraCQL->new(
-   host => "localhost",
-   keyspace => "hearthdrafter",
-   default_consistency => CONSISTENCY_ONE,
-);
-$loop->add($ds);
-my $c = $ds->connect->get;
 
 for my $class_key (sort(keys(%class_maps))) {
     my $class_data = $class_maps{$class_key};
