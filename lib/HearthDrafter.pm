@@ -12,13 +12,13 @@ has model => sub {
 };
 
 my $validate_user_sub = sub {
-    my ($app, $username, $password, $extradata) = @_;
-    #return $uid;
+    my ($self, $username, $password, $extradata) = @_;
+    return $self->model->user->check_password($username, $password);
 };
 
 my $load_user_sub = sub {
-    my ($app, $uid) = @_;
-    #return $user;
+    my ($self, $username) = @_;
+    return $self->model->user->load($username);
 };
 
 sub startup {
@@ -35,11 +35,16 @@ sub startup {
         'current_user_fn' => 'user',
     });
 
+    #define all routes
     my $r = $self->routes;
-
     $r->get('/')->to('home#index');
+    $r->get('/login')->to('home#login');
+    $r->post('/login')->to('home#login_post');
+    $r->get('/logout')->to('home#logmeout');
+    $r->get('/home')->to('home#home');
     $r->get('/register')->to('home#register');
     $r->post('/register')->to('home#register_post');
+    
 }
 
 1;

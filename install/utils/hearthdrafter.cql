@@ -10,6 +10,8 @@ CREATE TABLE IF NOT EXISTS users (
   user_name TEXT PRIMARY KEY,
   password TEXT,
   email TEXT,
+  first_name TEXT,
+  last_name TEXT
 );
 
 /*card info*/

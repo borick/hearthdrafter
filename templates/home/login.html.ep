@@ -1,1 +1,17 @@
 % layout 'default';
+<form id='register' method='POST' accept-charset='UTF-8'>
+<fieldset >
+<legend>Log In</legend>
+
+<label for='name' >User Name: </label>
+<input type='text' name='user_name' id='user_name' maxlength="50" /><br>
+ 
+<label for='password' >Password:</label>
+<input type='password' name='password' id='password' maxlength="50" /><br>
+
+<input type='submit' name='Submit' value='Submit' />
+</fieldset>
+</form>
+% if (my $message = flash 'message') {
+<%= $message %>.
+% }

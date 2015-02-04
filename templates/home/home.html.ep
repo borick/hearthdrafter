@@ -1,0 +1,3 @@
+% layout 'default';
+Logged in as: <%= $user->[0] %>
+<a href="/logout">logout</a>

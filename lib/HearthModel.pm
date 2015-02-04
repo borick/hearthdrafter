@@ -5,15 +5,18 @@ use Moo;
 use Net::Async::CassandraCQL;
 use Protocol::CassandraCQL qw( CONSISTENCY_ONE );
 use IO::Async::Loop;
-
 use HearthModel::User;
+
+has cass => (
+    is => 'rw',
+);
 
 has user => (
     is => 'rw',
-    default => sub { HearthModel::User->new() },
 );
 
 sub connect {
+    my ($self) = @_;
     my $loop = IO::Async::Loop->new;
     my $cass = Net::Async::CassandraCQL->new(
         host => "localhost",
@@ -21,7 +24,9 @@ sub connect {
         default_consistency => CONSISTENCY_ONE,
     );
     $loop->add($cass);
-    $cass->connect->get;    
+    $cass->connect->get;
+    $self->cass($cass);
+    $self->user(HearthModel::User->new(cass=>$cass));
 }
 
 1;
