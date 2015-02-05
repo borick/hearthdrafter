@@ -14,9 +14,9 @@ CREATE TABLE IF NOT EXISTS users (
   last_name TEXT
 );
 
-/*card info*/
-CREATE TYPE IF NOT EXISTS card (
-  name TEXT,
+/*preload the cards for each class*/
+CREATE TABLE IF NOT EXISTS cards (
+  name TEXT PRIMARY KEY,
   id TEXT,
   cost INT,
   type TEXT,
@@ -28,44 +28,29 @@ CREATE TYPE IF NOT EXISTS card (
   race TEXT,
   score INT,
   mechanics LIST<TEXT>
-);
-/*preload the cards for each class*/
-CREATE TABLE IF NOT EXISTS class_cards (
-  class_name TEXT PRIMARY KEY,
-  cards LIST<FROZEN<card>>,
-);
-CREATE INDEX IF NOT EXISTS class_cards_cards ON class_cards (cards);
+) WITH caching = {'keys':'ALL', 'rows_per_partition':'ALL'};
 
 /*allows each user to define adjustments on a class tier*/
 CREATE TABLE IF NOT EXISTS user_cards (
   user_name TEXT,
   class_name TEXT,
-  cards LIST<FROZEN<card>>,
+  key LIST<TEXT>,
+  value LIST<TEXT>,
   PRIMARY KEY(user_name, class_name)
 );
 
 /*misc user settings will be created as needed*/
 CREATE TABLE IF NOT EXISTS user_settings (
   user_name TEXT,
-  key TEXT,
-  value TEXT,
-  PRIMARY KEY(user_name, key)
+  user_key TEXT,
+  user_value TEXT,
+  PRIMARY KEY(user_name, user_key)
 );
 
 /*arena histories*/
-CREATE TYPE IF NOT EXISTS cards_3 (
-  card_1 TEXT,
-  card_2 TEXT,
-  card_3 TEXT
-);
-CREATE TYPE card_reward (
-  name TEXT,
-  rarity TEXT,
-  golden BOOLEAN
-);
 CREATE TABLE IF NOT EXISTS arena_history (
   user_name TEXT,
-  selection MAP<FROZEN <cards_3>, TEXT>,
+  selection LIST<TEXT>,
   class TEXT,
   tid TIMEUUID,
   deck_score INT,
@@ -74,6 +59,6 @@ CREATE TABLE IF NOT EXISTS arena_history (
   gold INT,
   dust INT,
   packs INT,
-  cards LIST<FROZEN<card_reward>>,
+  reward LIST<TEXT>,
   PRIMARY KEY(user_name, tid)
 );
