@@ -113,16 +113,14 @@ sub _array_to_literal {
         $result .= '{';    
         my @keys = keys(%$card);
         for my $k (0.. $#keys) {
-            
             my $key = $keys[$k];
             if (ref($card->{$key}) eq 'ARRAY') {
-                my $tmp = join(@{$card->{$key}}, ',');
-                chop($tmp);
+                my @tmp = @{$card->{$key}};
+                @tmp = map { "'$_'" } @tmp;
+                my $tmp = join(',', @tmp);
                 $result .= "$key: [" . $tmp . ']';
             } elsif (ref($card->{$key}) eq 'HASH') {
-                my $tmp = '';
-                #my $tmp = join(@{$card->{$key}}, ',');
-                #chop($tmp);
+                my $tmp = ''; #nothing
                 $result .= "$key: {" . $tmp . '}';
             } else {
                 $card->{$key} =~ s/'/''/g;
@@ -141,7 +139,6 @@ sub _array_to_literal {
     return $result .']';
 }
 
-#my $cmd = "UPDATE cards SET mechanics = mechanics + ? WHERE card_name = ?";
 print "Processed $counter results.\n";
 
 

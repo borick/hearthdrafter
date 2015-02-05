@@ -40,20 +40,8 @@ CREATE INDEX IF NOT EXISTS class_cards_cards ON class_cards (cards);
 CREATE TABLE IF NOT EXISTS user_cards (
   user_name TEXT,
   class_name TEXT,
-  card_score MAP<TEXT, INT>,
+  cards LIST<FROZEN<card>>,
   PRIMARY KEY(user_name, class_name)
-);
-
-/*allows for users to modify synergies*/
-CREATE TYPE IF NOT EXISTS card_synergy (
-  card TEXT,
-  amount FLOAT,
-);
-CREATE TABLE IF NOT EXISTS user_synergies (
-  user_name TEXT,
-  card_name TEXT,
-  synergy MAP<TEXT, FROZEN <card_synergy>>,
-  PRIMARY KEY(user_name, card_name)
 );
 
 /*misc user settings will be created as needed*/
