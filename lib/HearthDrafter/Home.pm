@@ -3,7 +3,11 @@ package HearthDrafter::Home;
 use Mojo::Base 'Mojolicious::Controller';
 
 sub index {
-    shift->render('home/index');
+    my $self = shift;
+    if ($self->is_user_authenticated()) {
+        return $self->redirect_to('/home');
+    }
+    $self->render('home/index');
 }
 
 sub login {
