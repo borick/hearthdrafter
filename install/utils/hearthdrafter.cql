@@ -26,6 +26,7 @@ CREATE TYPE IF NOT EXISTS card (
   attack INT,
   health INT,
   race TEXT,
+  score INT,
   mechanics LIST<TEXT>
 );
 /*preload the cards for each class*/
@@ -34,12 +35,6 @@ CREATE TABLE IF NOT EXISTS class_cards (
   cards LIST<FROZEN<card>>,
 );
 CREATE INDEX IF NOT EXISTS class_cards_cards ON class_cards (cards);
-
-/*class specific card scores*/
-CREATE TABLE IF NOT EXISTS class_card_score (
-  class_name TEXT PRIMARY KEY,
-  card_score MAP<TEXT, INT>
-);
 
 /*allows each user to define adjustments on a class tier*/
 CREATE TABLE IF NOT EXISTS user_cards (
