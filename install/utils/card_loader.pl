@@ -125,8 +125,7 @@ sub _array_to_literal {
                 #chop($tmp);
                 $result .= "$key: {" . $tmp . '}';
             } else {
-                #$card->{$key} =~ s/'/\\'/g;
-                $card->{$key} =~ s/'//g;
+                $card->{$key} =~ s/'/''/g;
                 
                 if ($card->{$key} =~ /^-?\d+$/) {
                     $result .= "$key: " . $card->{$key};

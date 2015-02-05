@@ -2,7 +2,5 @@ echo 'Rebuilding db...'
 echo 'DROP KEYSPACE hearthdrafter;' | cqlsh
 cqlsh < hearthdrafter.cql
 echo 'Loading cards...'
-#./card_loader.pl
-echo 'Loading scores...'
-#./ha_loader.pl
+./card_loader.pl
 echo 'Done.'
