@@ -19,13 +19,14 @@ my $ds = Net::Async::CassandraCQL->new(
 );
 $loop->add($ds);
 $ds->connect->get;
-my $debug = 1;
+my $debug = 0;
 
 my $card_data_file = 'data/AllSets.json';
 my $ha_data_folder = 'ha_tier_data';
 my @files = glob("$ha_data_folder/ha_data*.txt"); #json files
 my %score = ();
 my $counter = 0;
+my %class_maps = ();
 
 # Load the card scores.
 for my $file (@files) {
@@ -47,6 +48,7 @@ my $card_data_text = read_file($card_data_file);
 my $cards = decode_json $card_data_text;
 
 my @sets_to_load = ('Basic', 'Classic', 'Curse of Naxxramas', 'Goblins vs Gnomes');
+# save all the cards
 
 for my $set (@sets_to_load) {
     for my $card (@{$cards->{$set}}) {
@@ -73,6 +75,8 @@ for my $set (@sets_to_load) {
                            exists($card->{'race'}) ? lc($card->{'race'}) : 'n/a',
                            $score{$card_name},
                          );
+            $class_maps{$playerclass} = {} if !exists($class_maps{$playerclass});
+            $class_maps{$playerclass}->{$card_name} = \@values;
             my $result = $query->execute(\@values)->get;
             if (defined($mechanics) && scalar(@$mechanics) > 0) {
                 my @mech = @$mechanics;
@@ -85,7 +89,15 @@ for my $set (@sets_to_load) {
         }
     }
 }
-    
+
+# Create cards_by_class table, add neutral to each.
+my @neutral_cards = keys(%{$class_maps{'neutral'}});
+for my $class_key (keys(%class_maps)) {
+    next if $class_key eq 'neutral';
+    my @cards = keys(%{$class_maps{$class_key}});
+    my @total_cards = (@cards, @neutral_cards);
+    my $cql = 'INSERT INTO cards_by_class (class_name, cards) VALUES (?, ?)';
+    my $query = $ds->prepare($cql)->get;
+    my $result = $query->execute([$class_key, \@total_cards])->get;
+}
 print "Processed $counter results.\n";
-
-

@@ -20,7 +20,7 @@ sub selection {
         die "$class is not a valid class";
     }
     
-    $self->flash(cards => $self->model->card->get_cards_by_class($class));
+    $self->stash(cards => $self->model->card->get_cards_by_class($class));
     $self->render('draft/selection');
 }
 

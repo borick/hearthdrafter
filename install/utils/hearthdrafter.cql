@@ -13,8 +13,10 @@ CREATE TABLE IF NOT EXISTS users (
   first_name TEXT,
   last_name TEXT
 );
+// test user
+INSERT INTO users (user_name,password) VALUES ('test', '{X-PBKDF2}HMACSHA2+512:AAAnEA:1NG8Y6NGYG8qLw==:G8nT1+a529UFcTyMOv2Ss7mpcT/8QlBfDtmzfN7B5stKreGoXHUKoAK35mZ/6VXJqubdPDmkG3XFVhBLEdqpFw==');
 
-/*preload the cards for each class*/
+// all the cards
 CREATE TABLE IF NOT EXISTS cards (
   name TEXT PRIMARY KEY,
   id TEXT,
@@ -29,6 +31,11 @@ CREATE TABLE IF NOT EXISTS cards (
   score INT,
   mechanics LIST<TEXT>
 ) WITH caching = {'keys':'ALL', 'rows_per_partition':'ALL'};
+// preload all cards by class
+CREATE TABLE IF NOT EXISTS cards_by_class (
+  class_name TEXT PRIMARY KEY,
+  cards LIST<TEXT>
+);
 
 /*allows each user to define adjustments on a class tier*/
 CREATE TABLE IF NOT EXISTS user_cards (

@@ -39,7 +39,9 @@ sub check_password {
     
     my $query = $self->cass->prepare("SELECT password FROM users WHERE user_name = ?")->get;
     my (undef, $result) = $query->execute([$user_name])->get;
-    if ($pbkdf2->validate($result->{rows}->[0]->[0], $password)) {
+    my @data = @{$result->{rows}};    
+    return 0 if !@data;
+    if ($pbkdf2->validate($data[0]->[0], $password)) {
         return $user_name;
     } else { 
         return 0;
