@@ -15,19 +15,25 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 /*card info*/
-CREATE TABLE IF NOT EXISTS cards (
-  card_name TEXT PRIMARY KEY,
+CREATE TYPE IF NOT EXISTS card (
+  name TEXT,
   id TEXT,
   cost INT,
   type TEXT,
   rarity TEXT,
-  playerClass TEXT,
+  playerclass TEXT,
   synergy MAP<TEXT, FLOAT>,
   attack INT,
   health INT,
   race TEXT,
   mechanics LIST<TEXT>
 );
+/*preload the cards for each class*/
+CREATE TABLE IF NOT EXISTS class_cards (
+  class_name TEXT PRIMARY KEY,
+  cards LIST<FROZEN<card>>,
+);
+CREATE INDEX IF NOT EXISTS class_cards_cards ON class_cards (cards);
 
 /*class specific card scores*/
 CREATE TABLE IF NOT EXISTS class_card_score (

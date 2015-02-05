@@ -5,6 +5,7 @@ use Moo;
 use Net::Async::CassandraCQL;
 use Protocol::CassandraCQL qw( CONSISTENCY_ONE );
 use IO::Async::Loop;
+use HearthModel::Card;
 use HearthModel::Class;
 use HearthModel::User;
 
@@ -17,6 +18,10 @@ has user => (
 );
 
 has class => (
+    is => 'rw',
+);
+
+has card => (
     is => 'rw',
 );
 
@@ -33,6 +38,7 @@ sub connect {
     $self->cass($cass);
     $self->user(HearthModel::User->new(cass=>$cass));
     $self->class(HearthModel::Class->new(cass=>$cass));
+    $self->card(HearthModel::Card->new(cass=>$cass));
 }
 
 1;
