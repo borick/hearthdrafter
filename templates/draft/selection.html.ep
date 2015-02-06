@@ -1,3 +1,16 @@
 % layout 'default';
-% my $cards = stash('cards');
-% print $c->dumper($cards);
+
+<div id="cards">
+  <input class="search" placeholder="search" />
+  <ul class="list"></ul>
+</div>
+
+<script type="text/javascript">
+var cards = [
+% # has to match the format defined in hearthdrafter.js
+% my $cards = stash 'cards';
+% for my $card (@$cards) {
+    {name:"<%= $card %>"},
+% }
+];
+</script>

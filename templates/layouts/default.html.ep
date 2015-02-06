@@ -1,25 +1,17 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
-    <head>
-        <link rel="stylesheet" type="text/css" media="screen" href="/css/main.css" />
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js"></script>
-        <script src="/js/libs/list.min.js"></script>
-        <script src="/js/hearthdrafter.js"></script>
-    </head>
-    <body>
+<head>
+    <meta charset="utf-8">        
+    <link rel="stylesheet" type="text/css" media="screen" href="/css/main.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="/css/libs/jquery-ui.css" />
+    <script src="/js/libs/jquery-1.11.2.min.js"></script>
+    <script src="/js/libs/jquery-ui.min.js"></script>
+    <script src="/js/libs/list.min.js"></script>
+    <script src="/js/hearthdrafter.js"></script>
+</head>
+<body>
 
-    <div id="header">
-    </div>
+<%= content %>
 
-    <div id="main">
-    <div id="content">
-        <%= content %>
-    </div>
-    </div>
-
-    <div id="footer">
-    </div>
-
-    </body>
+</body>
 </html>
