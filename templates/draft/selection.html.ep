@@ -1,5 +1,10 @@
 % layout 'default';
-
+<div id="selection">
+  <div class="card"></div>
+  <div class="card"></div>
+  <div class="card"></div>
+  <style>clear: both;</style>
+</div>
 <div id="cards">
   <input class="search" placeholder="search" />
   <ul class="list"></ul>
