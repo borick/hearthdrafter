@@ -25,3 +25,4 @@ cpanm LWP::Simple
 cpanm Term::ReadKey
 cpanm Moo
 cpanm Crypt::PBKDF2
+cpanm Text::Autoformat
