@@ -26,3 +26,4 @@ cpanm Term::ReadKey
 cpanm Moo
 cpanm Crypt::PBKDF2
 cpanm Text::Autoformat
+cpanm Text::Format
