@@ -53,7 +53,7 @@ sub load_scores {
             my $text = read_file($file);
             my $data = decode_json $text;
             for my $result (@{$data->{results}}) {
-                print Dumper($result) if $debug >= 3;
+                print Dumper($result) if $debug >= 4;
                 my $dat = $result->{card};
                 $dat->{name} = lc($dat->{name});
                 $score{$dat->{name}} = int($dat->{score}*100);

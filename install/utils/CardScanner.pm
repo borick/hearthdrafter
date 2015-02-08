@@ -10,8 +10,10 @@ use warnings;
 use Data::Dumper;
 use Text::Format;
 use Term::ReadKey;
+use Graph::Simple;
 
 use constant MAX_BIG_DROP => 8;
+use constant MAX_MINION_SIZE_FOR_BUFF_SYNERGY => 4;
 
 #get term size!
 my ($wchar, $hchar, $wpixels, $hpixels) = GetTerminalSize();
@@ -67,7 +69,7 @@ sub create_custom_tags {
 
         my ($name, $text, $type, $cost, $race, $attack, $health, $blizz_tag_ref) = _get_vars_from_card($card);
         my $cost_tag = $cost > MAX_BIG_DROP ? 'big' : $cost;
-        my $drop_tag = $cost_tag . 'drop';
+        my $drop_tag = 'drop_' . $cost_tag;
         my %blizz_tags = %{$blizz_tag_ref};
         #AOE Damage/Board Clears.
         if ($text =~ /(\d+) damage to all/ && $text !~ /all minions with/) {
@@ -275,8 +277,8 @@ sub create_custom_tags {
         $tags{$name}->{'removalbig'}   = 0.50      if ($name eq 'hunter\'s mark');
         $tags{$name}->{'aoe'}          = 1.00      if ($name eq 'lightbomb');
         $tags{$name}->{'removalbig'}   = 1.00      if ($name eq 'mind control');
-        $tags{$name}->{'1drop'}        = 1.00      if ($name eq 'mind vision');
-        $tags{$name}->{'4drop'}        = 1.00      if ($name eq 'mind games');
+        $tags{$name}->{'drop_1'}       = 1.00      if ($name eq 'mind vision');
+        $tags{$name}->{'drop_4'}       = 1.00      if ($name eq 'mind games');
         $tags{$name}->{'reach'}        = 4.00/4.00 if ($name eq 'power overwhelming');
         $tags{$name}->{'reach'}        = 3.00/4.00 if ($name eq 'rockbiter weapon');
         $tags{$name}->{'removalsmall'} = 1.00      if ($name eq 'rockbiter weapon');
@@ -302,6 +304,10 @@ sub create_custom_tags {
         $tags{$name}->{'boardfill'}    = 1.00      if ($name eq 'unleash the hounds');
         $tags{$name}->{'boardfill'}    = 0.50      if ($name eq 'silverhand knight');
         $tags{$name}->{'boardfill'}    = 0.50      if ($name eq 'defias ringleader');
+        $tags{$name}->{'cursed'}       = 1.00      if ($name eq 'fel reaver');
+        $tags{$name}->{'cursed'}       = 1.00      if ($name eq 'zombie chow');
+        $tags{$name}->{'cursed'}       = 1.00      if ($name eq 'dancing swords');
+        $tags{$name}->{'cursed'}       = 1.00      if ($name eq 'zombie chow');
         # todo make sense of buffs
         $counter += 1;
     }
@@ -343,7 +349,9 @@ sub create_custom_tags {
 sub find_synergies {
    
     print "Running...\n";
-    my %synergies = ();
+    my $g = Graph::Simple->new ( is_directed => 0, is_weighted => 1);
+    my %reasons = ();
+    
     my $count = 0;
     for my $card_key_x (keys(%cards)) {
         my $card_x = $cards{$card_key_x};
@@ -375,13 +383,23 @@ sub find_synergies {
             next if (exists($card_x->{playerClass}) && exists($card_y->{playerClass}) && $card_x->{playerClass} ne $card_y->{playerClass});
            
             # spell power <> spell damange
-            if ($tags_x->{'has_spellpower'} && $text_y =~ /[\$](\d+)/) {
-                push(@{$synergies{$name_x}}, {$name_y=>'reason:damage increased by spellpower'});
+            if (_has_tag($tags_x, 'has_spellpower', $card_y) && $text_y =~ /[\$](\d+)/) {
+                $g->add_edge($name_x, $name_y, 1.00);
+                $reasons{"$name_x|$name_y"} = 'The damage of these cards is increased by spell power.';
             }
             # buff <> minion
-            if ($tags_x->{'buff'} && $type_y eq 'minion' && $cost_y <= 4) {            
-                push(@{$synergies{$name_x}}, {$name_y=>'reason:buffs are optimal on reasonably sized minions'});
+            if (ref($tags_x->{'buff'}) eq 'ARRAY'
+                && _has_tag($tags_x, 'buff', $card_y) && $type_y eq 'minion') {
+                $g->add_edge($name_x, $name_y, 1.00);
+                $reasons{"$name_x|$name_y"} = 'This buff only works on a particular kind of creature.';
+            }elsif (_has_tag($tags_x, 'buff', $card_y) && $type_y eq 'minion' && $text_y eq '') {            
+                $g->add_edge($name_x, $name_y, 0.50);
+                $reasons{"$name_x|$name_y"} = 'Buffs are ideal on basic creatures.';
+            }elsif (_has_tag($tags_x, 'buff', $card_y) && $type_y eq 'minion' && $cost_y <= MAX_MINION_SIZE_FOR_BUFF_SYNERGY) {            
+                $g->add_edge($name_x, $name_y, 0.70);
+                $reasons{"$name_x|$name_y"} = 'Buffs are ideal on smaller creatures.';
             }
+            
             # minion+reach =>
             # enrage <> pings
             # enrage <> buffs
@@ -413,7 +431,28 @@ sub find_synergies {
         }
     }
     print "Finished > $count comparisons.\n";
-    print Dumper(\%synergies);
+    my $synergies = 0;
+    my @vertices = $g->vertices;
+    print Dumper(\%reasons) if $debug >= 3;
+    print keys(%reasons) . " total synergies.\n";
+}
+
+sub _has_tag {
+    my ($hash_with_tag, $tag, $card) = @_;
+    
+    my $value = $hash_with_tag->{$tag};
+    if (defined($value) && ref($value) eq 'ARRAY') {
+        my $req = $value->[0];
+        my @tokens = split(/:/, $req);
+        if ($tokens[0] eq 'race') {
+            if (exists($card->{race}) && lc($card->{race}) eq $tokens[1]) {
+                return $value;
+            }
+        }
+    } elsif (defined($value)) {
+        return $value;
+    }
+    return undef;
 }
 
 1;
