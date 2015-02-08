@@ -10,6 +10,9 @@ use warnings;
 use Data::Dumper;
 use Text::Format;
 use Term::ReadKey;
+
+use constant MAX_BIG_DROP => 8;
+
 #get term size!
 my ($wchar, $hchar, $wpixels, $hpixels) = GetTerminalSize();
 
@@ -40,7 +43,7 @@ sub create_custom_tags {
         $race = lc($race);
         my $attack = $card->{attack};
         my $health = $card->{health};
-        my $cost_tag = $cost;#$cost > 6 ? 'big' : $cost;
+        my $cost_tag = $cost > MAX_BIG_DROP ? 'big' : $cost;
         my $drop_tag = $cost_tag . 'drop';
         my $mechanics = $card->{mechanics};
         my %blizz_tags = ();
@@ -103,7 +106,7 @@ sub create_custom_tags {
         ##large/big
         if (!exists($tags{$name}) || !exists($tags{$name}->{'aoe'})) {
             if ($text =~ /transform a minion/ || $text =~ /destroy an? ?(?:enemy)? minion/) { #sheep & hex
-                $tags{$name}->{'bigremoval'} = 1.0;
+                $tags{$name}->{'removalbig'} = 1.0;
                 $tags{$name}->{'removal'} = 1.0;
             }
             ##more removals
@@ -111,7 +114,7 @@ sub create_custom_tags {
                 my $dmg = $1;
                 $tags{$name}->{'removal'} = 1.0;
                 if ($dmg <= 3) {
-                    $tags{$name}->{'smallremoval'} = 1.0;
+                    $tags{$name}->{'removalsmall'} = 1.0;
                 }
                 $tags{$name}->{'reach'} = $1/2;
             }
@@ -120,16 +123,16 @@ sub create_custom_tags {
                 my $dmg = $attack;
                 $tags{$name}->{'removal'} = 1.0;
                 if ($dmg <= 3) {
-                    $tags{$name}->{'smallremoval'} = 1.0;
+                    $tags{$name}->{'removalsmall'} = 1.0;
                 } elsif ($dmg >= 6) {
-                    $tags{$name}->{'bigremoval'} = 1.0;
+                    $tags{$name}->{'removalbig'} = 1.0;
                 }
             }
             if ($text =~ /its damage to the minions next to it/) {
                 $tags{$name}->{'removal'} = 1.0; #betrayal
             }
             if ($type eq 'minion' && exists($blizz_tags{'charge'}) && $cost <= 3) {
-                $tags{$name}->{'smallremoval'} = 1.0; 
+                $tags{$name}->{'removalsmall'} = 1.0; 
             }
             if ($type eq 'minion' && exists($blizz_tags{'stealth'}) && $cost <= 4) {
                 $tags{$name}->{'removal'} = 1.0; 
@@ -234,29 +237,29 @@ sub create_custom_tags {
         $tags{$name}->{'aoe'}          = 0.75      if ($name eq 'circle of healing');
         $tags{$name}->{'reach'}        = 5.00/4.00 if ($name eq 'cold blood');
         $tags{$name}->{'removal'}      = 1.00      if ($name eq 'crackle');
-        $tags{$name}->{'smallremoval'} = 1.00      if ($name eq 'crackle');
-        $tags{$name}->{'bigremoval'}   = 1.00      if ($name eq 'crackle');
+        $tags{$name}->{'removalsmall'} = 1.00      if ($name eq 'crackle');
+        $tags{$name}->{'removalbig'}   = 1.00      if ($name eq 'crackle');
         $tags{$name}->{'reach'}        = 1.00      if ($name eq 'crackle');
-        $tags{$name}->{'smallremoval'} = 1.00      if ($name eq 'claw');
+        $tags{$name}->{'removalsmall'} = 1.00      if ($name eq 'claw');
         $tags{$name}->{'reach'}        = 3.00/4.00 if ($name eq 'claw');
-        $tags{$name}->{'smallremoval'} = 1.00      if ($name eq 'deadly poison');
+        $tags{$name}->{'removalsmall'} = 1.00      if ($name eq 'deadly poison');
         $tags{$name}->{'reach'}        = 3.00/4.00 if ($name eq 'deadly poison');
-        $tags{$name}->{'bigremoval'}   = 1.00      if ($name eq 'deadly shot');
+        $tags{$name}->{'removalbig'}   = 1.00      if ($name eq 'deadly shot');
         $tags{$name}->{'removal'}      = 1.00      if ($name eq 'deadly shot');
         $tags{$name}->{'draw'}         = 1.00      if ($name eq 'divine favor');
         $tags{$name}->{'draw'}         = 1.00      if ($name eq 'echo of medivh');
-        $tags{$name}->{'bigremoval'}   = 1.00      if ($name eq 'equality');
-        $tags{$name}->{'bigremoval'}   = 1.00      if ($name eq 'execute');
+        $tags{$name}->{'removalbig'}   = 1.00      if ($name eq 'equality');
+        $tags{$name}->{'removalbig'}   = 1.00      if ($name eq 'execute');
         $tags{$name}->{'reach'}        = 4.00/4.00 if ($name eq 'heroic strike');
-        $tags{$name}->{'bigremoval'}   = 0.50      if ($name eq 'humility');
-        $tags{$name}->{'bigremoval'}   = 0.50      if ($name eq 'hunter\'s mark');
+        $tags{$name}->{'removalbig'}   = 0.50      if ($name eq 'humility');
+        $tags{$name}->{'removalbig'}   = 0.50      if ($name eq 'hunter\'s mark');
         $tags{$name}->{'aoe'}          = 1.00      if ($name eq 'lightbomb');
-        $tags{$name}->{'bigremoval'}   = 1.00      if ($name eq 'mind control');
+        $tags{$name}->{'removalbig'}   = 1.00      if ($name eq 'mind control');
         $tags{$name}->{'1drop'}        = 1.00      if ($name eq 'mind vision');
         $tags{$name}->{'4drop'}        = 1.00      if ($name eq 'mind games');
         $tags{$name}->{'reach'}        = 4.00/4.00 if ($name eq 'power overwhelming');
         $tags{$name}->{'reach'}        = 3.00/4.00 if ($name eq 'rockbiter weapon');
-        $tags{$name}->{'smallremoval'} = 1.00      if ($name eq 'rockbiter weapon');
+        $tags{$name}->{'removalsmall'} = 1.00      if ($name eq 'rockbiter weapon');
         $tags{$name}->{'reach'}        = 1.00      if ($name eq 'savage roar');
         $tags{$name}->{'reach'}        = 1.00      if ($name eq 'tinker\'s sharpsword oil');
         $tags{$name}->{'draw'}         = 0.33      if ($name eq 'tracking');
@@ -268,36 +271,42 @@ sub create_custom_tags {
         $tags{$name}->{'survivability'}= 1.00      if ($name eq 'alexstrasza');
         $tags{$name}->{'reach'}        = 1.00      if ($name eq 'alexstrasza');
         $tags{$name}->{'reach'}        = 2.00/4.00 if ($name eq 'abusive sergeant');
-        $tags{$name}->{'bigremoval'}   = 0.50      if ($name eq 'aldor peacekeeper');
+        $tags{$name}->{'removalbig'}   = 0.50      if ($name eq 'aldor peacekeeper');
         #board fill
-        $tags{$name}->{'boardfill'}    = 1.00     if ($name eq 'imp master');
-        $tags{$name}->{'boardfill'}    = 0.50     if ($name eq 'dragonling mechanic');
-        $tags{$name}->{'boardfill'}    = 0.50     if ($name eq 'dragonling mechanic');
-        $tags{$name}->{'boardfill'}    = 0.50     if ($name eq 'murloc tidehunter');
-        $tags{$name}->{'boardfill'}    = 1.00     if ($name eq 'hogger');
-        $tags{$name}->{'boardfill'}    = 0.50     if ($name eq 'razorfen hunter');
-        $tags{$name}->{'boardfill'}    = 1.00     if ($name eq 'unleash the hounds');
-        $tags{$name}->{'boardfill'}    = 0.50     if ($name eq 'silverhand knight');
-        $tags{$name}->{'boardfill'}    = 0.50     if ($name eq 'defias ringleader');
+        $tags{$name}->{'boardfill'}    = 1.00      if ($name eq 'imp master');
+        $tags{$name}->{'boardfill'}    = 0.50      if ($name eq 'dragonling mechanic');
+        $tags{$name}->{'boardfill'}    = 0.50      if ($name eq 'dragonling mechanic');
+        $tags{$name}->{'boardfill'}    = 0.50      if ($name eq 'murloc tidehunter');
+        $tags{$name}->{'boardfill'}    = 1.00      if ($name eq 'hogger');
+        $tags{$name}->{'boardfill'}    = 0.50      if ($name eq 'razorfen hunter');
+        $tags{$name}->{'boardfill'}    = 1.00      if ($name eq 'unleash the hounds');
+        $tags{$name}->{'boardfill'}    = 0.50      if ($name eq 'silverhand knight');
+        $tags{$name}->{'boardfill'}    = 0.50      if ($name eq 'defias ringleader');
         
         $counter += 1;
     }
-    
+    my %_all_tags = ();
     if ($debug) {
-        for my $tag (sort(keys(%tags))) {
-            my $hash = $tags{$tag};
+        for my $card_name (sort(keys(%tags))) {
+            my $hash = $tags{$card_name};
+            for my $tag (keys(%$hash)) {
+                $_all_tags{$tag} = 1;
+            }
             my $data =  join(', ', map { if (ref $hash->{$_} eq 'ARRAY') {
                                             sprintf("%s => [%s,%0.2f]", $_, $hash->{$_}->[0], $hash->{$_}->[1]);
-                                        } else { sprintf("%s => %0.2f", $_, $hash->{$_}); } } keys(%$hash) );
-            printf("%-30s %-40s\n", $tag, $data);
+                                        } else { sprintf("%s => %0.2f", $_, $hash->{$_}); } } keys(%$hash) );            
+            printf("%-30s %-40s\n", $card_name, $data);
         }
         my $count_tags = scalar(keys(%tags));
         my $count_all = scalar(keys(%cards));
         print '*'x$wchar,"\n";
-        print "Total tags: " . $count_tags . "\n";
+        print "Total cards tagged: " . $count_tags . "\n";
         print "Total cards: " . $count_all . "\n";
         printf("Coverage: %0.2f\n", $count_tags / $count_all * 100); 
         print '*'x$wchar,"\n";
+        #Tags
+        print 'Tags: ' . Text::Format->new({bodyIndent => 4, columns => $wchar})->format(join(', ', sort(keys(%_all_tags))));
+        #Cards
         print "Uncovered cards: " . ($count_all-$count_tags) . "\n";
         my %uncovered_cards = ();
         for my $card (sort(keys(%cards))) {
