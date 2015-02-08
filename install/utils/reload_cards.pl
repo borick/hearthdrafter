@@ -15,4 +15,5 @@ CardLoader::init(debug => $debug);
 CardLoader::run();
 CardScanner::init(debug => $debug, cards => \%CardLoader::all_cards);
 CardScanner::create_custom_tags();
+CardScanner::find_synergies();
 

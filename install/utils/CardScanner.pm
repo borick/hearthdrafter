@@ -25,33 +25,50 @@ sub init {
     $debug = $data{debug};
     %cards =  %{$data{cards}};
 }
+sub _get_vars_from_card {
+    my $card = shift;
+    
+    my $text = $card->{text};
+    $text = '' if !defined($text);
+    $text = lc($text);
+    my $name = lc($card->{name});
+    my $type = lc($card->{type});
+    my $cost = $card->{cost};
+    my $race = $card->{race};
+    $race = '' if !defined($race);
+    $race = lc($race);
+    my $attack = $card->{attack};
+    my $health = $card->{health};
+    my $mechanics = $card->{mechanics};
+    my %blizz_tags = ();
+    if (defined($mechanics)) {
+        for my $mech (@$mechanics) {
+            $blizz_tags{lc($mech)} = 1;
+        }
+    }
+    return ($name,
+            $text,
+            $type,
+            $cost,
+            $race,
+            $attack,
+            $health,       
+            \%blizz_tags);
+}
 
 sub create_custom_tags {
+
     my $counter = 0;
     for my $key (sort(keys(%cards))) {
         my $card = $cards{$key};
+
         print 'Scanning:' . $counter, ' ', $key, "\n" if $debug >= 2;
         print Dumper($card) if $debug >= 2;
-        my $text = $card->{text};
-        $text = '' if !defined($text);
-        $text = lc($text);
-        my $name = lc($card->{name});
-        my $type = lc($card->{type});
-        my $cost = $card->{cost};
-        my $race = $card->{race};
-        $race = '' if !defined($race);
-        $race = lc($race);
-        my $attack = $card->{attack};
-        my $health = $card->{health};
+
+        my ($name, $text, $type, $cost, $race, $attack, $health, $blizz_tag_ref) = _get_vars_from_card($card);
         my $cost_tag = $cost > MAX_BIG_DROP ? 'big' : $cost;
         my $drop_tag = $cost_tag . 'drop';
-        my $mechanics = $card->{mechanics};
-        my %blizz_tags = ();
-        if (defined($mechanics)) {
-            for my $mech (@$mechanics) {
-                $blizz_tags{lc($mech)} = 1;
-            }
-        }
+        my %blizz_tags = %{$blizz_tag_ref};
         #AOE Damage/Board Clears.
         if ($text =~ /(\d+) damage to all/ && $text !~ /all minions with/) {
             my $total_amt = 3;
@@ -98,6 +115,7 @@ sub create_custom_tags {
         #deathrattle,etc -> has_deathrattle.
         if ($type eq 'minion') {
             for my $give_tag (keys(%blizz_tags)) {
+                $give_tag =~ s/ /_/g;
                 $tags{$name}->{"has_$give_tag"} = 1;
             }
         }
@@ -139,34 +157,36 @@ sub create_custom_tags {
             }
         }
         #buffs
-        if ($text =~ /[+](\d+)\/[+](\d+)/ && $type ne 'weapon'
-                && $name ne 'blood knight'
-                && $name ne 'frostwolf warlord'
-                && $name ne 'hungry crab'
-                && $name ne 'lil\' exorcist'
-                && $name ne 'power overwhelming'
-                && $name ne 'captain greenskin'
-                && $name ne 'ethereal arcanist'
-                && $name ne 'floating watcher'
-                && $name ne 'gruul'
-                && $name ne 'hobgoblin'
-                && $name ne 'undertaker'
+        if ( ($text =~ /give a friendly minion [+](\d+)\/[+](\d+)/ || $text =~ /give a minion [+](\d+)\/[+](\d+)/)
+             && $text !~ /dies. horribly/
                 ) {
             $tags{$name}->{'buff'} = 1.0;
         }
-        $tags{$name}->{'buff'} = ['race:demon',  3.0] if ($name eq 'demonheart');
-        $tags{$name}->{'buff'} = ['race:beast',  2.0] if ($name eq 'houndmaster');
-        $tags{$name}->{'buff'} = ['race:mech',   2.0] if ($name eq 'iron sensei');
-        $tags{$name}->{'buff'} = ['race:mech',   2.0] if ($name eq 'junkbot');
-        $tags{$name}->{'buff'} = ['race:demon',  2.0] if ($name eq 'mal\'ganis'); 
-        $tags{$name}->{'buff'} = ['race:murloc', 2.0] if ($name eq 'murloc warleader'); 
+        if ( ($text =~ /give a minion [+](\d+) (\w+) /)
+             && $text !~ /dies. horribly/
+                ) {
+            if ($2 eq 'attack') {
+                $tags{$name}->{'buff_attack'} = 1.0;
+            } elsif ($2 eq 'health') {
+                $tags{$name}->{'buff_health'} = 1.0;
+            }
+        }
+        $tags{$name}->{'buff'}   = ['race:demon',  2.5] if ($name eq 'demonheart');
+        $tags{$name}->{'buff'}   = ['race:demon',  1.0] if ($name eq 'demonfire');
+        $tags{$name}->{'buff'}   = ['race:beast',  1.0] if ($name eq 'houndmaster');
+        $tags{$name}->{'buff'}   = ['race:mech',   1.0] if ($name eq 'iron sensei');
+        $tags{$name}->{'buff'}   = ['race:demon',  2.0] if ($name eq 'mal\'ganis'); 
+        $tags{$name}->{'buff'}   = ['race:murloc', 2.0] if ($name eq 'murloc warleader'); 
+        $tags{$name}->{'buff'}   = ['race:beast',  1.0] if ($name eq 'cenarius'); 
+        $tags{$name}->{'buff'}   = ['attack:1',    1.0] if ($name eq 'hobgoblin'); 
+        $tags{$name}->{'growth'} = ['race:mech',   1.0] if ($name eq 'junkbot');
+        $tags{$name}->{'growth'} = ['race:beast',  1.0] if ($name eq 'scavenging hyena'); 
         
         #growing minions
         if ($text =~ /[+](\d+)/ && $type eq 'minion' && ($text =~ /each turn/ || $text =~ /whenever/)) {
             $tags{$name}->{'growth'} = 1.0;
             
         }
-
         #pings
         if ($text =~ /\s.?1 damage/ && $text !~ /armor/ && $text !~ /\s.?1 damage to this minion/) {
             $tags{$name}->{'ping'} = 1.0;
@@ -282,7 +302,7 @@ sub create_custom_tags {
         $tags{$name}->{'boardfill'}    = 1.00      if ($name eq 'unleash the hounds');
         $tags{$name}->{'boardfill'}    = 0.50      if ($name eq 'silverhand knight');
         $tags{$name}->{'boardfill'}    = 0.50      if ($name eq 'defias ringleader');
-        
+        # todo make sense of buffs
         $counter += 1;
     }
     my %_all_tags = ();
@@ -302,10 +322,11 @@ sub create_custom_tags {
         print '*'x$wchar,"\n";
         print "Total cards tagged: " . $count_tags . "\n";
         print "Total cards: " . $count_all . "\n";
-        printf("Coverage: %0.2f\n", $count_tags / $count_all * 100); 
+        printf("Coverage: %0.2f%%\n", $count_tags / $count_all * 100);
         print '*'x$wchar,"\n";
         #Tags
-        print 'Tags: ' . Text::Format->new({bodyIndent => 4, columns => $wchar})->format(join(', ', sort(keys(%_all_tags))));
+        print "Tags: " . keys(%_all_tags) . "\n";
+        print Text::Format->new({bodyIndent => 4, columns => $wchar})->format(join(', ', sort(keys(%_all_tags))));
         #Cards
         print "Uncovered cards: " . ($count_all-$count_tags) . "\n";
         my %uncovered_cards = ();
@@ -318,38 +339,81 @@ sub create_custom_tags {
     }
 }
 
-my %synergies = ();
 
 sub find_synergies {
-    # spell power <> spell damange
-    # buff <> minion
-    # minion+reach =>
-    # enrage <> pings
-    # enrage <> buffs
-    # windfury <> buffs
-    # silence <> negative effects on own minions (i.e wailing soul..)
-    # bonus weapon damage <> weapons
-    # bonus attack damage <> weapons
-    # weapons & minions who benefit from weapons
-    # growing minions + taunt
-    # acidic swamp ooze, kills weapaons
-    # alarm-o-bot, big drops
-    # alexstrasza, reach
-    # acolyte of pain + health-buff
-    # brewmaster and battle cry
-    # anima golem + stealth
-    # demon card + demon, murloc + murloc, etc.
-    # lightspawn + priest/dbl health
-    # priest dbl hearth + make attack = health
-    # combo, small spells
-    # adjacent buff, minions
-    # frostwolf, minions
-    # molten giant, damage
-    # sea giant, minions, implosion
-    # detahrattles and rebirth, secret, shaman...
-    # power of the wild, boardfill
-    # SOJ, boardfill
-    # knife jungler, board fill
+   
+    print "Running...\n";
+    my %synergies = ();
+    my $count = 0;
+    for my $card_key_x (keys(%cards)) {
+        my $card_x = $cards{$card_key_x};
+        my ($name_x,
+            $text_x,
+            $type_x,
+            $cost_x,
+            $race_x,
+            $attack_x,
+            $health_x,       
+            $blizz_tags_x) = _get_vars_from_card($card_x);
+        my $tags_x = $tags{$name_x};
+        
+        for my $card_key_y (keys(%cards)) {
+            my $card_y = $cards{$card_key_y};
+            my ($name_y,
+                $text_y,
+                $type_y,
+                $cost_y,
+                $race_y,
+                $attack_y,
+                $health_y,       
+                $blizz_tags_y) = _get_vars_from_card($card_y);
+            my $tags_y = $tags{$name_y};
+            
+            # code here.
+            $count += 1;
+            next if $name_x eq $name_y;
+            next if (exists($card_x->{playerClass}) && exists($card_y->{playerClass}) && $card_x->{playerClass} ne $card_y->{playerClass});
+           
+            # spell power <> spell damange
+            if ($tags_x->{'has_spellpower'} && $text_y =~ /[\$](\d+)/) {
+                push(@{$synergies{$name_x}}, {$name_y=>'reason:damage increased by spellpower'});
+            }
+            # buff <> minion
+            if ($tags_x->{'buff'} && $type_y eq 'minion' && $cost_y <= 4) {            
+                push(@{$synergies{$name_x}}, {$name_y=>'reason:buffs are optimal on reasonably sized minions'});
+            }
+            # minion+reach =>
+            # enrage <> pings
+            # enrage <> buffs
+            # windfury <> buffs
+            # silence <> negative effects on own minions (i.e wailing soul..)
+            # bonus weapon damage <> weapons
+            # bonus attack damage <> weapons
+            # weapons & minions who benefit from weapons
+            # growing minions + taunt
+            # acidic swamp ooze, kills weapaons
+            # alarm-o-bot, big drops
+            # alexstrasza, reach
+            # acolyte of pain + health-buff
+            # brewmaster and battle cry
+            # anima golem + stealth
+            # demon card + demon, murloc + murloc, etc.
+            # lightspawn + priest/dbl health
+            # priest dbl hearth + make attack = health
+            # combo, small spells
+            # adjacent buff, minions
+            # frostwolf, minions
+            # molten giant, damage
+            # sea giant, minions, implosion
+            # detahrattles and rebirth, secret, shaman...
+            # power of the wild, boardfill
+            # SOJ, boardfill
+            # knife jungler, board fill
+            
+        }
+    }
+    print "Finished > $count comparisons.\n";
+    print Dumper(\%synergies);
 }
 
 1;
