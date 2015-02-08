@@ -14,5 +14,5 @@ GetOptions ("debug+" => \$debug)
 CardLoader::init(debug => $debug);
 CardLoader::run();
 CardScanner::init(debug => $debug, cards => \%CardLoader::all_cards);
-CardScanner::scan();
+CardScanner::create_custom_tags();
 

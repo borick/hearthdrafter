@@ -48,7 +48,7 @@ sub load_scores {
 
     # Load the card scores.
     for my $file (@files) {
-    print "Processing $file...\n" if $debug;
+    print "Processing $file...\n" if $debug >= 2;
         if ($file =~ /ha_data_(\d)_.*.txt$/) {
             my $text = read_file($file);
             my $data = decode_json $text;
@@ -75,7 +75,7 @@ sub load_cards {
     for my $set (@sets_to_load) {
         for my $card (@{$cards->{$set}}) {
             if (($card->{'id'} =~ /^..._...$/ || $card->{'id'} =~ /^NEW1_...$/ || $card->{'id'} =~ /^tt_...$/) && $card->{'type'} ne 'Hero Power' && $card->{'collectible'}) {    
-                print "Processing: ",$card->{'name'}, ' ', $card->{'id'}, ", #$counter\n" if $debug;
+                print "Processing: ",$card->{'name'}, ' ', $card->{'id'}, ", #$counter\n" if $debug >= 2;
                 
                 print 'Text: ' . $card->{text} . "\n" if exists($card->{text}) and $debug >= 3;
                 print Dumper($card) if $debug >= 3;
