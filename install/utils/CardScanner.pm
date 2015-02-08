@@ -12,9 +12,9 @@ use Text::Format;
 use Term::ReadKey;
 use Graph::Simple;
 
-use constant MAX_BIG_DROP => 8;
-use constant MAX_MINION_SIZE_FOR_BUFF_SYNERGY => 4;
-
+use constant MAX_BIG_DROP                                 => 8;
+use constant MAX_MINION_SIZE_FOR_BUFF_SYNERGY             => 0;
+use constant MIN_MINION_HEALTH_FOR_GET_TAUNT_SYNERGY      => 3;
 #get term size!
 my ($wchar, $hchar, $wpixels, $hpixels) = GetTerminalSize();
 
@@ -388,18 +388,17 @@ sub find_synergies {
                 $reasons{"$name_x|$name_y"} = 'The damage of these cards is increased by spell power.';
             }
             # buff <> minion
-            if (ref($tags_x->{'buff'}) eq 'ARRAY'
+            if (ref($tags_x->{'buff'}) eq 'ARRAY' # has a specific requirement
                 && _has_tag($tags_x, 'buff', $card_y) && $type_y eq 'minion') {
                 $g->add_edge($name_x, $name_y, 1.00);
-                $reasons{"$name_x|$name_y"} = 'This buff only works on a particular kind of creature.';
-            }elsif (_has_tag($tags_x, 'buff', $card_y) && $type_y eq 'minion' && $text_y eq '') {            
-                $g->add_edge($name_x, $name_y, 0.50);
-                $reasons{"$name_x|$name_y"} = 'Buffs are ideal on basic creatures.';
+                $reasons{"$name_x|$name_y"} = 'This card meets special requirements for a buff.';
             }elsif (_has_tag($tags_x, 'buff', $card_y) && $type_y eq 'minion' && $cost_y <= MAX_MINION_SIZE_FOR_BUFF_SYNERGY) {            
-                $g->add_edge($name_x, $name_y, 0.70);
+                $g->add_edge($name_x, $name_y, (3.0/($cost_y+0.10)));
                 $reasons{"$name_x|$name_y"} = 'Buffs are ideal on smaller creatures.';
+            }elsif (_has_tag($tags_x, 'gives_taunt', $card_y) && $type_y eq 'minion' && $health_y >= MIN_MINION_HEALTH_FOR_GET_TAUNT_SYNERGY) {            
+                $g->add_edge($name_x, $name_y, ($health_y/6.0+0.10));
+                $reasons{"$name_x|$name_y"} = 'The bigger the creature, the more valuable the taunt...';
             }
-            
             # minion+reach =>
             # enrage <> pings
             # enrage <> buffs
