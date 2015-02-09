@@ -11,6 +11,7 @@ my %tags = ();
 my ($wchar, $hchar, $wpixels, $hpixels) = GetTerminalSize();
 
 use constant MAX_BIG_DROP                                 => 8;
+use constant MIN_COST_MINION_GROWTH_TAG                   => 3;
 
 sub CardScanner::TagBuilder::create_custom_tags {
     my $counter = 0;
@@ -94,6 +95,9 @@ sub CardScanner::TagBuilder::create_custom_tags {
                 }
                 $tags{$name}->{'reach'} = $1/2;
             }
+            if (($text =~ /deal .?(\d+) damage (?:instead)?\./) && ($text !~ /minion/) && ($text !~ /to your hero/)) {
+                $tags{$name}->{'direct_damage'} = $1;
+            }
             ##wpns
             if ($type eq 'weapon') {
                 my $dmg = $attack;
@@ -150,7 +154,7 @@ sub CardScanner::TagBuilder::create_custom_tags {
         $tags{$name}->{'growth'} = ['race:beast',  1.0] if ($name eq 'scavenging hyena'); 
         
         #growing minions
-        if ($text =~ /[+](\d+)/ && $type eq 'minion' && ($text =~ /each turn/ || $text =~ /whenever/)) {
+        if ($text =~ /[+](\d+)/ && $type eq 'minion' && ($text =~ /each turn/ || $text =~ /whenever/) && $cost <= MIN_COST_MINION_GROWTH_TAG && $name !~ /bolvar/) {
             $tags{$name}->{'growth'} = 1.0;
             
         }
@@ -273,6 +277,7 @@ sub CardScanner::TagBuilder::create_custom_tags {
         $tags{$name}->{'cursed'}       = 1.00      if ($name eq 'zombie chow');
         $tags{$name}->{'cursed'}       = 1.00      if ($name eq 'dancing swords');
         $tags{$name}->{'cursed'}       = 1.00      if ($name eq 'zombie chow');
+        
         # todo make sense of buffs
         $counter += 1;
     }

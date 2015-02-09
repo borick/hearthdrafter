@@ -54,7 +54,7 @@ sub CardScanner::SynergyFinder::find_synergies {
                 $g->add_edge($name_x, $name_y, 1.00);
                 $reasons{"$name_x|$name_y"} = 'The damage of these cards is increased by spell power.';
             }
-            # buff <> minion
+            # buff <> minion -
             if (ref($tags_x->{'buff'}) eq 'ARRAY' # has a specific requirement
                 && _has_tag($tags_x, 'buff', $card_y) && $type_y eq 'minion') {
                 $g->add_edge($name_x, $name_y, 1.00);
@@ -88,14 +88,49 @@ sub CardScanner::SynergyFinder::find_synergies {
                 $g->add_edge($name_x, $name_y, 1.00);
                 $reasons{"$name_x|$name_y"} = 'Use silence to get rid of negative effect on your own minions.';   
             }
-            # bonus weapon damage <> weapons
-            # bonus attack damage <> weapons
             # weapons & minions who benefit from weapons
+            if ((_has_tag($tags_x, 'weapon_synergy', $card_y) && ($type_y eq 'weapon'||(_has_tag($tags_x, 'gives_weapon', $card_y))))) {
+                $g->add_edge($name_x, $name_y, 1.00);
+                $reasons{"$name_x|$name_y"} = 'These cards have a special synergy with weapons.';   
+            }
             # growing minions + taunt
+            if ((_has_tag($tags_x, 'growth', $card_y) && ((_has_tag($tags_y, 'has_taunt', $card_x) || _has_tag($tags_y, 'gives_taunt', $card_x))))) {
+                $g->add_edge($name_x, $name_y, 1.00);
+                $reasons{"$name_x|$name_y"} = 'Use taunt to protect minions that can grow out of control.';   
+            }
             # alarm-o-bot, big drops
+            if (_has_tag($tags_x, 'drop_big', $card_y) && ($name_y eq 'alarm-o-bot')) {
+                $g->add_edge($name_x, $name_y, 1.00);
+                $reasons{"$name_x|$name_y"} = 'Use alarm-o-bot to bring in big drops!';   
+            }
             # alexstrasza, reach
+            my $dmg_x = _has_tag($tags_x, 'direct_damage', $card_y);            
+            if (defined($dmg_x) && $dmg_x >= 3 && ($name_y eq 'alexstrasza')) {
+                $g->add_edge($name_x, $name_y, 1.00);
+                $reasons{"$name_x|$name_y"} = 'Alexstrasza + direct damage == opponent dead.';   
+            }
             # acolyte of pain + health-buff
+            if (_has_tag($tags_x, 'buff_health', $card_y) && ($name_y eq 'acolyte of pain')) {
+                $g->add_edge($name_x, $name_y, 1.00);
+                $reasons{"$name_x|$name_y"} = 'More health means more pain...';   
+            }            
             # brewmaster and battle cry
+            if ((_has_tag($tags_x, 'panda', $card_y) && ((_has_tag($tags_y, 'has_battlecry', $card_x))))
+                    && $name_y !~ 'millhouse'
+                    && $name_y !~ 'faceless manip'
+                    && $name_y ne 'doomguard'
+                    && $name_y ne 'king mukla'
+                    && $name_y !~ 'jaraxxus'
+                    && $name_y !~ 'twilight drake'
+                    && $name_y !~ 'void terror'
+                    && $name_y !~ 'arcane golem'
+                    && $name_y !~ 'flame imp'
+                    && $name_y !~ 'felguard') {
+                $g->add_edge($name_x, $name_y, 1.00);
+                $reasons{"$name_x|$name_y"} = 'Return these cards to your hand to double-up the battlecry effect.';   
+            }
+            
+            # charge and battlecry
             # anima golem + stealth
             # demon card + demon, murloc + murloc, etc.
             # lightspawn + priest/dbl health
