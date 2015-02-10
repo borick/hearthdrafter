@@ -10,10 +10,10 @@ use Getopt::Long;
 my $debug = 0;
 GetOptions ("debug+" => \$debug)
     or die ("Error");
-    
+
+print "Running...\n" if $debug;    
 CardLoader::init(debug => $debug);
 CardLoader::run();
 CardScanner::init(debug => $debug, cards => \%CardLoader::all_cards);
-CardScanner::create_custom_tags();
-CardScanner::find_synergies();
+CardScanner::load_synergies();
 

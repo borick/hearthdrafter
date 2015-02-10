@@ -4,6 +4,7 @@ use strict;
 use warnings;
 
 use Data::Dumper;
+use Graph::Simple;
 use Algorithm::Combinatorics qw(combinations);
 
 sub _has_tag { return CardScanner::_has_tag(@_) }
@@ -15,15 +16,13 @@ use constant MIN_MINION_COST_ADJACENT_BUFF_SYNERGY        => 4;
 use constant MIN_MINION_COST_FROSTWOLF_WARLORD_SYNERGY    => 3;
 use constant MIN_MINION_COST_SEAGIANT_SYNERGY             => 3;
 
-sub CardScanner::SynergyFinder::find_synergies {
+sub find_synergies {
     my %cards = %CardScanner::SynergyFinder::cards;
     my %tags = %CardScanner::tags;
     
     my $g = Graph::Simple->new ( is_directed => 0, is_weighted => 1);
     my %reasons = ();
     my $debug = $CardScanner::debug;
-    
-    print "Running...\n" if $debug;
     
     my @keys = keys(%cards);
     my $iter = combinations(\@keys, 2);
@@ -36,10 +35,10 @@ sub CardScanner::SynergyFinder::find_synergies {
         my $card_x = $cards{$_name_x};
         my $card_y = $cards{$_name_y};
         
-        my ($name_x, $text_x, $type_x, $cost_x, $race_x, $attack_x, $health_x, $blizz_tags_x) = CardScanner::_get_vars_from_card($card_x);
+        my ($name_x, $text_x, $type_x, $cost_x, $race_x, $attack_x, $health_x, $blizz_tags_x) = CardScanner::get_vars_from_card($card_x);
         my $tags_x = $tags{$name_x};
         
-        my ($name_y, $text_y, $type_y, $cost_y, $race_y, $attack_y, $health_y, $blizz_tags_y) = CardScanner::_get_vars_from_card($card_y);
+        my ($name_y, $text_y, $type_y, $cost_y, $race_y, $attack_y, $health_y, $blizz_tags_y) = CardScanner::get_vars_from_card($card_y);
         my $tags_y = $tags{$name_y};
         
         $count += 1;
@@ -248,6 +247,8 @@ sub CardScanner::SynergyFinder::find_synergies {
     my @vertices = $g->vertices;
     print Dumper(\%reasons) if $debug >= 2;
     print keys(%reasons) . " total synergies.\n" if $debug;
+    
+    return [$g, \%reasons];
 }
 
 return 1;

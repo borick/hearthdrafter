@@ -9,9 +9,9 @@ use warnings;
 
 use Data::Dumper;
 use Text::Format;
-use Graph::Simple;
 use CardScanner::TagBuilder;
 use CardScanner::SynergyFinder;
+use CardScanner::DbLoader;
 
 #get term size!
 
@@ -27,7 +27,7 @@ sub init {
     $debug = $CardScanner::debug;
 }
 
-sub CardScanner::_get_vars_from_card {
+sub get_vars_from_card {
     my $card = shift;
     
     my $text = $card->{text};
@@ -58,11 +58,20 @@ sub CardScanner::_get_vars_from_card {
             \%blizz_tags);
 }
 
+sub create_custom_tags {
+    return CardScanner::TagBuilder::create_custom_tags();
+}
+
 sub find_synergies {
     return CardScanner::SynergyFinder::find_synergies();
 }
-sub create_custom_tags {
-    return CardScanner::TagBuilder::create_custom_tags();
+
+sub load_synergies {
+    create_custom_tags();
+    my $ref = find_synergies();
+    my $g = $ref->[0];
+    my $reasons = $ref->[1];
+    return CardScanner::DbLoader::load_synergies($g, $reasons);
 }
 
 sub CardScanner::_has_tag {

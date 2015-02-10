@@ -24,7 +24,7 @@ sub CardScanner::TagBuilder::create_custom_tags {
         print 'Scanning:' . $counter, ' ', $key, "\n" if $debug >= 2;
         print Dumper($card) if $debug >= 2;
         
-        my ($name, $text, $type, $cost, $race, $attack, $health, $blizz_tag_ref) = CardScanner::_get_vars_from_card($card);
+        my ($name, $text, $type, $cost, $race, $attack, $health, $blizz_tag_ref) = CardScanner::get_vars_from_card($card);
         $text =~ s/<b>//g;
         $text =~ s/<\/b>//g;
         my $cost_tag = $cost > MAX_BIG_DROP ? 'big' : $cost;

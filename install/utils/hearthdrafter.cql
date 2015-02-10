@@ -24,7 +24,6 @@ CREATE TABLE IF NOT EXISTS cards (
   type TEXT,
   rarity TEXT,
   playerclass TEXT,
-  synergy MAP<TEXT, FLOAT>,
   attack INT,
   health INT,
   race TEXT,
@@ -68,4 +67,12 @@ CREATE TABLE IF NOT EXISTS arena_history (
   packs INT,
   reward LIST<TEXT>,
   PRIMARY KEY(user_name, tid)
+);
+
+/*synergy lookup*/
+CREATE TABLE IF NOT EXISTS card_synergy (
+  card_name TEXT,
+  card_name_has_synergy TEXT,
+  reason TEXT,
+  PRIMARY KEY (card_name, card_name_has_synergy)
 );
