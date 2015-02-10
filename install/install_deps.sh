@@ -28,3 +28,4 @@ cpanm Crypt::PBKDF2
 cpanm Text::Autoformat
 cpanm Text::Format
 cpanm Graph::Simple
+cpanm Algorithm::Combinatorics

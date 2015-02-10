@@ -23,8 +23,10 @@ sub CardScanner::TagBuilder::create_custom_tags {
 
         print 'Scanning:' . $counter, ' ', $key, "\n" if $debug >= 2;
         print Dumper($card) if $debug >= 2;
-
+        
         my ($name, $text, $type, $cost, $race, $attack, $health, $blizz_tag_ref) = CardScanner::_get_vars_from_card($card);
+        $text =~ s/<b>//g;
+        $text =~ s/<\/b>//g;
         my $cost_tag = $cost > MAX_BIG_DROP ? 'big' : $cost;
         my $drop_tag = 'drop_' . $cost_tag;
         my %blizz_tags = %{$blizz_tag_ref};
@@ -137,6 +139,28 @@ sub CardScanner::TagBuilder::create_custom_tags {
         if ( ($text =~ /your weapon/) ) {
             $tags{$name}->{'weapon_synergy'} = 1.0;
         } 
+        #demon synergy, dont include demon buffs here as they are already covered under conditional buffs by race.
+        my @demon_synergy_strings = (
+                'Your other Demons have (.*)\.',
+                'Put 2 random Demons from your deck into your hand\.',
+                'Put a random Demon from your hand into the battlefield\.');
+        @demon_synergy_strings = map { lc } @demon_synergy_strings;
+        for my $str (@demon_synergy_strings) {
+            if ($text =~ /$str/) {
+                $tags{$name}->{'demon_synergy'} = 1.0;
+            }
+        }
+        
+        #mech synergy
+        if ($text =~ /mech/ && $name ne 'dragonling mechanic' && $name ne 'gazlowe') {
+            $tags{$name}->{'mech_synergy'} = 1.0;
+        }
+        
+        #pirate synergy
+        if ($text =~ /pirate/) {
+            $tags{$name}->{'pirate_synergy'} = 1.0;
+        }
+        
         #gives weapon
         if ( ($text =~ /equip a (\d+)\/(\d+) weapon/) && $type eq 'minion' ) {
             $tags{$name}->{'gives_weapon'} = 1.0;
@@ -154,7 +178,9 @@ sub CardScanner::TagBuilder::create_custom_tags {
         $tags{$name}->{'growth'} = ['race:beast',  1.0] if ($name eq 'scavenging hyena'); 
         
         #growing minions
-        if ($text =~ /[+](\d+)/ && $type eq 'minion' && ($text =~ /each turn/ || $text =~ /whenever/) && $cost <= MIN_COST_MINION_GROWTH_TAG && $name !~ /bolvar/) {
+        if ($text =~ /[+](\d+)/ && $type eq 'minion' && ($text =~ /each turn/ || $text =~ /whenever/) && $cost <= MIN_COST_MINION_GROWTH_TAG
+                && $name !~ /bolvar/ && $name ne 'hobgoblin' && $text !~ /this turn./) {
+                
             $tags{$name}->{'growth'} = 1.0;
             
         }
@@ -209,12 +235,23 @@ sub CardScanner::TagBuilder::create_custom_tags {
             my $rnd = $1;
             $tags{$name}->{'panda'} = $rnd ? 0.5 : 1.0;
         }
-        
+        #i.e. ancient mage
         if ($text =~ /spell damage/ && !exists($blizz_tags{'spellpower'})) {
             $tags{$name}->{'has_spellpower'} =  1.0;
         }
-        
-        #customizations.
+        #rebirth
+        if ($text =~ /return it to life/) {
+            $tags{$name}->{'rebirth'} = 1.00;
+        }
+        #secret_synergy
+        if ($text =~ /(?<!^)secret/ && $name ne 'flare' && $name ne 'kezan mystic') {
+            $tags{$name}->{'secret_synergy'} = 1.00;
+        }
+        #overload
+        if ($text =~ /overload:/) {
+            $tags{$name}->{'overload'} = 1.00;
+        }
+        #card by card changes.
         $tags{$name}->{'aoe'}          = 0.75      if ($name eq 'cone of cold');
         $tags{$name}->{'bigdrop'}      = 1.00      if ($name =~ /^edwin/);
         $tags{$name}->{'removal'}      = 1.00      if ($name eq 'bite');
@@ -265,18 +302,20 @@ sub CardScanner::TagBuilder::create_custom_tags {
         $tags{$name}->{'removalbig'}   = 0.50      if ($name eq 'aldor peacekeeper');
         #board fill
         $tags{$name}->{'boardfill'}    = 1.00      if ($name eq 'imp master');
+        $tags{$name}->{'boardfill'}    = 1.00      if ($name eq 'implosion');
         $tags{$name}->{'boardfill'}    = 0.50      if ($name eq 'dragonling mechanic');
-        $tags{$name}->{'boardfill'}    = 0.50      if ($name eq 'dragonling mechanic');
+        $tags{$name}->{'boardfill'}    = 0.50      if ($name eq 'muster for battle');
         $tags{$name}->{'boardfill'}    = 0.50      if ($name eq 'murloc tidehunter');
-        $tags{$name}->{'boardfill'}    = 1.00      if ($name eq 'hogger');
         $tags{$name}->{'boardfill'}    = 0.50      if ($name eq 'razorfen hunter');
         $tags{$name}->{'boardfill'}    = 1.00      if ($name eq 'unleash the hounds');
         $tags{$name}->{'boardfill'}    = 0.50      if ($name eq 'silverhand knight');
         $tags{$name}->{'boardfill'}    = 0.50      if ($name eq 'defias ringleader');
+        $tags{$name}->{'cursed'}       = 1.00      if ($name eq 'ancient watcher');
         $tags{$name}->{'cursed'}       = 1.00      if ($name eq 'fel reaver');
         $tags{$name}->{'cursed'}       = 1.00      if ($name eq 'zombie chow');
         $tags{$name}->{'cursed'}       = 1.00      if ($name eq 'dancing swords');
         $tags{$name}->{'cursed'}       = 1.00      if ($name eq 'zombie chow');
+        $tags{$name}->{'cursed'}       = 1.00      if ($name eq 'deathlord');
         
         # todo make sense of buffs
         $counter += 1;
