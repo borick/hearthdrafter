@@ -16,10 +16,10 @@ sub get_cards_by_class {
     );
 
     my @data = @{$results->{hits}->{hits}};
-    @data = map { $_->{_source} } @data;
-#     @data = map { my $res = autoformat($_, {case => 'highlight'}); } @data;
-#     chomp(@data);
-#     chomp(@data);
+    @data = map { $_->{_source}->{name} } @data;
+    @data = map { my $res = autoformat($_, {case => 'highlight'}); } @data;
+    chomp(@data);
+    chomp(@data);
     return \@data;
 }
 

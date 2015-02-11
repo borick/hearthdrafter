@@ -15,8 +15,7 @@ var cards = [
 % # has to match the format defined in hearthdrafter.js
 % my $cards = stash 'cards';
 % for my $card (@$cards) {
-% print $c->dumper($card);
-     {name:"<%= $card->{name} %>"},
+     {name:"<%= $card %>"},
 % }
 ];
 </script>
