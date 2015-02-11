@@ -74,22 +74,26 @@ sub load_cards {
                 my $mechanics = $card->{'mechanics'};
                 my $card_name = lc($card->{'name'});
                 my @mech = ();
+                my @mechs = ();
                 if (defined($mechanics) && scalar(@$mechanics) > 0) {
                     @mech = @$mechanics;
-                    @mech = map { { name => lc } } @mech;
+                    @mech = map { lc } @mech;
+                    for my $mech (@mech) {
+                        push (@mechs, { name => $mech });
+                    }
                 }
                 my %data = (
-                        'name' => $card_name,
-                        'id' => uc($card->{'id'}),
-                        'cost' => lc($card->{'cost'}),
-                        'type' => lc($card->{'type'}),
-                        'rarity' => lc($card->{'rarity'}),
-                        'playerclass' => $playerclass,
-                        'attack' => $card->{'attack'},
-                        'health' => $card->{'health'},
-                        'race' => $card->{'race'},
-                        'score' => $score{$card_name},
-                        'mechanics' => \@mech
+                    'name' => $card_name,
+                    'id' => uc($card->{'id'}),
+                    'cost' => lc($card->{'cost'}),
+                    'type' => lc($card->{'type'}),
+                    'rarity' => lc($card->{'rarity'}),
+                    'playerclass' => $playerclass,
+                    'attack' => $card->{'attack'},
+                    'health' => $card->{'health'},
+                    'race' => $card->{'race'},
+                    'score' => $score{$card_name},
+                    'mechanics' => \@mechs,
                 );
                         
                 my $result = $e->index(

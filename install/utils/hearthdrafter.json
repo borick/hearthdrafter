@@ -1,20 +1,36 @@
 {
     "card" : {
         "properties" : {
-            "name" : {"type" : "string", "store" : true},
-            "cost" : {"type" : "integer", "store" : true},
-            "type" : {"type" : "string", "store" : true},
-            "rarity" : {"type" : "string", "store" : true},
-            "playerclass" : {"type" : "string", "store" : true},
-            "attack" : {"type" : "integer", "store" : true},
-            "health" : {"type" : "integer", "store" : true},
-            "race" : {"type" : "string", "store" : true},
-            "score" : {"type" : "float", "store" : true},
+            "name" : {"type" : "string"},
+            "cost" : {"type" : "integer"},
+            "type" : {"type" : "string"},
+            "rarity" : {"type" : "string"},
+            "playerclass" : {"type" : "string"},
+            "attack" : {"type" : "integer"},
+            "health" : {"type" : "integer"},
+            "race" : {"type" : "string"},
+            "score" : {"type" : "float"},
             "mechanics" : {
                 "properties" : {
-                    "name" : {"type" : "string", "store" : true}
+                    "name" : {"type" : "string"}
                 }
             }
         }
-    }
+    },
+    "card_synergy" : {
+        "properties" : {
+            "card_name" : {"type" : "string"},
+            "card_name_2" : {"type" : "string"},
+            "reason" : {"type" : "string"}
+        }
+    },
+    "user" : {
+        "properties" : {
+            "user_name" : {"type" : "string"},
+            "email" : {"type" : "string"},
+            "first_name" : {"type" : "string"},
+            "last_name" : {"type" : "string"},
+            "password" : {"type" : "string", "index" : "no"}
+        }
+    }    
 }

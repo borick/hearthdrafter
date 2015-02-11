@@ -1,5 +1,5 @@
 % layout 'default';
-Logged in as: <%= $user->{user_name} %> <br>
+Logged in as: <%= $user->{user}->{user_name} %> <br>
 
 <a href="/draft">start new draft</a><br>
 <a href="/logout">logout</a>

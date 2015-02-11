@@ -11,9 +11,10 @@ my $debug = 0;
 GetOptions ("debug+" => \$debug)
     or die ("Error");
 
-print "Running...\n" if $debug;    
+print "Running...\n";
 CardLoader::init(debug => $debug);
 CardLoader::run();
-#CardScanner::init(debug => $debug, cards => \%CardLoader::all_cards);
-#CardScanner::load_synergies();
+CardScanner::init(debug => $debug, cards => \%CardLoader::all_cards);
+CardScanner::load_synergies();
+print "Done.\n";
 

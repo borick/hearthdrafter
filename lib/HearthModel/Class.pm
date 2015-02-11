@@ -1,10 +1,6 @@
 package HearthModel::Class;
-
 use Moo;
-
-has cass => (
-    is => 'rw',
-);
+extends 'HearthModel::DbBase';
 
 has classData => (
     is => 'ro',

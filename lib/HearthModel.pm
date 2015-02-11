@@ -2,14 +2,12 @@ package HearthModel;
 
 use Moo;
 
-use Net::Async::CassandraCQL;
-use Protocol::CassandraCQL qw( CONSISTENCY_ONE );
-use IO::Async::Loop;
+use Search::Elasticsearch;
 use HearthModel::Card;
 use HearthModel::Class;
 use HearthModel::User;
 
-has cass => (
+has es => (
     is => 'rw',
 );
 
@@ -27,18 +25,11 @@ has card => (
 
 sub connect {
     my ($self) = @_;
-    my $loop = IO::Async::Loop->new;
-    my $cass = Net::Async::CassandraCQL->new(
-        host => "localhost",
-        keyspace => "hearthdrafter",
-        default_consistency => CONSISTENCY_ONE,
-    );
-    $loop->add($cass);
-    $cass->connect->get;
-    $self->cass($cass);
-    $self->user(HearthModel::User->new(cass=>$cass));
-    $self->class(HearthModel::Class->new(cass=>$cass));
-    $self->card(HearthModel::Card->new(cass=>$cass));
+    my $es = Search::Elasticsearch->new();
+    $self->es($es);
+    $self->user(HearthModel::User->new(es=>$es));
+    $self->class(HearthModel::Class->new(es=>$es));
+    $self->card(HearthModel::Card->new(es=>$es));
 }
 
 1;

@@ -1,11 +1,8 @@
 package HearthModel::User;
-
 use Moo;
+extends 'HearthModel::DbBase';
 use Crypt::PBKDF2;
-
-has cass => (
-    is => 'rw',
-);
+use Data::Dumper;
 
 my $pbkdf2 = Crypt::PBKDF2->new(
     hash_class => 'HMACSHA2',
@@ -20,30 +17,57 @@ my $pbkdf2 = Crypt::PBKDF2->new(
 sub register {
     my ($self, $user_name, $email, $fname, $lname, $password) = @_;
     
-    my $query = $self->cass->prepare("INSERT INTO users (user_name, email, first_name, last_name, password) VALUES (?,?,?,?,?)")->get;
-    return $query->execute([$user_name, $email, $fname, $lname, $pbkdf2->generate($password)])->get;
+    my $hash = $pbkdf2->generate($password);
+    print STDERR "Registering with hash: $hash\n";
+    $self->es->index(
+        index   => 'hearthdrafter',
+        type    => 'user',
+        id      => $user_name,
+        body    => {
+            user_name   => $user_name,
+            email => $email,
+            first_name => $fname,
+            last_name => $lname,
+            password => $hash,
+        }
+    );
 }
 
 # Read
 sub load {
     my ($self, $user_name) = @_;
-    my $query = $self->cass->prepare("SELECT * FROM users WHERE user_name = ?")->get;
-    my ( undef, $result ) = $query->execute([$user_name])->get;
+
+    my $doc;
+    eval {
+        $doc = $self->es->get(
+            index => 'hearthdrafter',
+            type => 'user',
+            id => $user_name);
+    };
+        
     my %user_data = ();
-    $user_data{user_name} = $result->{rows}->[0]->[0];
+    delete $doc->{_source}->{password};
+    $user_data{user} = $doc->{_source};
     return \%user_data;
 }
 
 sub check_password {
     my ($self, $user_name, $password) = @_;
+     
+    my $doc;    
+    eval {
+        $doc = $self->es->get(
+            index => 'hearthdrafter',
+            type => 'user',
+            id => $user_name);
+    };
     
-    my $query = $self->cass->prepare("SELECT password FROM users WHERE user_name = ?")->get;
-    my (undef, $result) = $query->execute([$user_name])->get;
-    my @data = @{$result->{rows}};    
-    return 0 if !@data;
-    if ($pbkdf2->validate($data[0]->[0], $password)) {
+    return 0 if !$doc;
+
+    my $hash = $doc->{_source}->{password};
+    if ($pbkdf2->validate($hash, $password)) {
         return $user_name;
-    } else { 
+    } else {
         return 0;
     }
 }
