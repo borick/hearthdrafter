@@ -14,6 +14,6 @@ GetOptions ("debug+" => \$debug)
 print "Running...\n" if $debug;    
 CardLoader::init(debug => $debug);
 CardLoader::run();
-CardScanner::init(debug => $debug, cards => \%CardLoader::all_cards);
-CardScanner::load_synergies();
+#CardScanner::init(debug => $debug, cards => \%CardLoader::all_cards);
+#CardScanner::load_synergies();
 

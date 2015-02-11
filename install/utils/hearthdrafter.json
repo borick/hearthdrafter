@@ -1,0 +1,20 @@
+{
+    "card" : {
+        "properties" : {
+            "name" : {"type" : "string", "store" : true},
+            "cost" : {"type" : "integer", "store" : true},
+            "type" : {"type" : "string", "store" : true},
+            "rarity" : {"type" : "string", "store" : true},
+            "playerclass" : {"type" : "string", "store" : true},
+            "attack" : {"type" : "integer", "store" : true},
+            "health" : {"type" : "integer", "store" : true},
+            "race" : {"type" : "string", "store" : true},
+            "score" : {"type" : "float", "store" : true},
+            "mechanics" : {
+                "properties" : {
+                    "name" : {"type" : "string", "store" : true}
+                }
+            }
+        }
+    }
+}

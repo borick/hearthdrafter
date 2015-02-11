@@ -9,23 +9,12 @@ use JSON;
 use File::Slurp qw( :std ) ;
 use Data::Dumper;
 
-use Net::Async::CassandraCQL;
-use Protocol::CassandraCQL qw( CONSISTENCY_QUORUM CONSISTENCY_ONE );
-use IO::Async::Loop;
-
 use Getopt::Long;
 
 #init
-my $debug = 0;
-my $loop = IO::Async::Loop->new;
-my $ds = Net::Async::CassandraCQL->new(
-    host => "localhost",
-    keyspace => "hearthdrafter",
-    default_consistency => CONSISTENCY_ONE,
-);
-$loop->add($ds);
-$ds->connect->get;
-
+use Search::Elasticsearch;
+my $e = Search::Elasticsearch->new();
+ 
 my %class_maps = ();
 %CardLoader::all_cards  = ();
 my $card_data_file = 'data/AllSets.json';
@@ -33,6 +22,7 @@ my $ha_data_folder = 'ha_tier_data';
 my @files = glob("$ha_data_folder/ha_data*.txt"); #json files
 my %score = ();
 my $counter = 0;
+my $debug = 0;
 
 sub init {
     my %data = @_;
@@ -41,7 +31,6 @@ sub init {
 sub run {
     load_scores();
     load_cards();
-    load_cards_by_class();
 }
 
 sub load_scores {
@@ -75,58 +64,49 @@ sub load_cards {
     for my $set (@sets_to_load) {
         for my $card (@{$cards->{$set}}) {
             if (($card->{'id'} =~ /^..._...$/ || $card->{'id'} =~ /^NEW1_...$/ || $card->{'id'} =~ /^tt_...$/) && $card->{'type'} ne 'Hero Power' && $card->{'collectible'}) {    
-                print "Processing: ",$card->{'name'}, ' ', $card->{'id'}, ", #$counter\n" if $debug >= 2;
+                print "Processing: ",$card->{'name'}, ' ', $card->{'id'}, ", #$counter\n" if $debug >= 1;
                 
-                print 'Text: ' . $card->{text} . "\n" if exists($card->{text}) and $debug >= 3;
+                print 'Text: ' . $card->{text} . "\n" if exists($card->{text}) and $debug >= 2;
                 print Dumper($card) if $debug >= 3;
                 print Dumper($card->{mechanics}) if exists($card->{mechanics}) and $debug >= 3;            
                 
                 my $playerclass = exists($card->{'playerClass'}) ? lc($card->{'playerClass'}) : 'neutral';
                 my $mechanics = $card->{'mechanics'};
                 my $card_name = lc($card->{'name'});
-                my $cql = 'INSERT INTO cards (name, id, cost, type, rarity, playerclass, attack, health, race, score) VALUES (?,?,?,?,?,?,?,?,?,?)';
-                my $query = $ds->prepare($cql)->get;
-                my @values = ( $card_name,
-                            uc($card->{'id'}),
-                            lc($card->{'cost'}),
-                            lc($card->{'type'}),
-                            lc($card->{'rarity'}),
-                            $playerclass,
-                            exists($card->{'attack'}) ? lc($card->{'attack'}) : -1,
-                            exists($card->{'health'}) ? lc($card->{'health'}) : -1,
-                            exists($card->{'race'}) ? lc($card->{'race'}) : 'n/a',
-                            $score{$card_name},
-                            );
-                $class_maps{$playerclass} = {} if !exists($class_maps{$playerclass});
-                $class_maps{$playerclass}->{$card_name} = \@values;
-                $CardLoader::all_cards{$card_name} = $card;
-                my $result = $query->execute(\@values)->get;
+                my @mech = ();
                 if (defined($mechanics) && scalar(@$mechanics) > 0) {
-                    my @mech = @$mechanics;
-                    @mech = map { lc } @mech;
-                    $cql = 'UPDATE cards SET mechanics = mechanics + ? WHERE name = ?';
-                    $query = $ds->prepare($cql)->get;
-                    $result = $query->execute([\@mech, $card_name])->get;
+                    @mech = @$mechanics;
+                    @mech = map { { name => lc } } @mech;
                 }
+                my %data = (
+                        'name' => $card_name,
+                        'id' => uc($card->{'id'}),
+                        'cost' => lc($card->{'cost'}),
+                        'type' => lc($card->{'type'}),
+                        'rarity' => lc($card->{'rarity'}),
+                        'playerclass' => $playerclass,
+                        'attack' => $card->{'attack'},
+                        'health' => $card->{'health'},
+                        'race' => $card->{'race'},
+                        'score' => $score{$card_name},
+                        'mechanics' => \@mech
+                );
+                        
+                my $result = $e->index(
+                    index => 'hearthdrafter',
+                    type  => 'card',
+                    id => $card_name,
+                    body  => \%data);     
+
+                $class_maps{$playerclass} = {} if !exists($class_maps{$playerclass});
+                $class_maps{$playerclass}->{$card_name} = \%data;
+                $CardLoader::all_cards{$card_name} = $card;
+                
                 $counter += 1;
             }
         }
     }
-}
-
-sub load_cards_by_class {
-
-    # Create cards_by_class table, add neutral to each.
-    my @neutral_cards = keys(%{$class_maps{'neutral'}});
-    for my $class_key (keys(%class_maps)) {
-        next if $class_key eq 'neutral';
-        my @cards = keys(%{$class_maps{$class_key}});
-        my @total_cards = (@cards, @neutral_cards);
-        my $cql = 'INSERT INTO cards_by_class (class_name, cards) VALUES (?, ?)';
-        my $query = $ds->prepare($cql)->get;
-        my $result = $query->execute([$class_key, \@total_cards])->get;
-    }
-    
+    print "Loaded $counter cards.\n" if $debug;
 }
 
 1;
