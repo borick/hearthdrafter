@@ -1,5 +1,7 @@
 var selected = [null, null, null];
 var userList = null;
+var dat = {};
+
 $(document).ready(function() {
     $('.card1').click(function() {
         showClassCards(0);
@@ -23,26 +25,21 @@ function showClassCards(id) {
     userList = new List('cards', options, cards);
     userList.sort('name');
     
-    $(".name").button()
-      .click( function( event ) {
+    $(".name").button().click( function( event ) {
         event.preventDefault();  
-        
         var element = $(this);                     
         selected[id] = element;
-    
+        var text = element.text();
         var index = id + 1;
-        alert(element.values);
-        $('.card'+index).append(
-            $('.remove_card_'+element.values)
-                .button()
-                    .click( 
-                        function( event ) {
-                            $(this).remove();
-                            selected[id] = null;
-                        }
-                    ));
+        var remove_card = $('<div class="remove_card">'+text+'</div>')
+        $('.card'+index).append(remove_card);
+        $(".remove_card").button().click ( function( event ) {
+            event.preventDefault();  
+            selected[id] = null;
+            $(this).remove();
+        });
+        console.dirxml(selected);
         userList.clear();
-        
       } );
     $(".name").css({ width: '210px' });
     $(".card*").css({ position: 'absolute' });
