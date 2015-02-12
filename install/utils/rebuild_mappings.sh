@@ -14,4 +14,5 @@ curl -XPUT "$URL/user/test?pretty" -d '{
     "last_name" : "test",
     "password" : "{X-PBKDF2}HMACSHA2+512:AAAnEA:WDWVXCV4W1YKPA==:95KTsQJuGxNNN4RbCM3sSj2RhtkNGD+rEfUQ7BoRjQXj5owtFJSQrHU1aaivQP2bgHUfpaXcXuymwJHEDX5egQ=="
 }'
-
+echo Reloading cards...
+./reload_cards.pl

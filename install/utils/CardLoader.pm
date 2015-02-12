@@ -14,7 +14,11 @@ use Getopt::Long;
 #init
 use Search::Elasticsearch;
 my $e = Search::Elasticsearch->new();
- 
+my $bulk = $e->bulk_helper(
+    index   => 'hearthdrafter',
+    type    => 'card'
+);
+
 my %class_maps = ();
 %CardLoader::all_cards  = ();
 my $card_data_file = 'data/AllSets.json';
@@ -96,11 +100,10 @@ sub load_cards {
                     'mechanics' => \@mechs,
                 );
                         
-                my $result = $e->index(
-                    index => 'hearthdrafter',
-                    type  => 'card',
+                my $result = $bulk->index({
                     id => $card_name,
-                    body  => \%data);     
+                    source  => \%data
+                });
 
                 $class_maps{$playerclass} = {} if !exists($class_maps{$playerclass});
                 $class_maps{$playerclass}->{$card_name} = \%data;
@@ -110,6 +113,7 @@ sub load_cards {
             }
         }
     }
+    $bulk->flush;
     print "Loaded $counter cards.\n" if $debug;
 }
 

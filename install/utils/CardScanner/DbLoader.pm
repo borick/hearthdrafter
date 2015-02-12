@@ -8,6 +8,11 @@ use Data::Dumper;
 
 use Search::Elasticsearch;
 my $e = Search::Elasticsearch->new();
+my $bulk = $e->bulk_helper(
+    index     => 'hearthdrafter',
+    type      => 'card_synergy',
+    on_error  => sub { warn Dumper(@_) },
+);
 
 sub load_synergies {
     my ($g, $reasons) = @_;
@@ -20,16 +25,16 @@ sub load_synergies {
         die 'error, keys should contain "|"' if @values < 2;
         my $reason = $reasons->{$key};
         
-        $e->index(
-            index   => 'hearthdrafter',
-            type    => 'card_synergy',
-            body    => {
+        $bulk->index({
+            id => $key,
+            source => {
                 card_name   => $values[0],
                 card_name_2 => $values[1],
                 reason      => $reason
             }
-        );
+        });
     }
+    $bulk->flush;
 }
 
 1;
