@@ -2,7 +2,6 @@ package HearthModel::Card;
 use Moo;
 extends 'HearthModel::DbBase';
 use Data::Dumper;
-use Text::Autoformat;
 
 sub get_cards_by_class {
     my ($self, $class) = @_;
@@ -16,10 +15,7 @@ sub get_cards_by_class {
     );
 
     my @data = @{$results->{hits}->{hits}};
-    @data = map { $_->{_source}->{name} } @data;
-    @data = map { my $res = autoformat($_, {case => 'highlight'}); } @data;
-    chomp(@data);
-    chomp(@data);
+    @data = map { $_->{_source} } @data;
     return \@data;
 }
 

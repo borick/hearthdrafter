@@ -2,6 +2,12 @@ package HearthModel::Class;
 use Moo;
 extends 'HearthModel::DbBase';
 
+sub validate_class {
+    my ($self,$class_name) = @_;
+    my $classData = $self->classData();
+    return exists($classData->{$class_name});
+}
+
 has classData => (
     is => 'ro',
     default => sub {

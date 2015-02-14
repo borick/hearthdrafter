@@ -32,5 +32,41 @@
             "last_name" : {"type" : "string"},
             "password" : {"type" : "string", "index" : "no"}
         }
-    }    
+    },
+    "arena_run" : {
+        "properties" : {
+            "user_name" : {"type" : "string"},
+            "class_name" : {"type" : "string"},
+            "submission_type" : {"type" : "string"},
+            "start_date" : {
+                "type" : "date",
+                "format" : "basicDateTime"
+            },
+            "end_date" : {
+                "type" : "date",
+                "format" : "basicDateTime"
+            },
+            "card_chosen" : {"type" : "string"},
+            "card_options" : {
+                "properties" : {
+                    "card_name" : {"type" : "string"},
+                    "card_name_2" : {"type" : "string"},
+                    "card_name_3" : {"type" : "string"}
+                }
+            },
+            "results" : {
+                "properties" : {
+                    "gold" : {"type" : "integer"},
+                    "dust" : {"type" : "integer"},
+                    "packs" : {"type" : "integer"},
+                    "card" : {
+                        "properties": {
+                            "rarity" : {"type": "string"},
+                            "golden" : {"type" : "boolean"}
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

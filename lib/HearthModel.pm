@@ -6,6 +6,7 @@ use Search::Elasticsearch;
 use HearthModel::Card;
 use HearthModel::Class;
 use HearthModel::User;
+use HearthModel::Arena;
 
 has es => (
     is => 'rw',
@@ -23,6 +24,10 @@ has card => (
     is => 'rw',
 );
 
+has arena => (
+    is => 'rw',
+);
+
 sub connect {
     my ($self) = @_;
     my $es = Search::Elasticsearch->new();
@@ -30,6 +35,7 @@ sub connect {
     $self->user(HearthModel::User->new(es=>$es));
     $self->class(HearthModel::Class->new(es=>$es));
     $self->card(HearthModel::Card->new(es=>$es));
+    $self->arena(HearthModel::Arena->new(es=>$es));
 }
 
 1;

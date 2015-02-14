@@ -13,6 +13,7 @@ echo Installing Mojolicious
 apt-get install curl
 cpanm Mojolicious
 cpanm Mojolicious::Plugin::Authentication
+cpanm Mojolicious::Plugin::REST
 
 echo Installing Additional Perl Libs
 cpanm File::Slurp
@@ -25,4 +26,5 @@ cpanm Text::Autoformat
 cpanm Text::Format
 cpanm Graph::Simple
 cpanm Algorithm::Combinatorics
+cpanm Time::Piece
 echo Done
