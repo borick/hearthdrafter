@@ -40,10 +40,10 @@ sub select_card {
 
 sub card_choice {
     my $self = shift;
-#     $self->stash('card1');
-#     $self->stash('card2');
-#     $self->stash('card3');
-    $self->render(json => {});
+    $self->render(json => $self->model->card_choice($self->stash('arena_id'),
+                                                    $self->stash('card1'),
+                                                    $self->stash('card2'),
+                                                    $self->stash('card3')));
 }
 
 1;

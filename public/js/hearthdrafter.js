@@ -5,6 +5,7 @@ var img = "http://wow.zamimg.com/images/hearthstone/cards/enus/original/";
 var mode = '';
 $(document).ready(function() {
     console.log( "document loaded" );
+    $(".search").hide();
     $('.card1').click(function() {
         showClassCards(0);
     });
@@ -26,13 +27,16 @@ function showClassCards(id) {
         userList.clear();
     }
     userList = new List('cards', options, cards);
+    userList.page = 1000;
     userList.sort('name');
+    $(".search").val('');
+    $(".search").show().focus();
     card_ids = {};
     for (i = 0; i < cards.length; i++) {
         //create a dict to map names to IDs to avoid having to hack this into list.js.
         card_ids[cards[i]['name']] = cards[i]['id'];
     }
-    $(".name").click( function( event ) {
+    $(".name").button().click( function( event ) {
         console.log("clicked");
         event.preventDefault();
         var element = $(this);                     
@@ -40,6 +44,7 @@ function showClassCards(id) {
         var text = element.text();
         var index = id + 1;
         userList.clear();
+        $(".search").hide();
         var bg_img = img + card_ids[element.text()] + '.png';
         var card_name = ".card"+index;
         console.log(card_name + ":" + bg_img);
@@ -57,21 +62,4 @@ function showClassCards(id) {
       } );
     $(".name").css({ width: '210px' });
     $(".card*").css({ position: 'absolute' });
-//     $('.confirm').click( function( event ) {
-//         event.preventDefault();
-//         $.get( "", function( data ) {
-//                 console.log(data);
-//                 console.log( "Load was performed." );
-// });
 }
-
-function preload(arrayOfImages) {
-    $(arrayOfImages).each(function(){
-        $('<img/>')[0].src = this;
-    });
-}
-var images = ['http://wow.zamimg.com/images/hearthstone/cardbacks/original/Card_Back_Default.png'];
-for (i = 0; i < cards.length; i++) {
-    images.push(img + cards[i]['id']);
-}
-preload(images);

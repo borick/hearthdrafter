@@ -88,7 +88,7 @@ sub load_cards {
                 }
                 my %data = (
                     'name' => $card_name,
-                    'id' => uc($card->{'id'}),
+                    'id' => $card->{'id'},
                     'cost' => lc($card->{'cost'}),
                     'type' => lc($card->{'type'}),
                     'rarity' => lc($card->{'rarity'}),

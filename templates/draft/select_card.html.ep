@@ -15,6 +15,12 @@
 </div>
 
 <script type="text/javascript">
+
+function preload(arrayOfImages) {
+    $(arrayOfImages).each(function(){
+        $('<img/>')[0].src = this;
+    });
+}
 var cards = [
 % # has to match the format defined in hearthdrafter.js
 % my $cards = stash 'cards';
@@ -23,4 +29,11 @@ var cards = [
       id: "<%= $card->{id} %>"},
 % }
 ];
+
+//preload the images!
+var images = ['http://wow.zamimg.com/images/hearthstone/cardbacks/original/Card_Back_Default.png'];
+for (i = 0; i < cards.length; i++) {
+    images.push(img + cards[i]['id'] + '.png');
+}
+preload(images);
 </script>

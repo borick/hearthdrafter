@@ -11,7 +11,14 @@ sub get_cards_by_class {
         index => 'hearthdrafter',
         type => 'card',
         size => 531,
-        body => { query => { match => { playerclass => "$class" } } },
+        body => {
+            query => {
+                terms => {
+                    playerclass => [$class, 'neutral'],
+                    minimum_should_match => 1,
+                }
+            }
+        },
     );
 
     my @data = @{$results->{hits}->{hits}};
