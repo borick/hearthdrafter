@@ -1,26 +1,11 @@
 % layout 'default';
-<div id="top_bar">
-    <div id="selection">
-    <div class="card1"></div>
-    <div class="card2"></div>
-    <div class="card3"></div>
-    <div class="confirm"></div>
-    <div class="correction"></div>
-    <style>clear: both;</style>
-    </div>
-</div>
-<div id="cards">
-  <input class="search" placeholder="search" />
-  <ul class="list"></ul>
-</div>
-
-<script type="text/javascript">
-var cards = [
-% # has to match the format defined in hearthdrafter.js
-% my $cards = stash 'cards';
-% for my $card (@$cards) {
-     {name:"<%= $card->{name} %>",
-      id: "<%= $card->{id} %>"},
+% my $runs = stash 'runs';
+% for my $run (@$runs) {
+     <table><tr><th>Start Date/Time</th><th>Class</th><th>Actions</th>
+            </tr><td><%= $run->{_source}->{start_date} %>
+            </td><td><%= $run->{_source}->{class_name} %>
+            </td><td><a href="/draft/select_card/<%= $run->{_id} %>/">Continue Run</a>|
+                     <a href="/draft/arena_action/abandon_arena_<%= $run->{_id} %>/">Abandon Run</a>
+            </td>
+     </table>
 % }
-];
-</script>

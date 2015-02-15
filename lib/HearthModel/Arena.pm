@@ -21,6 +21,16 @@ sub begin_arena {
     return $results;
 }
 
+sub abandon_run {
+    my ($self, $arena_id) = @_;
+    $self->es->delete(
+        index => 'hearthdrafter',
+        type => 'arena_run',
+        id => $arena_id,
+    );
+    return;
+}
+
 sub continue_run {
     my ($self, $arena_id) = @_;
     my $doc = $self->es->get(
@@ -31,9 +41,29 @@ sub continue_run {
     return $doc;
 }
 
-sub list_open_arenas {
-    my ($self, $class) = @_;
-    
+sub list_open_runs {
+    my ($self, $user_name, $from, $size) = @_;
+        
+    my $results = $self->es->search(
+        index => 'hearthdrafter',
+        type => 'arena_run',
+        size => $size,
+        from => $from,
+        body  => {
+            query => {
+                filtered => {
+                    query => {
+                        match => { user_name => $user_name }
+                    },
+                    filter => {
+                        missing => { field => 'end_date' }
+                    }
+                }
+            }
+        }
+    );
+
+    return $results->{hits}->{hits};
 }
 
 1;

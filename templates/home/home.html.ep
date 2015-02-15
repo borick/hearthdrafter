@@ -2,4 +2,5 @@
 Logged in as: <%= $user->{user}->{user_name} %> <br>
 
 <a href="/draft/select_class">start new draft</a><br>
+<a href="/draft/continue_arena_run">continue arena run</a><br>
 <a href="/logout">logout</a>

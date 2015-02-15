@@ -1,0 +1,26 @@
+% layout 'default';
+<div id="top_bar">
+    <div id="selection">
+    <div class="card1"></div>
+    <div class="card2"></div>
+    <div class="card3"></div>
+    <div class="confirm"></div>
+    <div class="correction"></div>
+    <style>clear: both;</style>
+    </div>
+</div>
+<div id="cards">
+  <input class="search" placeholder="search" />
+  <ul class="list"></ul>
+</div>
+
+<script type="text/javascript">
+var cards = [
+% # has to match the format defined in hearthdrafter.js
+% my $cards = stash 'cards';
+% for my $card (@$cards) {
+     {name:"<%= $card->{name} %>",
+      id: "<%= $card->{id} %>"},
+% }
+];
+</script>

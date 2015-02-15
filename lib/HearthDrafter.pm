@@ -47,7 +47,9 @@ sub startup {
     $r->get('/draft/select_class/')->to('draft#select_class');
     $r->get('/draft/arena_status/')->to('draft#arena_status');
     $r->get('/draft/arena_status/:arena_action')->to('draft#arena_action', arena_action => 'none');
-    $r->get('/draft/continue_arena_run/:arena_id')->to('draft#continue_arena_run', arena_id => 'none');
+    $r->get('/draft/arena_action/:arena_action')->to('draft#arena_action', arena_action => 'none');
+    $r->get('/draft/continue_arena_run')->to('draft#continue_arena_run', arena_id => 'none');
+    $r->get('/draft/select_card/:arena_id')->to('draft#select_card', arena_id => 'none');
     $r->get('/draft/card_choice/:card1/:card2/:card3')->to('draft#card_choice', card1 => 'none', card2 => 'none', card3 => 'none');
 }
 
