@@ -26,7 +26,8 @@ var cards = [
 % my $cards = stash 'cards';
 % for my $card (@$cards) {
      {name:"<%= $card->{name} %>",
-      id: "<%= $card->{id} %>"},
+      id: "<%= $card->{id} %>",
+      rarity: "<%= $card->{rarity} %>"},
 % }
 ];
 
@@ -36,4 +37,12 @@ for (i = 0; i < cards.length; i++) {
     images.push(img + cards[i]['id'] + '.png');
 }
 preload(images);
+
+//create a dict to map names to IDs since not sure how else to get this into list.js.
+var card_ids = {};
+var card_rarity = {};
+for (i = 0; i < cards.length; i++) {
+    card_ids[cards[i]['name']] = cards[i]['id'];
+    card_rarity[cards[i]['name']] = cards[i]['rarity'];
+}
 </script>

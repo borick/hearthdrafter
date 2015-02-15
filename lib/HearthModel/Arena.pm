@@ -1,4 +1,8 @@
 package HearthModel::Arena;
+
+use strict;
+use warnings;
+
 use Moo;
 extends 'HearthModel::DbBase';
 use Data::Dumper;

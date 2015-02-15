@@ -1,4 +1,8 @@
 package HearthModel::User;
+
+use strict;
+use warnings;
+
 use Moo;
 extends 'HearthModel::DbBase';
 use Crypt::PBKDF2;

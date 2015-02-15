@@ -1,5 +1,8 @@
 package HearthDrafter::Home;
 
+use strict;
+use warnings;
+
 use Mojo::Base 'Mojolicious::Controller';
 
 sub index {

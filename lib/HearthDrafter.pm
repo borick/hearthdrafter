@@ -1,12 +1,13 @@
 package HearthDrafter;
 
+use strict;
+use warnings;
 
 use HearthModel;
 use Mojo::Base 'Mojolicious';
 use Mojolicious::Plugin::Authentication;
 
 my $model = HearthModel->new();
-$model->connect();
 has model => sub {
     return $model;
 };
@@ -21,9 +22,8 @@ my $load_user_sub = sub {
     return $self->model->user->load($username);
 };
 
-sub startup {
-
-    my $self = shift;
+sub startup {    
+    my $self = shift;    
     $self->secrets(['to.prevent.the.warning...']);
     $self->helper(model => sub { $model });
     $self->plugin('authentication' => {
@@ -33,6 +33,9 @@ sub startup {
         'validate_user' => $validate_user_sub,
         'current_user_fn' => 'user',
     });
+    #connect the model and pass ourself for convenience!
+    my $model = $self->model();
+    $model->connect($self);
     
     #define all routes
     my $r = $self->routes;
@@ -50,7 +53,7 @@ sub startup {
     $r->get('/draft/arena_action/:arena_action')->to('draft#arena_action', arena_action => 'none');
     $r->get('/draft/continue_arena_run')->to('draft#continue_arena_run', arena_id => 'none');
     $r->get('/draft/select_card/:arena_id')->to('draft#select_card', arena_id => 'none');
-    $r->get('/draft/card_choice/:card1/:card2/:card3')->to('draft#card_choice', card1 => 'none', card2 => 'none', card3 => 'none');
+    $r->get('/draft/card_choice/:arena_id/:card1/:card2/:card3')->to('draft#card_choice', card1 => 'none', card2 => 'none', card3 => 'none');
 }
 
 1;

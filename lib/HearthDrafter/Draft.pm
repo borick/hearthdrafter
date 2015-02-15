@@ -1,5 +1,8 @@
 package HearthDrafter::Draft;
 
+use strict;
+use warnings;
+
 use Mojo::Base 'Mojolicious::Controller';
 use Data::Dumper;
 
@@ -40,10 +43,12 @@ sub select_card {
 
 sub card_choice {
     my $self = shift;
-    $self->render(json => $self->model->card_choice($self->stash('arena_id'),
-                                                    $self->stash('card1'),
-                                                    $self->stash('card2'),
-                                                    $self->stash('card3')));
+    my $result = $self->model->card_choice->get_advice($self->stash('arena_id'),
+                                           $self->stash('card1'),
+                                           $self->stash('card2'),
+                                           $self->stash('card3'));
+    print STDERR "RESULT: " . Dumper($result);
+    $self->render(json => $result);
 }
 
 1;

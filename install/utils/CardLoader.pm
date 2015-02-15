@@ -18,6 +18,10 @@ my $bulk = $e->bulk_helper(
     index   => 'hearthdrafter',
     type    => 'card'
 );
+my $bulk2 = $e->bulk_helper(
+    index   => 'hearthdrafter',
+    type    => 'card_score_by_class'
+);
 
 my %class_maps = ();
 %CardLoader::all_cards  = ();
@@ -27,33 +31,25 @@ my @files = glob("$ha_data_folder/ha_data*.txt"); #json files
 my %score = ();
 my $counter = 0;
 my $debug = 0;
+my $class_name_to_id= { 'druid'    => 1,
+                        'hunter'   => 2,
+                        'mage'     => 3,
+                        'paladin'  => 4,
+                        'priest'   => 5,
+                        'rogue'    => 6,
+                        'shaman'   => 7,
+                        'warlock'  => 8,
+                        'warrior'  => 9,
+                        };
+my %class_id_to_name= reverse %{$class_name_to_id};
 
 sub init {
     my %data = @_;
     $debug = $data{debug};
 }
 sub run {
-    load_scores();
     load_cards();
-}
-
-sub load_scores {
-
-    # Load the card scores.
-    for my $file (@files) {
-    print "Processing $file...\n" if $debug >= 2;
-        if ($file =~ /ha_data_(\d)_.*.txt$/) {
-            my $text = read_file($file);
-            my $data = decode_json $text;
-            for my $result (@{$data->{results}}) {
-                print Dumper($result) if $debug >= 4;
-                my $dat = $result->{card};
-                $dat->{name} = lc($dat->{name});
-                $score{$dat->{name}} = int($dat->{score}*100);
-            }
-        }
-    }
-
+    load_scores();    
 }
 
 sub load_cards {
@@ -96,7 +92,6 @@ sub load_cards {
                     'attack' => $card->{'attack'},
                     'health' => $card->{'health'},
                     'race' => $card->{'race'},
-                    'score' => $score{$card_name},
                     'mechanics' => \@mechs,
                 );
                         
@@ -113,8 +108,52 @@ sub load_cards {
             }
         }
     }
-    $bulk->flush;
-    print "Loaded $counter cards.\n" if $debug;
+    $bulk->flush;    
+    
+    print "Indexed $counter new documents.\n" if $debug;
+}
+
+sub load_scores {
+
+    # Load the card scores.
+    for my $file (@files) {
+    print "Processing $file...\n" if $debug >= 2;
+        if ($file =~ /ha_data_(\d)_.*.txt$/) {
+            my $class_num = $1;
+            my $class_name = $class_id_to_name{$class_num};
+            my $text = read_file($file);
+            my $data = decode_json $text;
+            for my $result (@{$data->{results}}) {
+                print Dumper($result) if $debug >= 4;
+                my $dat = $result->{card};
+                $dat->{name} = lc($dat->{name});
+                $score{$class_name}->{$dat->{name}} = int($dat->{score}*100);
+            }
+        }
+    }
+    
+    for my $class_name (sort(keys(%score))) {
+        my $ref = $score{$class_name};
+        for my $card_name (sort(keys(%$ref))) {
+            
+            
+            my $score = $ref->{$card_name};
+            my $id = $card_name.'|'.$class_name;
+            $id =~ s/ /_/g;
+            my $result = $bulk2->index({
+                id => $id,
+                source  => {
+                    card_name => $card_name,
+                    class_name => $class_name,
+                    score => $score 
+                },
+            });
+            $counter += 1;
+        }
+    }
+    
+    $bulk2->flush;
 }
 
 1;
+

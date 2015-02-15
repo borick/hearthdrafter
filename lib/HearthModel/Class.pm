@@ -1,4 +1,8 @@
 package HearthModel::Class;
+
+use strict;
+use warnings;
+
 use Moo;
 extends 'HearthModel::DbBase';
 

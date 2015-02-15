@@ -9,12 +9,18 @@
             "attack" : {"type" : "integer"},
             "health" : {"type" : "integer"},
             "race" : {"type" : "string"},
-            "score" : {"type" : "float"},
             "mechanics" : {
                 "properties" : {
                     "name" : {"type" : "string"}
                 }
             }
+        }
+    },
+    "card_score_by_class" : {
+        "properties" : {
+            "card_name" : {"type" : "string"},
+            "class_name" : {"type" : "string"},
+            "score" : {"type" : "integer"}
         }
     },
     "card_synergy" : {
