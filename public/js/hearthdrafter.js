@@ -22,6 +22,9 @@ $(document).ready(function() {
 
 function filterList() {
     console.log("inside filter list");
+    if (rarity == 'none') {
+        return;
+    }
     var newItems = [];
     for (i = 0; i < userList.items.length; i++) {
         var objr =  userList.items[i];
@@ -67,7 +70,7 @@ function rebuildList () {
 
 function drawElement(e, name, target, callback){   
     div = $("<div />");
-    div.attr({id: name, class: 'element'});
+    div.attr({id: name});
     div.css({top: e.pageY + e.height, left: e.pageX});
     div.html(name);
     $(target).append(div);
@@ -84,14 +87,6 @@ function showClassCards(id) {
     
     //pick a card
     $(".name").button().click( function( event ) {
-            
-        console.log("clicked");
-        
-        drawElement($(card_name), 'Undo', $(card_name), function ( event ) {
-            event.stopPropagation(); $(this).remove();
-            selected[id] = null;
-            $(card_name).css('background-image', 'url('+card_back+')' );
-        } );
         
         event.preventDefault();
         var element = $(this);                     
@@ -100,11 +95,25 @@ function showClassCards(id) {
         rarity = card_rarity[text];
         console.log('rarity:'+rarity);        
         mode = 'some_selected';
+        
+        //undo button
+        drawElement($(card_name), 'Undo', $(card_name), function ( event ) {
+            event.stopPropagation(); $(this).remove();
+            selected[id] = null;
+            if(selected[0]==null&&selected[1]==null&&selected[2]==null) {
+                rarity='none';
+            }
+            $(card_name).css('background-image', 'url('+card_back+')' );
+            $(card_name).click(function() {
+                showClassCards(id);
+            });
+        });
+        
         userList.clear();
         $(".search").hide();
         var bg_img = img + card_ids[text] + '.png';
-        console.log(card_name + ":" + bg_img);
         $(card_name).css('background-image', 'url('+bg_img+')' );
+        $(card_name).off('click');
         if (selected[0] != null && selected[1] != null && selected[2] != null) {
             mode = 'all_selected';
             
