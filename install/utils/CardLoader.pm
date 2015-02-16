@@ -136,10 +136,8 @@ sub load_scores {
         my $ref = $score{$class_name};
         for my $card_name (sort(keys(%$ref))) {
             
-            
             my $score = $ref->{$card_name};
             my $id = $card_name.'|'.$class_name;
-            $id =~ s/ /_/g;
             my $result = $bulk2->index({
                 id => $id,
                 source  => {

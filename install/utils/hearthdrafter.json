@@ -1,74 +1,70 @@
 {
-    "card" : {
-        "properties" : {
-            "name" : {"type" : "string"},
-            "cost" : {"type" : "integer"},
-            "type" : {"type" : "string"},
-            "rarity" : {"type" : "string"},
-            "playerclass" : {"type" : "string"},
-            "attack" : {"type" : "integer"},
-            "health" : {"type" : "integer"},
-            "race" : {"type" : "string"},
-            "mechanics" : {
-                "properties" : {
-                    "name" : {"type" : "string"}
+    "mappings": {    
+        "card" : {
+            "properties" : {
+                "name" : {"type" : "string", "index": "not_analyzed"},
+                "cost" : {"type" : "integer"},
+                "type" : {"type" : "string"},
+                "rarity" : {"type" : "string"},
+                "playerclass" : {"type" : "string"},
+                "attack" : {"type" : "integer"},
+                "health" : {"type" : "integer"},
+                "race" : {"type" : "string"},
+                "mechanics" : {
+                    "properties" : {
+                        "name" : {"type" : "string", "index": "not_analyzed"}
+                    }
                 }
             }
-        }
-    },
-    "card_score_by_class" : {
-        "properties" : {
-            "card_name" : {"type" : "string"},
-            "class_name" : {"type" : "string"},
-            "score" : {"type" : "integer"}
-        }
-    },
-    "card_synergy" : {
-        "properties" : {
-            "card_name" : {"type" : "string"},
-            "card_name_2" : {"type" : "string"},
-            "reason" : {"type" : "string"}
-        }
-    },
-    "user" : {
-        "properties" : {
-            "user_name" : {"type" : "string"},
-            "email" : {"type" : "string"},
-            "first_name" : {"type" : "string"},
-            "last_name" : {"type" : "string"},
-            "password" : {"type" : "string", "index" : "no"}
-        }
-    },
-    "arena_run" : {
-        "properties" : {
-            "user_name" : {"type" : "string"},
-            "class_name" : {"type" : "string"},
-            "submission_type" : {"type" : "string"},
-            "start_date" : {
-                "type" : "date",
-                "format" : "basicDateTime"
-            },
-            "end_date" : {
-                "type" : "date",
-                "format" : "basicDateTime"
-            },
-            "card_chosen" : {"type" : "string"},
-            "card_options" : {
-                "properties" : {
-                    "card_name" : {"type" : "string"},
-                    "card_name_2" : {"type" : "string"},
-                    "card_name_3" : {"type" : "string"}
-                }
-            },
-            "results" : {
-                "properties" : {
-                    "gold" : {"type" : "integer"},
-                    "dust" : {"type" : "integer"},
-                    "packs" : {"type" : "integer"},
-                    "card" : {
-                        "properties": {
-                            "rarity" : {"type": "string"},
-                            "golden" : {"type" : "boolean"}
+        },
+        "card_score_by_class" : {
+            "properties" : {
+                "card_name" : {"type" : "string", "index": "not_analyzed", "analyzer": "keyword"},
+                "class_name" : {"type" : "string", "index": "not_analyzed"},
+                "score" : {"type" : "integer"}
+            }
+        },
+        "card_synergy" : {
+            "properties" : {
+                "card_name" : {"type" : "string", "index": "not_analyzed"},
+                "card_name_2" : {"type" : "string", "index": "not_analyzed"},
+                "reason" : {"type" : "string"}
+            }
+        },
+        "user" : {
+            "properties" : {
+                "user_name" : {"type" : "string", "index": "not_analyzed"},
+                "email" : {"type" : "string", "index": "not_analyzed"},
+                "first_name" : {"type" : "string", "index": "not_analyzed"},
+                "last_name" : {"type" : "string", "index": "not_analyzed"},
+                "password" : {"type" : "string", "index" : "no"}
+            }
+        },
+        "arena_run" : {
+            "properties" : {
+                "user_name" : {"type" : "string", "index": "not_analyzed"},
+                "class_name" : {"type" : "string", "index": "not_analyzed"},
+                "submission_type" : {"type" : "string", "index": "not_analyzed"},
+                "start_date" : {"type" : "string", "index": "not_analyzed"},
+                "end_date" : {"type" : "string", "index": "not_analyzed"},
+                "card_chosen" : {"type" : "string"},
+                "card_options" : {
+                    "properties" : {
+                        "card_name" : {"type" : "string", "index": "not_analyzed"},
+                        "card_name_2" : {"type" : "string", "index": "not_analyzed"},
+                        "card_name_3" : {"type" : "string", "index": "not_analyzed"}
+                    }
+                },
+                "results" : {
+                    "properties" : {
+                        "gold" : {"type" : "integer"},
+                        "dust" : {"type" : "integer"},
+                        "packs" : {"type" : "integer"},
+                        "card" : {
+                            "properties": {
+                                "rarity" : {"type": "string", "index": "not_analyzed"},
+                                "golden" : {"type" : "boolean"}
+                            }
                         }
                     }
                 }

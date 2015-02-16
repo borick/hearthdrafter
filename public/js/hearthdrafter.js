@@ -9,16 +9,23 @@ var rarity = 'unknown';
 $(document).ready(function() {
     console.log( "document loaded" );
     $(".search").hide();
+    initCardClicks();
+});
+
+function initCardClicks() {
+    $('.card1').css('background-image', 'url('+card_back+')' );
     $('.card1').click(function() {
         showClassCards(0);
     });
+    $('.card2').css('background-image', 'url('+card_back+')' );
     $('.card2').click(function() {
         showClassCards(1);
     });
+    $('.card3').css('background-image', 'url('+card_back+')' );
     $('.card3').click(function() {
         showClassCards(2);
     });
-});
+}
 
 function filterList() {
     console.log("inside filter list");
@@ -128,8 +135,11 @@ function showClassCards(id) {
                 //get data
                 $.get(url, function( data ) {
                         console.dirxml(data);
-                        $('.confirm').remove();
-                        selected = [];
+                        
+//                         $('.confirm').remove();
+//                         initCardClicks();
+//                         selected = [];
+                        
                         mode = 'confirm_selected';
                 });
             });

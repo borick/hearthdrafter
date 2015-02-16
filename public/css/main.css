@@ -7,7 +7,7 @@
   text-align: center;
   margin-left: auto;
   margin-right: auto;
-  width: 900px; /*card width*3*/
+  width: 750px; /*card width*3*/
 }
 #cards {
   text-align: center;
@@ -18,7 +18,6 @@
   color: white;
 }
 .card1, .card2, .card3 {
-  background-image: url(http://wow.zamimg.com/images/hearthstone/cardbacks/original/Card_Back_Default.png);
   width:242px;
   height:358px;
   display: block;

@@ -33,7 +33,7 @@ has card_choice => (
 
 sub connect {
     my ($self,$c) = @_;
-    my $es = Search::Elasticsearch->new();
+    my $es = Search::Elasticsearch->new(trace_to => 'Stderr');
     $self->es($es);
     $self->user(HearthModel::User->new(es=>$es));
     $self->class(HearthModel::Class->new(es=>$es));
