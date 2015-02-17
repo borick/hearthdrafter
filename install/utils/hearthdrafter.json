@@ -47,12 +47,12 @@
                 "submission_type" : {"type" : "string", "index": "not_analyzed"},
                 "start_date" : {"type" : "string", "index": "not_analyzed"},
                 "end_date" : {"type" : "string", "index": "not_analyzed"},
-                "card_chosen" : {"type" : "string"},
                 "card_options" : {
                     "properties" : {
                         "card_name" : {"type" : "string", "index": "not_analyzed"},
                         "card_name_2" : {"type" : "string", "index": "not_analyzed"},
-                        "card_name_3" : {"type" : "string", "index": "not_analyzed"}
+                        "card_name_3" : {"type" : "string", "index": "not_analyzed"},
+                        "card_chosen" : {"type" : "string", "index": "not_analyzed"}
                     }
                 },
                 "results" : {

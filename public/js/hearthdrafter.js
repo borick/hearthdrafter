@@ -5,7 +5,8 @@ var img = "http://wow.zamimg.com/images/hearthstone/cards/enus/original/";
 var card_back = 'http://wow.zamimg.com/images/hearthstone/cardbacks/original/Card_Back_Default.png';
 var mode = 'none_selected';
 var rarity = 'unknown';
-
+var card_number = 0;
+    
 $(document).ready(function() {
     console.log( "document loaded" );
     $(".search").hide();
@@ -75,13 +76,34 @@ function rebuildList () {
     $(".search").show().focus();
 }
 
-function drawElement(e, name, target, callback){   
-    div = $("<div />");
+function createElement(e, name) {
+    div = $("<div/>");
     div.attr({id: name});
-    div.css({top: e.pageY + e.height, left: e.pageX});
     div.html(name);
-    $(target).append(div);
-    div.button().click(callback);
+    e.append(div);
+}
+    
+function createInputButton(e, my, at, name, id, callback){   
+    div = $("<div/>");
+    div.attr({id: name});
+    div.css({"position":"absolute"});
+    div.html(name);
+    e.append(div);
+    var button = div.button();
+    button.click({id: id}, callback);
+    div.position({
+        my: my,
+        at: at,
+        of: e
+    });
+}
+
+function hideConfirm () {
+    $('.confirm').text('').off('click');
+}
+
+function removeConfirmChoices() {
+    $("[id='I Picked This Card']").remove();
 }
 
 function showClassCards(id) {
@@ -97,15 +119,19 @@ function showClassCards(id) {
         
         event.preventDefault();
         var element = $(this);                     
-        var text = element.text();
+        var text = element.text();//actual card name
         selected[id] = text;
         rarity = card_rarity[text];
         console.log('rarity:'+rarity);        
         mode = 'some_selected';
         
         //undo button
-        drawElement($(card_name), 'Undo', $(card_name), function ( event ) {
-            event.stopPropagation(); $(this).remove();
+        createInputButton($(card_name), 'right top', 'right top', 'Undo', id, function ( event ) {
+            hideConfirm();
+            removeConfirmChoices();
+            event.stopPropagation();
+            $(this).remove();
+            
             selected[id] = null;
             if(selected[0]==null&&selected[1]==null&&selected[2]==null) {
                 rarity='none';
@@ -125,22 +151,40 @@ function showClassCards(id) {
             mode = 'all_selected';
             
             //confirm teh selection of all 3 cards...
-            $('.confirm').text("Confirm").button().click( function( event ) {
+            $('.confirm').text("Confirm Cards").button().click( function( event ) {
                 event.preventDefault();
                 var pathArray = window.location.pathname.split('/', -1);
                 var arena_id = pathArray[3];
-                var url = "/draft/card_choice/"+arena_id+'/'+selected[0]+'/'+selected[1]+'/'+selected[2];
+                var url = "/draft/card_choice/"+selected[0]+'/'+selected[1]+'/'+selected[2]+'/'+card_number+'/'+arena_id;
                 console.log('getting url: ' + url);
-                
                 //get data
                 $.get(url, function( data ) {
+                    
                         console.dirxml(data);
                         
+                        //TODO: highlight recommended card
+                        
+                        hideConfirm();
+
+                        for(j = 0; j < selected.length; j++) {
+                            var tmp_index = j + 1;
+                            var tmp_card_name = ".card"+tmp_index;
+                            createInputButton($(tmp_card_name), 'center center', 'center center', 'I Picked This Card', j, function ( event ) {
+                                event.stopPropagation();
+                                var selindex = event.data.id;
+                                console.log('selindex is: ' + selindex);
+                                var url = "/draft/confirm_card_choice/"+selected[selindex]+'/'+card_number+'/'+arena_id;
+                                $.get(url, function( data ) {
+                                    removeConfirmChoices();
+                                });
+                            });
+                        }
+        
 //                         $('.confirm').remove();
 //                         initCardClicks();
 //                         selected = [];
                         
-                        mode = 'confirm_selected';
+
                 });
             });
         }

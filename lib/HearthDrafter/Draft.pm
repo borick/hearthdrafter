@@ -46,9 +46,20 @@ sub card_choice {
     my $result = $self->model->card_choice->get_advice($self->stash('arena_id'),
                                            $self->stash('card1'),
                                            $self->stash('card2'),
-                                           $self->stash('card3'));
+                                           $self->stash('card3'),
+                                           $self->stash('card_number'));
     print STDERR "RESULT: " . Dumper($result);
     $self->render(json => $result);
 }
+
+sub confirm_card_choice {
+    my $self = shift;
+    my $result = $self->model->arena->confirm_card_choice($self->stash('arena_id'),
+                                                          $self->stash('card_name'),
+                                                          $self->stash('card_number'));
+    $self->render(json => $result);
+}
+
+
 
 1;

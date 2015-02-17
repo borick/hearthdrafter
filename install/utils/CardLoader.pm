@@ -23,6 +23,9 @@ my $bulk2 = $e->bulk_helper(
     type    => 'card_score_by_class'
 );
 
+my $max_score = -1;
+my $score_total = 0;
+my $score_count = 0;
 my %class_maps = ();
 %CardLoader::all_cards  = ();
 my $card_data_file = 'data/AllSets.json';
@@ -137,6 +140,8 @@ sub load_scores {
         for my $card_name (sort(keys(%$ref))) {
             
             my $score = $ref->{$card_name};
+            $max_score = $score if ($score > $max_score);
+            $score_total += $score;
             my $id = $card_name.'|'.$class_name;
             my $result = $bulk2->index({
                 id => $id,
@@ -147,10 +152,13 @@ sub load_scores {
                 },
             });
             $counter += 1;
+            $score_count += 1;
         }
     }
     
     $bulk2->flush;
+    print "max score is: $max_score\n";
+    print "average score is: ".($score_total/$score_count)."\n";
 }
 
 1;

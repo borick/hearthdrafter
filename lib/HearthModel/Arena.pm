@@ -66,8 +66,23 @@ sub list_open_runs {
             }
         }
     );
-
     return $results->{hits}->{hits};
+}
+
+sub confirm_card_choice {
+    my ($self, $arena_id, $card_name, $card_number) = @_;
+    
+    my $run = $self->continue_run($arena_id);    
+    #TODO: add user validation
+    my $source = $run->{_source};
+    $source->{card_options}->[$card_number]->{card_chosen} = $card_name;
+    print STDERR Dumper($source);
+    $self->es->index(
+        index => 'hearthdrafter',
+        type => 'arena_run',
+        id => $arena_id,
+        body => $source,
+    );
 }
 
 1;
