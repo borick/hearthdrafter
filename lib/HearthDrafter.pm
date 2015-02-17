@@ -53,8 +53,8 @@ sub startup {
     $r->get('/draft/arena_action/:arena_action')->to('draft#arena_action');
     $r->get('/draft/continue_arena_run')->to('draft#continue_arena_run');
     $r->get('/draft/select_card/:arena_id')->to('draft#select_card');
-    $r->get('/draft/card_choice/:card1/:card2/:card3/:card_number/:arena_id/')->to('draft#card_choice');
-    $r->get('/draft/confirm_card_choice/:card_name/:card_number/:arena_id/')->to('draft#confirm_card_choice');
+    $r->get('/draft/card_choice/:card1/:card2/:card3/:arena_id/')->to('draft#card_choice');
+    $r->get('/draft/confirm_card_choice/:card_name/:arena_id/')->to('draft#confirm_card_choice');
 }
 
 1;

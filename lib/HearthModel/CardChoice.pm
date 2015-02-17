@@ -18,20 +18,52 @@ sub _process_card_name {
     return $name;
 }
 
+sub get_card_number {
+    my ($self,$arena_id) = @_;
+    my $source = $self->c()->model->arena->continue_run($arena_id);
+    return $self->get_next_index($source);
+}
+
+sub get_next_index {
+    my ($self,$source) = @_;
+    my $count = 0;
+    for my $option (@{$source->{card_options}}) {
+        last if !exists($option->{card_chosen});
+        $count += 1;
+    }
+    return $count;
+}
+
+sub confirm_card_choice {
+    my ($self, $arena_id, $card_name) = @_;
+    
+    my $source = $self->c()->model->arena->continue_run($arena_id);    
+    my $next_index = $self->get_next_index($source);
+    
+    #TODO: add user validation
+    $source->{card_options}->[$next_index]->{card_chosen} = $card_name;
+    $self->es->index(
+        index => 'hearthdrafter',
+        type => 'arena_run',
+        id => $arena_id,
+        body => $source,
+    );
+}
+
 sub get_advice {
-    my ($self, $arena_id, $card_1, $card_2, $card_3, $card_number) = @_;        
+    my ($self, $arena_id, $card_1, $card_2, $card_3) = @_;        
     
     my $max_score = 8500;
     
     my $c = $self->c();
-    my $run = $c->model->arena->continue_run($arena_id);
-    my $source = $run->{_source};
-    #TODO: add more validation on checking card number matches expected sequence.
-    return if $card_number >= 29;    
+    my $source = $c->model->arena->continue_run($arena_id);
+    my $next_index = $self->get_next_index($source);
+    my $out_data = {};
+    
     #update the card choices we have
-    $source->{card_options}->[$card_number] = {card_name => $card_1,
-                                               card_name_2 => $card_2,
-                                               card_name_3 => $card_3}; 
+    $source->{card_options}->[$next_index] = {card_name => $card_1,
+                                              card_name_2 => $card_2,
+                                              card_name_3 => $card_3}; 
     #reindex
     $self->es->index(
         index => 'hearthdrafter',
@@ -39,10 +71,9 @@ sub get_advice {
         id => $arena_id,
         body => $source,
     );
-    
+    #card number
+    $out_data->{'card_number'} = $next_index;
     my $class = $source->{class_name};
-    
-    my $out_data = {};
     
     
     print STDERR "Searching for: " . Dumper($card_1, $card_2, $card_3);

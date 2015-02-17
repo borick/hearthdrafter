@@ -36,8 +36,8 @@ sub select_card {
     my $self = shift;
     my $arena_id = $self->stash('arena_id');
     my $run_details = $self->model->arena->continue_run($arena_id);
-    print STDERR Dumper($run_details);
-    $self->stash(cards => $self->model->card->get_cards_by_class($run_details->{_source}->{class_name}));
+    $self->stash(cards => $self->model->card->get_cards_by_class($run_details->{class_name}),
+                 card_number => $self->model->card_choice->get_next_index($run_details));
     $self->render('draft/select_card');
 }
 
@@ -46,17 +46,15 @@ sub card_choice {
     my $result = $self->model->card_choice->get_advice($self->stash('arena_id'),
                                            $self->stash('card1'),
                                            $self->stash('card2'),
-                                           $self->stash('card3'),
-                                           $self->stash('card_number'));
+                                           $self->stash('card3'));
     print STDERR "RESULT: " . Dumper($result);
     $self->render(json => $result);
 }
 
 sub confirm_card_choice {
     my $self = shift;
-    my $result = $self->model->arena->confirm_card_choice($self->stash('arena_id'),
-                                                          $self->stash('card_name'),
-                                                          $self->stash('card_number'));
+    my $result = $self->model->card_choice->confirm_card_choice($self->stash('arena_id'),
+                                                                $self->stash('card_name'));
     $self->render(json => $result);
 }
 

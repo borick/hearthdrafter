@@ -42,12 +42,12 @@ sub continue_run {
         type => 'arena_run',
         id => $arena_id,
     );
-    return $doc;
+    return $doc->{_source};
 }
 
 sub list_open_runs {
     my ($self, $user_name, $from, $size) = @_;
-        
+    my $out = [];
     my $results = $self->es->search(
         index => 'hearthdrafter',
         type => 'arena_run',
@@ -66,23 +66,11 @@ sub list_open_runs {
             }
         }
     );
-    return $results->{hits}->{hits};
-}
-
-sub confirm_card_choice {
-    my ($self, $arena_id, $card_name, $card_number) = @_;
     
-    my $run = $self->continue_run($arena_id);    
-    #TODO: add user validation
-    my $source = $run->{_source};
-    $source->{card_options}->[$card_number]->{card_chosen} = $card_name;
-    print STDERR Dumper($source);
-    $self->es->index(
-        index => 'hearthdrafter',
-        type => 'arena_run',
-        id => $arena_id,
-        body => $source,
-    );
+    for my $result (@{$results->{hits}->{hits}}) {
+        push(@$out, $result->{_source});
+    }
+    return $out;
 }
 
 1;

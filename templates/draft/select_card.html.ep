@@ -21,6 +21,7 @@ function preload(arrayOfImages) {
         $('<img/>')[0].src = this;
     });
 }
+var card_number = <%= $card_number %>;
 var cards = [
 % # has to match the format defined in hearthdrafter.js
 % my $cards = stash 'cards';
