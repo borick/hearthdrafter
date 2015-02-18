@@ -4,20 +4,20 @@ var dat = {};
 var img = "http://wow.zamimg.com/images/hearthstone/cards/enus/original/";
 var card_back = 'http://wow.zamimg.com/images/hearthstone/cardbacks/original/Card_Back_Default.png';
 var mode = 'none_selected';
-var rarity = 'unknown';
+var rarity = 'none';
 var number_element;
 
 function updateNumber (newNumber) {
-    number_element.text( (newNumber+1) + '/30');
+    $('#card_number').text( (newNumber+1) + '/30');
 }
 
 $(document).ready(function() {
     console.log( "document loaded" );
     $(".search").hide();
     initCardClicks();
-    number_element = createElement($("#top_bar"), card_number,{"font-size":"200%","color":"white"});
+    number_element = createElement($("#top_bar"), 'card_number',{"font-size":"200%","color":"white"});
     number_element.css({"position":"absolute"});
-    updateNumber(card_number+1);
+    updateNumber(card_number);
     number_element.position({
         my: 'right top',
         at: 'right top',
@@ -43,6 +43,7 @@ function initCardClicks() {
 function filterList() {
     console.log("inside filter list");
     if (rarity == 'none') {
+        console.log('doing nothing');
         return;
     }
     var newItems = [];
@@ -115,8 +116,8 @@ function hideUndo () {
     $('.Undo').hide();
 }
 
-function hideConfirm () {
-    $('.confirm').hide();
+function removeConfirm () {
+    $("[id='Confirm Cards']").remove();
 }
 
 function removeConfirmChoices() {
@@ -124,7 +125,7 @@ function removeConfirmChoices() {
 }
 
 function removeHighlight () {
-    $('#highlight').remove();
+    $('div#highlight').hide();
 }
 
 function showClassCards(id) {
@@ -148,7 +149,7 @@ function showClassCards(id) {
         
         //undo button
         createInputButton($(card_name), 'right top', 'right top', 'Undo', id, function ( event ) {
-            hideConfirm();
+            removeConfirm();
             removeHighlight();
             removeConfirmChoices();
             event.stopPropagation();
@@ -173,7 +174,8 @@ function showClassCards(id) {
             mode = 'all_selected';
             
             //confirm teh selection of all 3 cards...
-            $('.confirm').show().text("Confirm Cards").button().click( function( event ) {
+            createInputButton($('.card2'), 'center top', 'center bottom', 'Confirm Cards', 'confirm', function ( event ) {
+                rarity = 'none';
                 event.preventDefault();
                 event.stopPropagation();
                 var pathArray = window.location.pathname.split('/', -1);
@@ -182,50 +184,49 @@ function showClassCards(id) {
                 console.log('getting url: ' + url);
                 //get data
                 $.get(url, function( data ) {
-                    
-                        console.dirxml(data);
-                        var n = 0;
-                        var m = -100;
-                        for(j = 0; j < selected.length; j++) {
-                            var score = data['scores'][selected[j]];
-                            if (score > m) {
-                                n = j;
-                                m = score;
-                            }
+                    console.dirxml(data);
+                    var n = 0;
+                    var m = -100;
+                    for(j = 0; j < selected.length; j++) {
+                        var score = data['scores'][selected[j]];
+                        if (score > m) {
+                            n = j;
+                            m = score;
                         }
-                        //highlight best score card with star
-                        var sel_card = '.card' + (n+1);
-                        console.log("highlighting " + sel_card);
-                        var star = createElement($(sel_card), 'highlight', {'font-size':'500%', 'color':'white', 'position':'absolute'});
-                        star.text('*');
-                        star.position({my:'center center',at:'center top+15',of:$(sel_card)});
-                        
-                        hideConfirm();
+                    }
+                    //highlight best score card with star
+                    var sel_card = '.card' + (n+1);
+                    console.log("highlighting " + sel_card);
+                    var star = createElement($(sel_card), 'highlight', {'font-size':'500%', 'color':'white', 'position':'absolute'});
+                    star.text('*');
+                    star.position({my:'center center',at:'center top+15',of:$(sel_card)});
+                    
+                    removeConfirm();
 
-                        for(j = 0; j < selected.length; j++) {
-                            var tmp_index = j + 1;
-                            var tmp_card_name = ".card"+tmp_index;
-                            createInputButton($(tmp_card_name), 'center center', 'center center', 'I Picked This Card', j, function ( event ) {
-                                event.preventDefault();
-                                event.stopPropagation();
-                                var selindex = event.data.id;
-                                console.log('selindex is: ' + selindex);
-                                var url = "/draft/confirm_card_choice/"+selected[selindex]+'/'+arena_id;
-                                $.get(url, function( data ) {
-                                    removeConfirmChoices();
-                                    card_number += 1;
-                                    updateNumber(card_number);
-                                    initCardClicks();
-                                    selected = [];
-                                    hideUndo();
-                                    removeHighlight();
-                                });
+                    for(j = 0; j < selected.length; j++) {
+                        var tmp_index = j + 1;
+                        var tmp_card_name = ".card"+tmp_index;
+                        createInputButton($(tmp_card_name), 'center center', 'center center', 'I Picked This Card', j, function ( event ) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                            var selindex = event.data.id;
+                            console.log('selindex is: ' + selindex);
+                            var url = "/draft/confirm_card_choice/"+selected[selindex]+'/'+arena_id;
+                            $.get(url, function( data ) {
+                                removeConfirmChoices();
+                                card_number += 1;
+                                updateNumber(card_number);
+                                initCardClicks();
+                                selected = [];
+                                hideUndo();
+                                removeHighlight();
                             });
-                        }                
+                        });
+                    }                
                 });
             });
-        }
-      } );
+        }   
+    });
     $(".name").css({ width: '210px' });
     $(".card*").css({ position: 'absolute' });
 }

@@ -26,7 +26,7 @@ sub load_synergies {
         my $reason = $reasons->{$key};
         
         $bulk->index({
-            id => $key,
+            id => $values[0].'|'.$values[1],
             source => {
                 card_name   => $values[0],
                 card_name_2 => $values[1],
@@ -34,7 +34,7 @@ sub load_synergies {
             }
         });
         $bulk->index({
-            id => $key,
+            id => $values[1].'|'.$values[0],
             source => {
                 card_name_2 => $values[0],
                 card_name   => $values[1],

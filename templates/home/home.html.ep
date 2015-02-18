@@ -1,6 +1,13 @@
 % layout 'default';
 Logged in as: <%= $user->{user}->{user_name} %> <br>
 
-<a href="/draft/select_class">start new draft</a><br>
-<a href="/draft/continue_arena_run">continue arena run</a><br>
-<a href="/logout">logout</a>
+<a href="/draft/select_class">Start New Draft</a><br>
+% my $runs = stash 'runs';
+% for my $run (@$runs) {
+
+<a href="/draft/select_card/<%= $run->{_id} %>/">Continue <%= $run->{class_name} %> Run Started At <%= $run->{start_date} %> </a>
+or <a href="/draft/arena_action/abandon_arena_<%= $run->{_id} %>/">Abandon This Run.</a> <br>
+
+% }
+
+<a href="/logout">Log Out</a>

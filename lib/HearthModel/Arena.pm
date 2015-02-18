@@ -18,11 +18,48 @@ sub begin_arena {
         type => 'arena_run',
         body => { 
             class_name => $class,
-            start_date => $t->datetime,
+            start_date => $t->strftime(),
             user_name => $user_name,
         },
     );
     return $results;
+}
+
+sub get_card_number {
+    my ($self,$arena_id) = @_;
+    my $source = $self->continue_run($arena_id);
+    return $self->get_next_index($source);
+}
+
+sub get_next_index {
+    my ($self,$source) = @_;
+    my $count = 0;
+    for my $option (@{$source->{card_options}}) {
+        last if !exists($option->{card_chosen});
+        $count += 1;
+    }
+    return $count;
+}
+
+sub confirm_card_choice {
+    my ($self, $arena_id, $card_name) = @_;
+    
+    my $source = $self->continue_run($arena_id);    
+    my $next_index = $self->get_next_index($source);
+    
+    #TODO: add user validation
+    $source->{card_options}->[$next_index]->{card_chosen} = $card_name;
+    
+    if ($next_index >= 29) {
+        my $t = localtime;
+        $source->{end_date} = $t->strftime();
+    }
+    $self->es->index(
+        index => 'hearthdrafter',
+        type => 'arena_run',
+        id => $arena_id,
+        body => $source,
+    );
 }
 
 sub abandon_run {

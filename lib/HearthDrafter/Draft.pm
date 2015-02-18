@@ -20,40 +20,34 @@ sub arena_action {
         my $arena_id = $1;
         $self->model->arena->abandon_run($arena_id, $self->user->{'user'}->{'name'});
         sleep 1;#TODO: figure out how to wait for data to be propagated.
-        return $self->redirect_to('/draft/continue_arena_run');
+        return $self->redirect_to('/home');
     }
     warn "bad action $action";
-}
-
-sub continue_arena_run {
-    my $self = shift;
-    my $runs = $self->model->arena->list_open_runs($self->user->{'user'}->{'name'}, 0, 10);
-    $self->stash(runs => $runs);
-    $self->render('draft/continue_arena_run');    
 }
 
 sub select_card {
     my $self = shift;
     my $arena_id = $self->stash('arena_id');
     my $run_details = $self->model->arena->continue_run($arena_id);
+    print STDERR 'Run details: ' . Dumper($run_details);
     $self->stash(cards => $self->model->card->get_cards_by_class($run_details->{class_name}),
-                 card_number => $self->model->card_choice->get_next_index($run_details));
+                 card_number => $self->model->arena->get_next_index($run_details));
     $self->render('draft/select_card');
 }
 
 sub card_choice {
     my $self = shift;
     my $result = $self->model->card_choice->get_advice($self->stash('arena_id'),
-                                           $self->stash('card1'),
-                                           $self->stash('card2'),
-                                           $self->stash('card3'));
+                                                       $self->stash('card1'),
+                                                       $self->stash('card2'),
+                                                       $self->stash('card3'));
     $self->render(json => $result);
 }
 
 sub confirm_card_choice {
     my $self = shift;
-    my $result = $self->model->card_choice->confirm_card_choice($self->stash('arena_id'),
-                                                                $self->stash('card_name'));
+    my $result = $self->model->arena->confirm_card_choice($self->stash('arena_id'),
+                                                          $self->stash('card_name'));
     $self->render(json => $result);
 }
 

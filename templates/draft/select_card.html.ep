@@ -1,4 +1,7 @@
 % layout 'default';
+<script src="/js/libs/list.min.js"></script>
+<script src="/js/hearthdrafter.js"></script>
+    
 <div id="top_bar">
     <div id="selection">
     <div class="card1"></div>
