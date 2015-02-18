@@ -70,7 +70,7 @@ sub find_synergies {
         if (_has_tag($tags_x, 'gives_taunt', $card_y) && $name_y eq 'ancient watcher') {            
             $g->add_edge($name_x, $name_y, 1.00);
             _update_reasons("$name_x|$name_y",'Give Ancient Watcher taunt in order to make it useful.',\%reasons);
-        }elsif (_has_tag($tags_x, 'gives_taunt', $card_y) && $type_y eq 'minion' && $health_y >= MIN_MINION_HEALTH_FOR_GET_TAUNT_SYNERGY) {            
+        }elsif (_has_tag($tags_x, 'gives_taunt', $card_y) && $type_y eq 'minion' && $health_y >= MIN_MINION_HEALTH_FOR_GET_TAUNT_SYNERGY && !_has_tag($tags_y, 'has_taunt', $card_x)) {            
             $g->add_edge($name_x, $name_y, ($health_y/6.0+0.10));
             _update_reasons("$name_x|$name_y",'The bigger the creature, the more valuable the taunt.',\%reasons);
         }

@@ -57,13 +57,14 @@ sub get_advice {
     
     my $c = $self->c();
     my $source = $c->model->arena->continue_run($arena_id);
+    print STDERR "Arena run: " . Dumper($source) . "\n";
     my $next_index = $self->get_next_index($source);
     my $out_data = {};
-    
+    my $card_options = $source->{card_options};
     #update the card choices we have
-    $source->{card_options}->[$next_index] = {card_name => $card_1,
-                                              card_name_2 => $card_2,
-                                              card_name_3 => $card_3}; 
+    $card_options->[$next_index] = {card_name   => $card_1,
+                                    card_name_2 => $card_2,
+                                    card_name_3 => $card_3}; 
     #reindex
     $self->es->index(
         index => 'hearthdrafter',
@@ -73,9 +74,7 @@ sub get_advice {
     );
     #card number
     $out_data->{'card_number'} = $next_index;
-    my $class = $source->{class_name};
-    
-    
+    my $class = $source->{class_name};        
     print STDERR "Searching for: " . Dumper($card_1, $card_2, $card_3);
     
     #tier score
@@ -97,9 +96,43 @@ sub get_advice {
         $out_data->{'scores'}->{$source->{'card_name'}} = $source->{'score'} / $max_score;
     }
     
-    #synergies    
-    #mana curve
+    my @card_choices;
+    for my $card_option (@$card_options) {
+        push(@card_choices, $card_option->{card_chosen}) if exists($card_option->{card_chosen});
+    }
+
+    print STDERR "Cards chosen: " . Dumper(\@card_choices);
     
+    #synergies    
+    # find synergies between the existing card choices (@card_choices) and the currently available cards ($card_1, card_2, etc.)
+    my $synergies = $self->es->search(
+        index => 'hearthdrafter',
+        type => 'card_synergy',
+        size => 99999, #greater than max, hopefully
+        body => {
+            query => {
+                filtered => {
+                    query => {
+                        match => { card_name_2 => $card_1 },
+#                         terms => {
+#                             card_name_2 => [$card_1, $card_2, $card_3],
+#                         },
+#                         minimum_should_match => 1,
+                    },
+                    filter => {
+                        terms => {
+                            card_name => \@card_choices,
+                        },
+                    },   
+                },
+            },
+        },
+    );
+    
+    print 'Synergies' . Dumper($synergies);
+    
+    #mana curve
+    #diminishing returns on cards
     return $out_data;
     
 }

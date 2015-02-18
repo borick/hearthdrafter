@@ -47,7 +47,6 @@ sub card_choice {
                                            $self->stash('card1'),
                                            $self->stash('card2'),
                                            $self->stash('card3'));
-    print STDERR "RESULT: " . Dumper($result);
     $self->render(json => $result);
 }
 

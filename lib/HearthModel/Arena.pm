@@ -42,6 +42,7 @@ sub continue_run {
         type => 'arena_run',
         id => $arena_id,
     );
+    $doc->{_source}->{_id} = $doc->{_id};
     return $doc->{_source};
 }
 
@@ -68,6 +69,7 @@ sub list_open_runs {
     );
     
     for my $result (@{$results->{hits}->{hits}}) {
+        $result->{_source}->{_id} = $result->{_id};
         push(@$out, $result->{_source});
     }
     return $out;

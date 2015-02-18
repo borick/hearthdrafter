@@ -33,6 +33,14 @@ sub load_synergies {
                 reason      => $reason
             }
         });
+        $bulk->index({
+            id => $key,
+            source => {
+                card_name_2 => $values[0],
+                card_name   => $values[1],
+                reason      => $reason
+            }
+        });
     }
     $bulk->flush;
 }

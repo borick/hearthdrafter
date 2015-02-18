@@ -66,7 +66,7 @@ function filterList() {
         }
         if (add) {
             newItems.push(objr);
-        }
+        }                                    
     }
     userList.items = newItems;
 }
@@ -123,6 +123,10 @@ function removeConfirmChoices() {
     $("[id='I Picked This Card']").remove();
 }
 
+function removeHighlight () {
+    $('#highlight').remove();
+}
+
 function showClassCards(id) {
     console.log("show class cards clicked"+id);
     
@@ -145,6 +149,7 @@ function showClassCards(id) {
         //undo button
         createInputButton($(card_name), 'right top', 'right top', 'Undo', id, function ( event ) {
             hideConfirm();
+            removeHighlight();
             removeConfirmChoices();
             event.stopPropagation();
             $(this).remove();
@@ -213,6 +218,7 @@ function showClassCards(id) {
                                     initCardClicks();
                                     selected = [];
                                     hideUndo();
+                                    removeHighlight();
                                 });
                             });
                         }                
