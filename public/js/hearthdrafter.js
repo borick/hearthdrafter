@@ -17,12 +17,8 @@ $(document).ready(function() {
     initCardClicks();
     number_element = createElement($("#top_bar"), 'card_number',{"font-size":"200%","color":"white"});
     number_element.css({"position":"absolute"});
+    number_element.css({'top':'0', 'right':'0'});
     updateNumber(card_number);
-    number_element.position({
-        my: 'right top',
-        at: 'right top',
-        of: $('#top_bar')
-    });
 });
 
 function initCardClicks() {
@@ -97,7 +93,7 @@ function createElement(e, name, css) {
     return div;
 }
     
-function createInputButton(e, my, at, name, id, callback){   
+function createInputButton(e, css, name, id, callback){   
     div = $("<div/>");
     div.attr({id: name, class: name});
     div.css({"position":"absolute"});
@@ -105,11 +101,7 @@ function createInputButton(e, my, at, name, id, callback){
     e.append(div);
     var button = div.button();
     button.click({id: id}, callback);
-    div.position({
-        my: my,
-        at: at,
-        of: e
-    });
+    div.css(css);
 }
 
 function hideUndo () {
@@ -148,7 +140,7 @@ function showClassCards(id) {
         mode = 'some_selected';
         
         //undo button
-        createInputButton($(card_name), 'right top', 'right top', 'Undo', id, function ( event ) {
+        createInputButton($(card_name), {"margin-left":"70%", "margin-right": "auto", "left": "0", "right": "0"}, 'Undo', id, function ( event ) {
             removeConfirm();
             removeHighlight();
             removeConfirmChoices();
@@ -174,7 +166,7 @@ function showClassCards(id) {
             mode = 'all_selected';
             
             //confirm teh selection of all 3 cards...
-            createInputButton($('.card2'), 'center top', 'center bottom', 'Confirm Cards', 'confirm', function ( event ) {
+            createInputButton($('.card2'), {"bottom": "0", "left": "0", "right": "0", "margin-left":"30%","margin-right":"30%" }, 'Confirm Cards', 'confirm', function ( event ) {
                 rarity = 'none';
                 event.preventDefault();
                 event.stopPropagation();
@@ -199,14 +191,15 @@ function showClassCards(id) {
                     console.log("highlighting " + sel_card);
                     var star = createElement($(sel_card), 'highlight', {'font-size':'500%', 'color':'white', 'position':'absolute'});
                     star.text('*');
-                    star.position({my:'center center',at:'center top+15',of:$(sel_card)});
+                    star.css({"margin-left":"auto", "margin-right": "auto", "left": "0", "right": "0", "bottom": "0"});
                     
                     removeConfirm();
 
                     for(j = 0; j < selected.length; j++) {
                         var tmp_index = j + 1;
                         var tmp_card_name = ".card"+tmp_index;
-                        createInputButton($(tmp_card_name), 'center center', 'center center', 'I Picked This Card', j, function ( event ) {
+                        createInputButton($(tmp_card_name), {"margin-left":"auto", "margin-right": "auto", "left": "0", "right": "0",
+                                                             "margin-top":"auto", "margin-bottom": "auto", "top": "0", "bottom": "0", "width":"50%", "height":"55px"}, 'I Picked This Card', j, function ( event ) {
                             event.preventDefault();
                             event.stopPropagation();
                             var selindex = event.data.id;

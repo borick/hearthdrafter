@@ -23,6 +23,7 @@
   display: block;
   float: left;
   background-position: -32px -75px;
+  position: relative;
 }
 
 /* layout */
