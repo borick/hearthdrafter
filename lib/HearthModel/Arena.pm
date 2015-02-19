@@ -52,6 +52,7 @@ sub confirm_card_choice {
         my $t = localtime;
         $source->{end_date} = $t->strftime();
     }
+    print STDERR "Confirming choice card #" . ($next_index+1) . "\n";
     $self->es->index(
         index => 'hearthdrafter',
         type => 'arena_run',

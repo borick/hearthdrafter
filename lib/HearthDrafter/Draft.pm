@@ -27,12 +27,18 @@ sub arena_action {
 
 sub select_card {
     my $self = shift;
-    my $arena_id = $self->stash('arena_id');
-    my $run_details = $self->model->arena->continue_run($arena_id);
-    print STDERR 'Run details: ' . Dumper($run_details);
-    $self->stash(cards => $self->model->card->get_cards_by_class($run_details->{class_name}),
-                 card_number => $self->model->arena->get_next_index($run_details));
-    $self->render('draft/select_card');
+    my $run_details;
+    if (!eval { $run_details = $self->model->arena->continue_run($self->stash('arena_id')); }) {
+        $self->stash(message=>'No arena with that ID exists.');
+        return $self->redirect_to('/home');
+    } else {
+
+        my $cards = $self->model->card->get_cards_by_class($run_details->{class_name});
+        print STDERR 'Run details: ' . Dumper($run_details);
+        $self->stash(cards => $self->model->card->get_cards_by_class($run_details->{class_name}),
+                    card_number => $self->model->arena->get_next_index($run_details));
+        return $self->render('draft/select_card');
+    }
 }
 
 sub card_choice {

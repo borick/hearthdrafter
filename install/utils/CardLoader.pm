@@ -137,8 +137,7 @@ sub load_scores {
     
     for my $class_name (sort(keys(%score))) {
         my $ref = $score{$class_name};
-        for my $card_name (sort(keys(%$ref))) {
-            
+        for my $card_name (sort(keys(%$ref))) {            
             my $score = $ref->{$card_name};
             $max_score = $score if ($score > $max_score);
             $score_total += $score;

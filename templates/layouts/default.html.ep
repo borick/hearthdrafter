@@ -8,8 +8,11 @@
     <script src="/js/libs/jquery-ui.min.js"></script>
 </head>
 <body>
-
+<div class="content">
 <%= content %>
-
+</div>
+<div class="message">
+%= stash("message")
+</div>
 </body>
 </html>

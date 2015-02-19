@@ -133,7 +133,8 @@ function showClassCards(id) {
         event.preventDefault();
         event.stopPropagation();
         var element = $(this);                     
-        var text = element.text();//actual card name
+        var text = element.text();//actual card name        
+        console.log('card ' + text + " selected");
         selected[id] = text;
         rarity = card_rarity[text];
         console.log('rarity:'+rarity);        

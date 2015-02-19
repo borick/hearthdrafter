@@ -33,7 +33,8 @@ sub get_advice {
     #update the card choices we have
     $card_options->[$next_index] = {card_name   => $card_1,
                                     card_name_2 => $card_2,
-                                    card_name_3 => $card_3}; 
+                                    card_name_3 => $card_3};
+    print STDERR "Updating card selection for Card #".($next_index+1) . "\n";
     #reindex
     $self->es->index(
         index => 'hearthdrafter',
