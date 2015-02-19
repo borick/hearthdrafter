@@ -205,7 +205,7 @@ sub CardScanner::TagBuilder::create_custom_tags {
             } else {
                 $tags{$name}->{'survivability'} = 0.4;
             }
-            if (!exists($tags{$name}->{'has_taunt'}) && $text !~ /choose/ && $text !~ /summon/) {
+            if (($name eq 'sunfury protector') || (!exists($tags{$name}->{'has_taunt'}) && $text !~ /choose/ && $text !~ /summon/)) {
                 $tags{$name}->{'gives_taunt'} = 1.0;
                 $tags{$name}->{'gives_taunt'} = ['race:beast',  1.0] if ($name eq 'houndmaster');
             } else {

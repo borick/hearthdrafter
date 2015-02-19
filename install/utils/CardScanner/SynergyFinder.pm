@@ -5,7 +5,7 @@ use warnings;
 
 use Data::Dumper;
 use Graph::Simple;
-use Algorithm::Combinatorics qw(combinations);
+use Algorithm::Combinatorics qw(variations);
 
 sub _has_tag { return CardScanner::_has_tag(@_) }
 
@@ -30,7 +30,7 @@ sub find_synergies {
     my $debug = $CardScanner::debug;
     
     my @keys = sort(keys(%cards));
-    my $iter = combinations(\@keys, 2);
+    my $iter = variations(\@keys, 2);
     my $count = 0;
     
     while (my $c = $iter->next) {
@@ -63,9 +63,9 @@ sub find_synergies {
             
         }elsif (_has_tag($tags_x, 'buff', $card_y) && $type_y eq 'minion' && $cost_y <= MAX_MINION_SIZE_FOR_BUFF_SYNERGY) {            
             $g->add_edge($name_x, $name_y, (3.0/($cost_y+0.10)));
-            _update_reasons("$name_x|$name_y",'Buffs are ideal on smaller creatures.',\%reasons);
-            
+            _update_reasons("$name_x|$name_y",'Buffs are ideal on smaller creatures.',\%reasons);   
         }
+        
         # give taunt
         if (_has_tag($tags_x, 'gives_taunt', $card_y) && $name_y eq 'ancient watcher') {            
             $g->add_edge($name_x, $name_y, 1.00);
@@ -245,7 +245,7 @@ sub find_synergies {
             $g->add_edge($name_x, $name_y, 1.00);
             _update_reasons("$name_x|$name_y",'Lots of buffed minions!',\%reasons);
         }
-
+        
     }
     print "Finished > $count comparisons.\n" if $debug;
 

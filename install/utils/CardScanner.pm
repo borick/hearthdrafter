@@ -23,7 +23,9 @@ sub init {
     my (%data) = @_;
     $CardScanner::debug = $data{debug};
     %CardScanner::TagBuilder::cards =  %{$data{cards}};
+    $CardScanner::TagBuilder::debug = $data{debug};
     %CardScanner::SynergyFinder::cards =  %{$data{cards}};
+    $CardScanner::SynergyFinder::debug = $data{debug};
     $debug = $CardScanner::debug;
 }
 
