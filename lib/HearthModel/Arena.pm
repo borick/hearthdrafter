@@ -26,13 +26,13 @@ sub begin_arena {
 }
 
 sub get_card_number {
-    my ($self,$arena_id) = @_;
+    my ($self, $arena_id) = @_;
     my $source = $self->continue_run($arena_id);
     return $self->get_next_index($source);
 }
 
 sub get_next_index {
-    my ($self,$source) = @_;
+    my ($self,$source) = @_;    
     my $count = 0;
     for my $option (@{$source->{card_options}}) {
         last if !exists($option->{card_chosen});
@@ -42,14 +42,12 @@ sub get_next_index {
 }
 
 sub confirm_card_choice {
-    my ($self, $arena_id, $card_name) = @_;
-    
-    my $source = $self->continue_run($arena_id);    
+    my ($self, $card_name, $arena_id) = @_;
+    my $source = $self->continue_run($arena_id);
     my $next_index = $self->get_next_index($source);
     
     #TODO: add user validation
     $source->{card_options}->[$next_index]->{card_chosen} = $card_name;
-    
     if ($next_index >= 29) {
         my $t = localtime;
         $source->{end_date} = $t->strftime();

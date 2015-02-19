@@ -106,7 +106,7 @@ sub find_synergies {
             _update_reasons("$name_x|$name_y",'Use taunt to protect minions that can increase in stats over time.',\%reasons);
         }
         # alarm-o-bot, big drops
-        if (_has_tag($tags_x, 'drop_big', $card_y) && ($name_y eq 'alarm-o-bot')) {
+        if ((_has_tag($tags_x, 'drop_big', $card_y) || _has_tag($tags_x, 'drop_6', $card_y)) && ($name_y eq 'alarm-o-bot')) {
             $g->add_edge($name_x, $name_y, 1.00);
             _update_reasons("$name_x|$name_y",'Use alarm-o-bot to bring in big drops!',\%reasons);
         }

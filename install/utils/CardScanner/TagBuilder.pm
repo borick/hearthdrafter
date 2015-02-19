@@ -10,7 +10,7 @@ my %tags = ();
 
 my ($wchar, $hchar, $wpixels, $hpixels) = GetTerminalSize();
 
-use constant MAX_BIG_DROP                                 => 8;
+use constant MAX_BIG_DROP                                 => 7;
 use constant MIN_COST_MINION_GROWTH_TAG                   => 3;
 
 sub CardScanner::TagBuilder::create_custom_tags {
@@ -27,7 +27,7 @@ sub CardScanner::TagBuilder::create_custom_tags {
         my ($name, $text, $type, $cost, $race, $attack, $health, $blizz_tag_ref) = CardScanner::get_vars_from_card($card);
         $text =~ s/<b>//g;
         $text =~ s/<\/b>//g;
-        my $cost_tag = $cost > MAX_BIG_DROP ? 'big' : $cost;
+        my $cost_tag = $cost >= MAX_BIG_DROP ? 'big' : $cost;
         my $drop_tag = 'drop_' . $cost_tag;
         my %blizz_tags = %{$blizz_tag_ref};
         #AOE Damage/Board Clears.

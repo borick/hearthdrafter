@@ -14,11 +14,12 @@ use Time::Piece;
 use Data::Dumper;
 
 sub get_next_index {
-    return shift->c()->model->arena->get_next_index();
+    my ($self,$source) = @_;
+    return $self->c()->model->arena->get_next_index($source);
 }
 
 sub get_advice {
-    my ($self, $arena_id, $card_1, $card_2, $card_3) = @_;        
+    my ($self, $card_1, $card_2, $card_3, $arena_id) = @_;        
     
     my $max_score = 8500;
     
@@ -26,6 +27,7 @@ sub get_advice {
     my $source = $c->model->arena->continue_run($arena_id);
     print STDERR "Arena run: " . Dumper($source) . "\n";
     my $next_index = $self->get_next_index($source);
+    return undef if $next_index >= 30;
     my $out_data = {};
     my $card_options = $source->{card_options};
     #update the card choices we have

@@ -206,8 +206,13 @@ function showClassCards(id) {
                             console.log('selindex is: ' + selindex);
                             var url = "/draft/confirm_card_choice/"+selected[selindex]+'/'+arena_id;
                             $.get(url, function( data ) {
-                                removeConfirmChoices();
                                 card_number += 1;
+                                if (card_number >= 31) {
+                                    //TODO: finish arena visualization!
+                                    $('[class^="card"]').hide();
+                                    return;
+                                }
+                                removeConfirmChoices();
                                 updateNumber(card_number);
                                 initCardClicks();
                                 selected = [];

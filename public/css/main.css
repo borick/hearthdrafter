@@ -9,6 +9,10 @@
   margin-right: auto;
   width: 750px; /*card width*3*/
 }
+#card_number {
+  padding: 8px;
+  padding-right:14px;
+}
 #cards {
   text-align: center;
   clear: both;

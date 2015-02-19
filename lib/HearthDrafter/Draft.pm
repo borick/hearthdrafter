@@ -37,17 +37,17 @@ sub select_card {
 
 sub card_choice {
     my $self = shift;
-    my $result = $self->model->card_choice->get_advice($self->stash('arena_id'),
-                                                       $self->stash('card1'),
+    my $result = $self->model->card_choice->get_advice($self->stash('card1'),
                                                        $self->stash('card2'),
-                                                       $self->stash('card3'));
+                                                       $self->stash('card3'),
+                                                       $self->stash('arena_id'));
     $self->render(json => $result);
 }
 
 sub confirm_card_choice {
     my $self = shift;
-    my $result = $self->model->arena->confirm_card_choice($self->stash('arena_id'),
-                                                          $self->stash('card_name'));
+    my $result = $self->model->arena->confirm_card_choice($self->stash('card_name'),
+                                                          $self->stash('arena_id'));
     $self->render(json => $result);
 }
 
