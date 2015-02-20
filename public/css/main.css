@@ -128,5 +128,5 @@ input:focus {
 }
 /*always show scrollbars*/
 html {
-  overflow-y: scroll;
+  /*overflow-y: scroll;*/
 }

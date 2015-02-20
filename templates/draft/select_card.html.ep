@@ -1,5 +1,5 @@
 % layout 'default';
-<script src="/js/libs/list.min.js"></script>
+<script src="/js/libs/list.js"></script>
 <script src="/js/hearthdrafter.js"></script>
     
 <div id="top_bar">
@@ -36,7 +36,7 @@ var cards = [
 ];
 
 //preload the images!
-var images = ['http://wow.zamimg.com/images/hearthstone/cardbacks/original/Card_Back_Default.png'];
+var images = ['/images/card_backs/Card_Back_Gnome_Comp.png'];
 for (i = 0; i < cards.length; i++) {
     images.push(img + cards[i]['id'] + '.png');
 }

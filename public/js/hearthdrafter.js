@@ -5,19 +5,67 @@ var img = "/images/cards/";
 var card_back = '/images/card_backs/Card_Back_Gnome_Comp.png';
 var rarity = 'none';
 var number_element;
+var selected_index = 0;
 
 function updateNumber (newNumber) {
     $('#card_number').text( (newNumber+1) + '/30');
+}
+function highlightElement(index) {
+    for(i = 0;i < $($("li div")).length; i++) {
+        if (i == index) {
+            $($("li div")[i]).css({"opacity":0.6});
+        } else {
+            $($("li div")[i]).css({"opacity":1.0});
+        }
+    }
+}
+
+function getCurrentListLength() {
+    return $("li div").length;
 }
 
 $(document).ready(function() {
     console.log( "document loaded" );
     $(".search").hide();
     initCardClicks();
-    number_element = createElement($("#top_bar"), 'card_number',{"font-size":"200%","color":"white"});
+    number_element = createElement($("#top_bar"), 'card_number', {"font-size":"200%","color":"white"});
     number_element.css({"position":"absolute"});
     number_element.css({'top':'0', 'right':'0'});
     updateNumber(card_number);
+    /*keep the search focused, where we type card names*/
+    $(document).click(function(event) {
+        $(".search").focus();
+    });
+    //prevent backspace from taking you back.
+    $(document).keydown(function(e) {
+        if (e.which === 8 && !$(e.target).is("input, textarea")) {
+            e.preventDefault();
+        }
+    });
+    $(".search").keydown(function(e) {
+        switch(e.which) {
+            case 38: // up
+                selected_index -= 1;
+                if (selected_index < 0)
+                    selected_index = 0;
+                highlightElement(selected_index);
+                break;
+            case 40: // down
+                selected_index += 1;
+                if (selected_index >= getCurrentListLength()-1)
+                    selected_index = getCurrentListLength()-1;
+                highlightElement(selected_index);
+                break;
+            case 13: // enter
+                $($("li div")[selected_index]).click();
+                break;
+            default:
+                selected_index = 0;
+                highlightElement(selected_index);
+        }
+        console.log("index:"+selected_index);
+        //e.preventDefault();
+    });
 });
 
 function initCardClicks() {
@@ -121,7 +169,7 @@ function removeHighlight () {
 
 function showClassCards(id) {
     console.log("show class cards clicked"+id);
-    
+    selected_index = 0;
     var index = id + 1;
     var card_name = ".card"+index;
     var card_names = $('#cards');
@@ -129,6 +177,7 @@ function showClassCards(id) {
     $(card_name).append(card_names);
     rebuildList();
     $(".search").focus();
+    highlightElement(selected_index);
     
     //pick a card
     $(".name").button().click( function( event ) {
@@ -227,6 +276,4 @@ function showClassCards(id) {
             });
         }   
     });
-    $(".name").css({ width: '210px' });
-    $(".card*").css({ position: 'absolute' });
 }
