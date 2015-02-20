@@ -17,4 +17,3 @@ CardLoader::run();
 CardScanner::init(debug => $debug, cards => \%CardLoader::all_cards);
 CardScanner::load_synergies();
 print "Done.\n";
-

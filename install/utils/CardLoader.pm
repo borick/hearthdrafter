@@ -85,6 +85,7 @@ sub load_cards {
                         push (@mechs, { name => $mech });
                     }
                 }
+                #print $card->{'id'},"\n"; The cards we need to get images for :D
                 my %data = (
                     'name' => $card_name,
                     'id' => $card->{'id'},
@@ -97,7 +98,6 @@ sub load_cards {
                     'race' => $card->{'race'},
                     'mechanics' => \@mechs,
                 );
-                        
                 my $result = $bulk->index({
                     id => $card_name,
                     source  => \%data

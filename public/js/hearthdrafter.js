@@ -1,9 +1,8 @@
 var selected = [null, null, null];
 var userList = null;
 var dat = {};
-var img = "http://wow.zamimg.com/images/hearthstone/cards/enus/original/";
-var card_back = 'http://wow.zamimg.com/images/hearthstone/cardbacks/original/Card_Back_Default.png';
-var mode = 'none_selected';
+var img = "/images/cards/";
+var card_back = '/images/card_backs/Card_Back_Gnome_Comp.png';
 var rarity = 'none';
 var number_element;
 
@@ -125,20 +124,23 @@ function showClassCards(id) {
     
     var index = id + 1;
     var card_name = ".card"+index;
-    
+    var card_names = $('#cards');
+    card_names.css({"display": "block", "z-index":9999});
+    $(card_name).append(card_names);
     rebuildList();
+    $(".search").focus();
     
     //pick a card
     $(".name").button().click( function( event ) {
         event.preventDefault();
         event.stopPropagation();
+        card_names.css({"display": "none"});
         var element = $(this);                     
         var text = element.text();//actual card name        
         console.log('card ' + text + " selected");
         selected[id] = text;
         rarity = card_rarity[text];
-        console.log('rarity:'+rarity);        
-        mode = 'some_selected';
+        console.log('rarity:'+rarity);
         
         //undo button
         createInputButton($(card_name), {"margin-left":"70%", "margin-right": "auto", "left": "0", "right": "0"}, 'Undo', id, function ( event ) {
@@ -164,7 +166,6 @@ function showClassCards(id) {
         $(card_name).css('background-image', 'url('+bg_img+')' );
         $(card_name).off('click');
         if (selected[0] != null && selected[1] != null && selected[2] != null) {
-            mode = 'all_selected';
             
             //confirm teh selection of all 3 cards...
             createInputButton($('.card2'), {"bottom": "0", "left": "0", "right": "0", "margin-left":"30%","margin-right":"30%" }, 'Confirm Cards', 'confirm', function ( event ) {
