@@ -24,6 +24,7 @@ function createInputButton(e, css, name, id, callback){
     var button = div.button();
     button.click({id: id}, callback);
     div.css(css);
+    return button;
 }
 
 function createfunc(i) {
@@ -59,8 +60,10 @@ $(document).ready(function() {
     
     initCardClicks();
     //make card element to hold inner image
-    for(var i=0;i<3;i++) {
+    for(var i=0;i<3;i++) {        
         var ii = createElement($('.card'+(i+1)), 'inside_image', '');
+        var ic = createElement($('.card'+(i+1)), 'inside_cover', '');
+        //ii.css({'z-index':'-2'});
     }
     
     //misc layout
@@ -102,9 +105,8 @@ $(document).ready(function() {
                 selected_index = 0;
                 highlightElement(selected_index);
         }
-        console.log("index:"+selected_index);
-        //e.preventDefault();
     });
+    $("#top_bar").css({'visibility':'visible'}).hide().fadeIn('fast', function() {} );
 });
 
 function filterList() {
@@ -198,6 +200,8 @@ function layoutCardChosen (card_option, text, id) {
     
     card_option.css({'visibility':'hidden'});
     var child_element = card_option.find('#inside_image');
+    var cover_element = card_option.find('#inside_cover');
+    cover_element.css({'visibility':'visible'});
     child_element.addClass('cardselected');
     console.log('card ' + text + " selected");
     selected[id] = text;
@@ -221,9 +225,9 @@ function showClassCards(id) {
     rebuildList();
     $(".search").focus();
     highlightElement(selected_index);
-    
     //pick a card
     $(".name").button().click( function( event ) {
+        //card name selected
         event.preventDefault();
         event.stopPropagation();
         
@@ -232,7 +236,7 @@ function showClassCards(id) {
         var element = $(this);
         var child_element = layoutCardChosen(card_option, element.text(), id);
         //undo button
-        createInputButton(child_element, {"margin-left":"70%", "margin-right": "auto", "left": "0", "right": "0"}, 'Undo', id, function ( event ) {
+        var undoButton = createInputButton(card_option, {"margin-left":"70%", "margin-right": "auto", "left": "0", "right": "0"}, 'Undo', id, function ( event ) {
             $(this).remove();
             removeConfirm();
             removeHighlight();
@@ -240,7 +244,7 @@ function showClassCards(id) {
             undoCardChoice(id);
             event.stopPropagation();
         });
-        
+        undoButton.css({'visibility': 'visible', 'z-index': '1', 'position': 'absolute'});
         userList.clear();
         $(".search").hide();
 
