@@ -33,8 +33,11 @@ function createfunc(i) {
 
 function initCardClicks() {
     for(var i=0;i<3;i++) {
-        $('.card'+(i+1)).css('background-image', 'url('+card_back+')' );
-        $('.card'+(i+1)).click(createfunc(i));
+        var ele = $('.card'+(i+1));
+        ele.click(createfunc(i));
+        ele.html('');
+        $('<p>Click here to select a card.</p>').appendTo(ele);
+        $('<img src="'+card_back+'">').appendTo(ele);
     }
 }
 
@@ -59,13 +62,6 @@ $(document).ready(function() {
     console.log( "document loaded" );
     
     initCardClicks();
-    //make card element to hold inner image
-    for(var i=0;i<3;i++) {        
-        var ii = createElement($('.card'+(i+1)), 'inside_image', '');
-        var ic = createElement($('.card'+(i+1)), 'inside_cover', '');
-        //ii.css({'z-index':'-2'});
-    }
-    
     //misc layout
     $(".search").hide();
     //card # element positioning
@@ -151,6 +147,7 @@ function rebuildList () {
         item: '<li><div class="name"></div></li>'
     };
     userList = new List('cards', options, cards);
+    console.log(userList);
     filterList();
     userList.page = 1000;
     userList.sort('name');
@@ -181,36 +178,32 @@ function getCardElement (id) {
 }
 
 function undoCardChoice (id) {
+    removeConfirm();
+    removeHighlight();
+    removeConfirmChoices();
     var card_option = getCardElement(id);
-    var card_child = card_option.find('#inside_image');
     selected[id] = null;
     if(selected[0]==null&&selected[1]==null&&selected[2]==null) {
         rarity='none';
     }
-    //card_option.css('background-image', 'url('+card_back+')' );
-    card_option.click(function() {
-        showClassCards(id);
-    });
-    card_option.css({'visibility':'visible'});
-    card_child.attr('style', 'display: none');
-    card_option.removeClass('cardselected');
+    initCardClicks();
 }
 
 function layoutCardChosen (card_option, text, id) {
     
-    card_option.css({'visibility':'hidden'});
-    var child_element = card_option.find('#inside_image');
-    var cover_element = card_option.find('#inside_cover');
-    cover_element.css({'visibility':'visible'});
-    child_element.addClass('cardselected');
     console.log('card ' + text + " selected");
     selected[id] = text;
     rarity = card_rarity[text];
+    console.log(card_ids);
     var bg_img = img + card_ids[text] + '.png';
-    child_element.attr('style', 'display: block');
-    child_element.css('background-image', 'url('+bg_img+')' );
+    
+    card_option.html('');
+    $('<p>'+text+' selected.</p>').appendTo(card_option);
+    $('<img src="'+bg_img+'">').appendTo(card_option);
+        
     card_option.off('click');
-    return child_element;
+    //card_option.text(text + ' selected.');
+    return card_option;
     
 }
 
@@ -221,7 +214,7 @@ function showClassCards(id) {
     var card_option = getCardElement(id);
     var card_names = $('#cards');
     card_names.css({"display": "block", "z-index":9999});
-    card_option.append(card_names);
+    card_option.append(card_names); //move the list inside the card...
     rebuildList();
     $(".search").focus();
     highlightElement(selected_index);
@@ -234,20 +227,17 @@ function showClassCards(id) {
         card_names.css({"display": "none"});
         
         var element = $(this);
-        var child_element = layoutCardChosen(card_option, element.text(), id);
+        layoutCardChosen(card_option, element.text(), id);
         //undo button
         var undoButton = createInputButton(card_option, {"margin-left":"70%", "margin-right": "auto", "left": "0", "right": "0"}, 'Undo', id, function ( event ) {
             $(this).remove();
-            removeConfirm();
-            removeHighlight();
-            removeConfirmChoices();
             undoCardChoice(id);
             event.stopPropagation();
         });
         undoButton.css({'visibility': 'visible', 'z-index': '1', 'position': 'absolute'});
         userList.clear();
         $(".search").hide();
-
+        $('body').append(card_names);//move the list back out lest we destory it
         if (selected[0] != null && selected[1] != null && selected[2] != null) {
             
             //confirm teh selection of all 3 cards...

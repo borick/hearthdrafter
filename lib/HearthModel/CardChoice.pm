@@ -21,6 +21,7 @@ sub get_next_index {
 sub get_advice {
     my ($self, $card_1, $card_2, $card_3, $arena_id) = @_;        
     
+    ($card_1,$card_2,$card_3) = (lc($card_1),lc($card_2),lc($card_3));
     my $max_score = 8500;
     
     my $c = $self->c();

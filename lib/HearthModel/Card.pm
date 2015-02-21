@@ -27,6 +27,9 @@ sub get_cards_by_class {
 
     my @data = @{$results->{hits}->{hits}};
     @data = map { $_->{_source} } @data;
+    for my $datum (@data) {
+        $datum->{name} =~ s/([\w']+)/\u\L$1/g; #title case
+    }
     return \@data;
 }
 
