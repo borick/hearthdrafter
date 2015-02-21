@@ -80,7 +80,7 @@ sub get_advice {
         my $synergies_tmp = $self->es->search(
             index => 'hearthdrafter',
             type => 'card_synergy',
-            size => 5000, #greater than max, hopefully
+            size => 9999,
             body => {
                 query => {
                     filtered => {

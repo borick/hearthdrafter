@@ -1,11 +1,41 @@
 var selected = [null, null, null];
 var userList = null;
 var dat = {};
-var img = "/images/cards/";
-var card_back = '/images/card_backs/Card_Back_Gnome_Comp.png';
+var img = "/images/cards_medium/";
+var card_back = '/images/card_backs/original/Card_Back_Legend.png';
 var rarity = 'none';
 var number_element;
 var selected_index = 0;
+
+function createElement(e, name, css) {
+    div = $("<div/>");
+    div.attr({id: name});
+    div.css(css);
+    e.append(div);
+    return div;
+}
+    
+function createInputButton(e, css, name, id, callback){   
+    div = $("<div/>");
+    div.attr({id: name, class: name});
+    div.css({"position":"absolute"});
+    div.html(name);
+    e.append(div);
+    var button = div.button();
+    button.click({id: id}, callback);
+    div.css(css);
+}
+
+function createfunc(i) {
+    return function() { showClassCards(i); };
+}
+
+function initCardClicks() {
+    for(var i=0;i<3;i++) {
+        $('.card'+(i+1)).css('background-image', 'url('+card_back+')' );
+        $('.card'+(i+1)).click(createfunc(i));
+    }
+}
 
 function updateNumber (newNumber) {
     $('#card_number').text( (newNumber+1) + '/30');
@@ -24,15 +54,24 @@ function getCurrentListLength() {
     return $("li div").length;
 }
 
-$(document).ready(function() {
+$(document).ready(function() {    
     console.log( "document loaded" );
-    $(".search").hide();
+    
     initCardClicks();
-    number_element = createElement($("#top_bar"), 'card_number', {"font-size":"200%","color":"white"});
+    //make card element to hold inner image
+    for(var i=0;i<3;i++) {
+        var ii = createElement($('.card'+(i+1)), 'inside_image', '');
+    }
+    
+    //misc layout
+    $(".search").hide();
+    //card # element positioning
+    number_element = createElement($("#top_bar"), 'card_number', {"font-size":"200%"});
     number_element.css({"position":"absolute"});
     number_element.css({'top':'0', 'right':'0'});
     updateNumber(card_number);
-    /*keep the search focused, where we type card names*/
+    
+    //keep the search focused, where we type card names
     $(document).click(function(event) {
         $(".search").focus();
     });
@@ -67,21 +106,6 @@ $(document).ready(function() {
         //e.preventDefault();
     });
 });
-
-function initCardClicks() {
-    $('.card1').css('background-image', 'url('+card_back+')' );
-    $('.card1').click(function() {
-        showClassCards(0);
-    });
-    $('.card2').css('background-image', 'url('+card_back+')' );
-    $('.card2').click(function() {
-        showClassCards(1);
-    });
-    $('.card3').css('background-image', 'url('+card_back+')' );
-    $('.card3').click(function() {
-        showClassCards(2);
-    });
-}
 
 function filterList() {
     console.log("inside filter list");
@@ -132,25 +156,6 @@ function rebuildList () {
     $(".search").show().focus();
 }
 
-function createElement(e, name, css) {
-    div = $("<div/>");
-    div.attr({id: name});
-    div.css(css);
-    e.append(div);
-    return div;
-}
-    
-function createInputButton(e, css, name, id, callback){   
-    div = $("<div/>");
-    div.attr({id: name, class: name});
-    div.css({"position":"absolute"});
-    div.html(name);
-    e.append(div);
-    var button = div.button();
-    button.click({id: id}, callback);
-    div.css(css);
-}
-
 function hideUndo () {
     $('.Undo').hide();
 }
@@ -167,14 +172,52 @@ function removeHighlight () {
     $('div#highlight').hide();
 }
 
+function getCardElement (id) {
+    console.log('getCardElement(' + id +')');
+    var card_name = ".card"+(id+1);
+    return $(card_name);
+}
+
+function undoCardChoice (id) {
+    var card_option = getCardElement(id);
+    var card_child = card_option.find('#inside_image');
+    selected[id] = null;
+    if(selected[0]==null&&selected[1]==null&&selected[2]==null) {
+        rarity='none';
+    }
+    //card_option.css('background-image', 'url('+card_back+')' );
+    card_option.click(function() {
+        showClassCards(id);
+    });
+    card_option.css({'visibility':'visible'});
+    card_child.attr('style', 'display: none');
+    card_option.removeClass('cardselected');
+}
+
+function layoutCardChosen (card_option, text, id) {
+    
+    card_option.css({'visibility':'hidden'});
+    var child_element = card_option.find('#inside_image');
+    child_element.addClass('cardselected');
+    console.log('card ' + text + " selected");
+    selected[id] = text;
+    rarity = card_rarity[text];
+    var bg_img = img + card_ids[text] + '.png';
+    child_element.attr('style', 'display: block');
+    child_element.css('background-image', 'url('+bg_img+')' );
+    card_option.off('click');
+    return child_element;
+    
+}
+
 function showClassCards(id) {
     console.log("show class cards clicked"+id);
     selected_index = 0;
-    var index = id + 1;
-    var card_name = ".card"+index;
+    
+    var card_option = getCardElement(id);
     var card_names = $('#cards');
     card_names.css({"display": "block", "z-index":9999});
-    $(card_name).append(card_names);
+    card_option.append(card_names);
     rebuildList();
     $(".search").focus();
     highlightElement(selected_index);
@@ -183,37 +226,24 @@ function showClassCards(id) {
     $(".name").button().click( function( event ) {
         event.preventDefault();
         event.stopPropagation();
-        card_names.css({"display": "none"});
-        var element = $(this);                     
-        var text = element.text();//actual card name        
-        console.log('card ' + text + " selected");
-        selected[id] = text;
-        rarity = card_rarity[text];
-        console.log('rarity:'+rarity);
         
+        card_names.css({"display": "none"});
+        
+        var element = $(this);
+        var child_element = layoutCardChosen(card_option, element.text(), id);
         //undo button
-        createInputButton($(card_name), {"margin-left":"70%", "margin-right": "auto", "left": "0", "right": "0"}, 'Undo', id, function ( event ) {
+        createInputButton(child_element, {"margin-left":"70%", "margin-right": "auto", "left": "0", "right": "0"}, 'Undo', id, function ( event ) {
+            $(this).remove();
             removeConfirm();
             removeHighlight();
             removeConfirmChoices();
+            undoCardChoice(id);
             event.stopPropagation();
-            $(this).remove();
-            
-            selected[id] = null;
-            if(selected[0]==null&&selected[1]==null&&selected[2]==null) {
-                rarity='none';
-            }
-            $(card_name).css('background-image', 'url('+card_back+')' );
-            $(card_name).click(function() {
-                showClassCards(id);
-            });
         });
         
         userList.clear();
         $(".search").hide();
-        var bg_img = img + card_ids[text] + '.png';
-        $(card_name).css('background-image', 'url('+bg_img+')' );
-        $(card_name).off('click');
+
         if (selected[0] != null && selected[1] != null && selected[2] != null) {
             
             //confirm teh selection of all 3 cards...

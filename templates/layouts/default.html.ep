@@ -8,6 +8,9 @@
     <script src="/js/libs/jquery-ui.min.js"></script>
 </head>
 <body>
+<!--<div class="header">
+<b>hearthdrafter.com.</b>
+</div>-->
 <div class="content">
 <%= content %>
 </div>
