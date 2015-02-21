@@ -27,32 +27,11 @@
   float: left;
   color: white;
 }
-#inside_cover {
-  z-index: -1;
-  height: 100%;
-  width: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-  background-image:
-  visibility: hidden;
-}
-#inside_image {
-  z-index: -2;
-  height: 100%;
-  width: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-  visibility: hidden;
-}
-.cardselected {
-  background-repeat: no-repeat;
-  height: 100%;
-  visibility: visible !important;
-}
 .card1, .card2, .card3 {
-  background-repeat: no-repeat;
+  border: 0px;
+  border-right: 2px;
+  border-color: black;
+  border-style: solid;
   width:250px;
   height:100%;
   display: block;

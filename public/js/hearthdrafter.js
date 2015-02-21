@@ -16,9 +16,8 @@ function createElement(e, name, css) {
 }
     
 function createInputButton(e, css, name, id, callback){   
-    div = $("<div/>");
+    div = $("<br><div/>");
     div.attr({id: name, class: name});
-    div.css({"position":"absolute"});
     div.html(name);
     e.append(div);
     var button = div.button();
@@ -31,13 +30,42 @@ function createfunc(i) {
     return function() { showClassCards(i); };
 }
 
+function rebindKeys() {
+    $(".search").off("keydown");
+    $(".search").keydown(function(e) {
+        //console.log('test');
+        switch(e.which) {
+            case 38: // up
+                selected_index -= 1;
+                if (selected_index < 0)
+                    selected_index = 0;
+                highlightElement(selected_index);
+                break;
+            case 40: // down
+                selected_index += 1;
+                if (selected_index >= getCurrentListLength()-1)
+                    selected_index = getCurrentListLength()-1;
+                highlightElement(selected_index);
+                break;
+            case 13: // enter
+                $($("li div")[selected_index]).click();
+                break;
+            default:
+                selected_index = 0;
+                highlightElement(selected_index);
+        }
+    });
+}
+function initCardClick(i) {
+    var ele = $('.card'+(i+1));
+    ele.click(createfunc(i));
+    ele.html('');
+    $('<p>Click here to select a card.</p>').appendTo(ele);
+    $('<img src="'+card_back+'">').appendTo(ele);
+}
 function initCardClicks() {
     for(var i=0;i<3;i++) {
-        var ele = $('.card'+(i+1));
-        ele.click(createfunc(i));
-        ele.html('');
-        $('<p>Click here to select a card.</p>').appendTo(ele);
-        $('<img src="'+card_back+'">').appendTo(ele);
+        initCardClick(i);
     }
 }
 
@@ -62,6 +90,7 @@ $(document).ready(function() {
     console.log( "document loaded" );
     
     initCardClicks();
+    rebindKeys();
     //misc layout
     $(".search").hide();
     //card # element positioning
@@ -73,33 +102,12 @@ $(document).ready(function() {
     //keep the search focused, where we type card names
     $(document).click(function(event) {
         $(".search").focus();
+        rebindKeys();
     });
     //prevent backspace from taking you back.
     $(document).keydown(function(e) {
         if (e.which === 8 && !$(e.target).is("input, textarea")) {
             e.preventDefault();
-        }
-    });
-    $(".search").keydown(function(e) {
-        switch(e.which) {
-            case 38: // up
-                selected_index -= 1;
-                if (selected_index < 0)
-                    selected_index = 0;
-                highlightElement(selected_index);
-                break;
-            case 40: // down
-                selected_index += 1;
-                if (selected_index >= getCurrentListLength()-1)
-                    selected_index = getCurrentListLength()-1;
-                highlightElement(selected_index);
-                break;
-            case 13: // enter
-                $($("li div")[selected_index]).click();
-                break;
-            default:
-                selected_index = 0;
-                highlightElement(selected_index);
         }
     });
     $("#top_bar").css({'visibility':'visible'}).hide().fadeIn('fast', function() {} );
@@ -153,6 +161,7 @@ function rebuildList () {
     userList.sort('name');
     $(".search").val('');
     $(".search").show().focus();
+    rebindKeys();
 }
 
 function hideUndo () {
@@ -186,7 +195,7 @@ function undoCardChoice (id) {
     if(selected[0]==null&&selected[1]==null&&selected[2]==null) {
         rarity='none';
     }
-    initCardClicks();
+    initCardClick(id);
 }
 
 function layoutCardChosen (card_option, text, id) {
@@ -229,19 +238,18 @@ function showClassCards(id) {
         var element = $(this);
         layoutCardChosen(card_option, element.text(), id);
         //undo button
-        var undoButton = createInputButton(card_option, {"margin-left":"70%", "margin-right": "auto", "left": "0", "right": "0"}, 'Undo', id, function ( event ) {
+        var undoButton = createInputButton(card_option, {}, 'Undo', id, function ( event ) {
             $(this).remove();
             undoCardChoice(id);
             event.stopPropagation();
         });
-        undoButton.css({'visibility': 'visible', 'z-index': '1', 'position': 'absolute'});
         userList.clear();
         $(".search").hide();
         $('body').append(card_names);//move the list back out lest we destory it
         if (selected[0] != null && selected[1] != null && selected[2] != null) {
             
             //confirm teh selection of all 3 cards...
-            createInputButton($('.card2'), {"bottom": "0", "left": "0", "right": "0", "margin-left":"30%","margin-right":"30%" }, 'Confirm Cards', 'confirm', function ( event ) {
+            createInputButton($('.card2'), {}, 'Confirm Cards', 'confirm', function ( event ) {
                 rarity = 'none';
                 event.preventDefault();
                 event.stopPropagation();
@@ -251,30 +259,11 @@ function showClassCards(id) {
                 console.log('getting url: ' + url);
                 //get data
                 $.get(url, function( data ) {
-                    console.dirxml(data);
-                    var n = 0;
-                    var m = -100;
-                    for(j = 0; j < selected.length; j++) {
-                        var score = data['scores'][selected[j]];
-                        if (score > m) {
-                            n = j;
-                            m = score;
-                        }
-                    }
-                    //highlight best score card with star
-                    var sel_card = '.card' + (n+1);
-                    console.log("highlighting " + sel_card);
-                    var star = createElement($(sel_card), 'highlight', {'font-size':'500%', 'color':'white', 'position':'absolute'});
-                    star.text('*');
-                    star.css({"margin-left":"auto", "margin-right": "auto", "left": "0", "right": "0", "bottom": "0"});
                     
-                    removeConfirm();
-
                     for(j = 0; j < selected.length; j++) {
                         var tmp_index = j + 1;
                         var tmp_card_name = ".card"+tmp_index;
-                        createInputButton($(tmp_card_name), {"margin-left":"auto", "margin-right": "auto", "left": "0", "right": "0",
-                                                             "margin-top":"auto", "margin-bottom": "auto", "top": "0", "bottom": "0", "width":"50%", "height":"55px"}, 'I Picked This Card', j, function ( event ) {
+                        createInputButton($(tmp_card_name), {}, 'I Picked This Card', j, function ( event ) {
                             event.preventDefault();
                             event.stopPropagation();
                             var selindex = event.data.id;
@@ -295,7 +284,24 @@ function showClassCards(id) {
                                 removeHighlight();
                             });
                         });
-                    }                
+                    }
+
+                    var n = 0;
+                    var m = -100;
+                    for(j = 0; j < selected.length; j++) {
+                        var score = data['scores'][selected[j]];
+                        if (score > m) {
+                            n = j;
+                            m = score;
+                        }
+                    }
+                    
+                    //highlight best score card 
+                    var sel_card = '.card' + (n+1);
+                    var highlight = createElement($(sel_card), 'highlight', {});
+                    highlight.text('We recommend you pick this card.');
+                    removeConfirm();
+                    
                 });
             });
         }   
