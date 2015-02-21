@@ -1,8 +1,8 @@
 var selected = [null, null, null];
 var userList = null;
 var dat = {};
-var img = "/images/cards_medium/";
-var card_back = '/images/card_backs/original/Card_Back_Legend.png';
+var img = "/images/cards_small/";
+var card_back = '/images/card_backs/small/Card_Back_Legend.png';
 var rarity = 'none';
 var number_element;
 var selected_index = 0;
