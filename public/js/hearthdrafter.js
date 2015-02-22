@@ -15,7 +15,8 @@ function createElement(e, name, css) {
     return div;
 }
     
-function createInputButton(e, css, name, id, callback){   
+function createInputButton(e, css, name, id, callback){
+
     div = $("<br><div/>");
     div.attr({id: name, class: name});
     div.html(name);
@@ -61,7 +62,7 @@ function initCardClick(i) {
     ele.click(createfunc(i));
     ele.html('');
     $('<p>Click here to select a card.</p>').appendTo(ele);
-    $('<img src="'+card_back+'">').appendTo(ele);
+    makeCardElement(card_back).appendTo(ele);
 }
 function initCardClicks() {
     for(var i=0;i<3;i++) {
@@ -87,7 +88,6 @@ function getCurrentListLength() {
 }
 
 $(document).ready(function() {    
-    console.log( "document loaded" );
     
     initCardClicks();
     rebindKeys();
@@ -114,9 +114,7 @@ $(document).ready(function() {
 });
 
 function filterList() {
-    console.log("inside filter list");
     if (rarity == 'none') {
-        console.log('doing nothing');
         return;
     }
     var newItems = [];
@@ -155,7 +153,6 @@ function rebuildList () {
         item: '<li><div class="name"></div></li>'
     };
     userList = new List('cards', options, cards);
-    console.log(userList);
     filterList();
     userList.page = 1000;
     userList.sort('name');
@@ -181,7 +178,6 @@ function removeHighlight () {
 }
 
 function getCardElement (id) {
-    console.log('getCardElement(' + id +')');
     var card_name = ".card"+(id+1);
     return $(card_name);
 }
@@ -198,17 +194,19 @@ function undoCardChoice (id) {
     initCardClick(id);
 }
 
+function makeCardElement (img) {
+    return $('<center><img src="'+img+'"></center>');
+}
+
 function layoutCardChosen (card_option, text, id) {
-    
     console.log('card ' + text + " selected");
     selected[id] = text;
     rarity = card_rarity[text];
-    console.log(card_ids);
     var bg_img = img + card_ids[text] + '.png';
     
     card_option.html('');
-    $('<p>'+text+' selected.</p>').appendTo(card_option);
-    $('<img src="'+bg_img+'">').appendTo(card_option);
+    $('<p><b>'+text+'</b> selected.</p>').appendTo(card_option);
+    makeCardElement(bg_img).appendTo(card_option);
         
     card_option.off('click');
     //card_option.text(text + ' selected.');
@@ -217,7 +215,6 @@ function layoutCardChosen (card_option, text, id) {
 }
 
 function showClassCards(id) {
-    console.log("show class cards clicked"+id);
     selected_index = 0;
     
     var card_option = getCardElement(id);
@@ -259,6 +256,8 @@ function showClassCards(id) {
                 console.log('getting url: ' + url);
                 //get data
                 $.get(url, function( data ) {
+                    //GOT DATA!!!!!
+                    console.log(data);
                     
                     for(j = 0; j < selected.length; j++) {
                         var tmp_index = j + 1;
@@ -267,11 +266,14 @@ function showClassCards(id) {
                             event.preventDefault();
                             event.stopPropagation();
                             var selindex = event.data.id;
-                            console.log('selindex is: ' + selindex);
                             var url = "/draft/confirm_card_choice/"+selected[selindex]+'/'+arena_id;
                             $.get(url, function( data ) {
+                                
+                                //GOT MORE DATA!!!
+                                console.log(data);
                                 card_number += 1;
                                 if (card_number >= 31) {
+                                    
                                     //TODO: finish arena visualization!
                                     $('[class^="card"]').hide();
                                     return;
@@ -289,6 +291,7 @@ function showClassCards(id) {
                     var n = 0;
                     var m = -100;
                     for(j = 0; j < selected.length; j++) {
+                        console.log(selected[j]);
                         var score = data['scores'][selected[j]];
                         if (score > m) {
                             n = j;
@@ -298,8 +301,7 @@ function showClassCards(id) {
                     
                     //highlight best score card 
                     var sel_card = '.card' + (n+1);
-                    var highlight = createElement($(sel_card), 'highlight', {});
-                    highlight.text('We recommend you pick this card.');
+                    //var highlight = createElement($(sel_card), 'highlight', {});
                     removeConfirm();
                     
                 });

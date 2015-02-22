@@ -24,7 +24,8 @@ sub load_synergies {
         my @values = split(/[|]/, $key);
         die 'error, keys should contain "|"' if @values < 2;
         my $reason = $reasons->{$key};
-        
+        $values[0] =~ s/([\w']+)/\u\L$1/g;
+        $values[1] =~ s/([\w']+)/\u\L$1/g;
         $bulk->index({
             id => $values[0].'|'.$values[1],
             source => {

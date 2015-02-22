@@ -1,7 +1,8 @@
 % layout 'default';
 <script src="/js/libs/list.js"></script>
 <script src="/js/hearthdrafter.js"></script>
-    
+<script src="/js/libs/turnjs4/turn.js"></script>
+
 <div id="top_bar">
     <div id="selection">
     <div class="card1"></div>

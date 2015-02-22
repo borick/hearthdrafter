@@ -28,6 +28,7 @@
   color: white;
 }
 .card1, .card2, .card3 {
+  overflow-y: scroll;
   border: 0px;
   border-right: 2px;
   border-color: black;
@@ -37,7 +38,6 @@
   display: block;
   float: left;
   position: relative;
-  overflow: auto;
 }
 
 /* other */
@@ -87,7 +87,6 @@ input:focus {
 
 /*always show scrollbars*/
 html,body {
-  /*overflow-y: scroll;*/
   height: 100%;
   font-family: arial;
   margin: 0px;

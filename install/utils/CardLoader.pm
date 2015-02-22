@@ -75,7 +75,8 @@ sub load_cards {
                 
                 my $playerclass = exists($card->{'playerClass'}) ? lc($card->{'playerClass'}) : 'neutral';
                 my $mechanics = $card->{'mechanics'};
-                my $card_name = lc($card->{'name'});
+                my $card_name = $card->{'name'};
+                $card_name =~ s/([\w']+)/\u\L$1/g;
                 my @mech = ();
                 my @mechs = ();
                 if (defined($mechanics) && scalar(@$mechanics) > 0) {
@@ -129,7 +130,7 @@ sub load_scores {
             for my $result (@{$data->{results}}) {
                 print Dumper($result) if $debug >= 4;
                 my $dat = $result->{card};
-                $dat->{name} = lc($dat->{name});
+                $dat->{name} = $dat->{name};
                 $score{$class_name}->{$dat->{name}} = int($dat->{score}*100);
             }
         }

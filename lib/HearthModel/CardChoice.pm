@@ -21,7 +21,6 @@ sub get_next_index {
 sub get_advice {
     my ($self, $card_1, $card_2, $card_3, $arena_id) = @_;        
     
-    ($card_1,$card_2,$card_3) = (lc($card_1),lc($card_2),lc($card_3));
     my $max_score = 8500;
     
     my $c = $self->c();
@@ -97,13 +96,17 @@ sub get_advice {
                 },
             },
         );
-        $synergies{$card} = $synergies_tmp;
+        $synergies{$card} = [];
+        for my $synergy (@{$synergies_tmp->{hits}->{hits}}) {
+            $synergy = $synergy->{_source};
+            delete($synergy->{card_name_2}); 
+            push($synergies{$card}, $synergy);
+        }
     }
-    
-    print 'Synergies' . Dumper(\%synergies);
-    
+    $out_data->{synergy} = \%synergies;
     #mana curve
     #diminishing returns on cards
+    #other?
     return $out_data;
     
 }
