@@ -17,9 +17,20 @@
                 }
             }
         },
+        "card_tag" : {
+            "properties" : {
+                "card_name" : {"type" : "string", "index": "not_analyzed"},
+                "tag" : {
+                    "properties" : {
+                        "name" :   {"type" : "string", "index": "not_analyzed"},
+                        "weight" : {"type" : "float",  "index": "not_analyzed"}
+                    }
+                }
+            }
+        },
         "card_score_by_class" : {
             "properties" : {
-                "card_name" : {"type" : "string", "index": "not_analyzed", "analyzer": "keyword"},
+                "card_name" : {"type" : "string", "index": "not_analyzed"},
                 "class_name" : {"type" : "string", "index": "not_analyzed"},
                 "score" : {"type" : "integer"}
             }
@@ -28,7 +39,8 @@
             "properties" : {
                 "card_name" : {"type" : "string", "index": "not_analyzed"},
                 "card_name_2" : {"type" : "string", "index": "not_analyzed"},
-                "reason" : {"type" : "string"}
+                "reason" : {"type" : "string"},
+                "weight" : {"type" : "float"}
             }
         },
         "user" : {

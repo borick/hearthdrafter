@@ -15,5 +15,6 @@ print "Running...\n";
 CardLoader::init(debug => $debug);
 CardLoader::run();
 CardScanner::init(debug => $debug, cards => \%CardLoader::all_cards);
+CardScanner::load_tags();
 CardScanner::load_synergies();
 print "Done.\n";

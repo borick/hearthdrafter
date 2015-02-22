@@ -6,6 +6,7 @@ var card_back = '/images/card_backs/small/Card_Back_Legend.png';
 var rarity = 'none';
 var number_element;
 var selected_index = 0;
+var name_to_id = [];
 
 function createElement(e, name, css) {
     div = $("<div/>");
@@ -63,26 +64,7 @@ function rebindKeys() {
     });
 }
 
-function makeOdometer(id) {
-    id = id + 1;
-    var new_ele = $('<div class="odometer card_'+id+'_meter">0</div>');
-    od = new Odometer({
-      el: new_ele.get(0),
-      value: 0,
-      format: '',
-      theme: 'minimal',
-    });
-    return new_ele;
-    
-}
-function updateOdometer(id,value) {
-    var card_name = '.card_'+(id+1)+'_meter';
-    console.log('updating odo with ' + card_name);
-    var odo = $(card_name);
-    odo.show();
-    odo.text(0);
-    odo.text(parseInt(value*10000));
-}
+
 function initCardClick(i) {
     var ele = $('.card'+(i+1));
     ele.click(createfunc(i));
@@ -210,6 +192,49 @@ function removeSynergies () {
     }
 }
 
+function buildScoreUI (data) {
+    for (c=0;c<3;c++) {
+        var tmp = $('<span id="odo"><br><b>Card value score is: </b></span>');
+        tmp.appendTo(getCardElement(c));
+        makeOdometer(c).hide().appendTo(tmp);
+    }
+    var n = 0;
+    var m = -100;
+    var synergies;
+    var card_pane;
+    for(j = 0; j < selected.length; j++) {
+        console.log(selected[j]);
+        name_to_id[selected[j]] = j;
+        var score = data['scores'][selected[j]];
+        if (score > m) {
+            n = j;
+            m = score;
+        }
+        updateOdometer(j, score);
+    }
+                    
+}
+function makeOdometer(id) {
+    id = id + 1;
+    var new_ele = $('<div class="odometer card_'+id+'_meter">0</div>');
+    od = new Odometer({
+      el: new_ele.get(0),
+      value: 0,
+      format: '',
+      theme: 'minimal',
+    });
+    return new_ele;
+    
+}
+function updateOdometer(id,value) {
+    var card_name = '.card_'+(id+1)+'_meter';
+    console.log('updating odo with ' + card_name);
+    var odo = $(card_name);
+    odo.show();
+    odo.text(0);
+    odo.text(parseInt(value*10000));
+}
+
 function removeOdo () {
     $("#odo").remove();
     $("#odo").remove();
@@ -260,6 +285,61 @@ function layoutCardChosen (card_option, text, id) {
     
 }
 
+function buildConfirmChoices() {
+    //make "picked this card" buttons
+    for(j = 0; j < selected.length; j++) {
+        var tmp_index = j + 1;
+        var tmp_card_name = ".card"+tmp_index;
+        var ipicked = createInputButton($(tmp_card_name), {}, 'I Picked This Card', j, function ( event ) {
+            event.preventDefault();
+            event.stopPropagation();
+            var selindex = event.data.id;
+            var url = "/draft/confirm_card_choice/"+selected[selindex]+'/'+arena_id;
+            $.get(url, function( data ) {
+                //GOT MORE DATA!!!
+                console.log(data);
+                card_number += 1;
+                if (card_number >= 31) {
+                    //TODO: finish arena visualization!
+                    $('[class^="card"]').hide();
+                    return;
+                }
+                removeConfirmChoices();
+                updateNumber(card_number);
+                initCardClicks();
+                selected = [];
+                hideUndo();
+                removeHighlight();
+            });
+        });
+    }
+}
+
+function buildSynergyUI(data) {
+    for(myvar in data['synergy']) {
+        synergies = createSynergiesDiv(name_to_id[myvar]);
+        var syn_found = 0;
+        for (syn in data['synergy'][myvar]) {
+            var sync = data['synergy'][myvar][syn]['card_name'];
+            var reason = data['synergy'][myvar][syn]['reason'];
+            var tmp_div = $('<div class="item"></div>');
+            tmp_div.appendTo(synergies.find('[id^="synergies"]'));
+            var ce = makeCardElement(getCardFile(sync));
+            ce.appendTo(tmp_div);
+            ce.prop('title', reason);
+            syn_found = 1;
+        }
+        if (!syn_found) {
+            $('<p><i>empty</i>').appendTo(synergies);
+        }
+        card_pane = $('.card'+(name_to_id[myvar]+1));
+        synergies.appendTo(card_pane);
+        for(s=0;s<3;s++) {
+            $("#synergies"+s).owlCarousel({items:3});
+        };
+    }   
+}
+
 //CARD CLICKED.
 function showClassCards(id) {
     selected_index = 0;
@@ -304,88 +384,17 @@ function showClassCards(id) {
                 var pathArray = window.location.pathname.split('/', -1);
                 var arena_id = pathArray[3];
                 var url = "/draft/card_choice/"+selected[0]+'/'+selected[1]+'/'+selected[2]+'/'+arena_id;
-                console.log('getting url: ' + url);
-                for (c=0;c<3;c++) {
-                    var tmp = $('<span id="odo"><br><b>Card value score is: </b></span>');
-                    tmp.appendTo(getCardElement(c));
-                    makeOdometer(c).hide().appendTo(tmp);
-                }
+                console.log('getting url: ' + url);                
                 //get data
                 $.get(url, function( data ) {
                     //GOT DATA!!!!! (scores n shit.)
                     console.log(data);
                     
-                    //make "picked this card" buttons
-                    for(j = 0; j < selected.length; j++) {
-                        var tmp_index = j + 1;
-                        var tmp_card_name = ".card"+tmp_index;
-                        var ipicked = createInputButton($(tmp_card_name), {}, 'I Picked This Card', j, function ( event ) {
-                            event.preventDefault();
-                            event.stopPropagation();
-                            var selindex = event.data.id;
-                            var url = "/draft/confirm_card_choice/"+selected[selindex]+'/'+arena_id;
-                            $.get(url, function( data ) {
-                                //GOT MORE DATA!!!
-                                console.log(data);
-                                card_number += 1;
-                                if (card_number >= 31) {
-                                    //TODO: finish arena visualization!
-                                    $('[class^="card"]').hide();
-                                    return;
-                                }
-                                removeConfirmChoices();
-                                updateNumber(card_number);
-                                initCardClicks();
-                                selected = [];
-                                hideUndo();
-                                removeHighlight();
-                            });
-                        });
-                    }
-
-                    var n = 0;
-                    var m = -100;
-                    var name_to_id = [];
-                    var synergies;
-                    var card_pane;
-                    for(j = 0; j < selected.length; j++) {
-                        console.log(selected[j]);
-                        name_to_id[selected[j]] = j;
-                        var score = data['scores'][selected[j]];
-                        if (score > m) {
-                            n = j;
-                            m = score;
-                        }
-                        updateOdometer(j, score);
-                    }
-                    for(myvar in data['synergy']) {
-                        synergies = createSynergiesDiv(name_to_id[myvar]);
-                        var syn_found = 0;
-                        for (syn in data['synergy'][myvar]) {
-                            var sync = data['synergy'][myvar][syn]['card_name'];
-                            var reason = data['synergy'][myvar][syn]['reason'];
-                            console.log('my card: ' + myvar);
-                            console.log('my syn: ' + sync);
-                            console.log('my reason: ' + reason);
-                            var tmp_div = $('<div class="item"></div>');
-                            tmp_div.appendTo(synergies.find('[id^="synergies"]'));
-                            makeCardElement(getCardFile(sync)).appendTo(tmp_div);
-                            syn_found = 1;
-                        }
-                        if (!syn_found) {
-                            $('<p><i>empty</i>').appendTo(synergies);
-                        }
-                        card_pane = $('.card'+(name_to_id[myvar]+1));
-                        synergies.appendTo(card_pane);
-                        for(s=0;s<3;s++) {
-                            $("#synergies"+s).owlCarousel({items:3});
-                        };
-                    }
-                    
-                    var sel_card = '.card' + (n+1);
-                    //TODO:add more messages
-                    
                     removeConfirm();
+                    buildConfirmChoices();
+                    
+                    buildScoreUI(data);
+                    buildSynergyUI(data);                    
                 });
             });
         }   

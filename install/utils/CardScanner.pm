@@ -68,8 +68,13 @@ sub find_synergies {
     return CardScanner::SynergyFinder::find_synergies();
 }
 
+sub load_tags {
+    my $ref = create_custom_tags();
+    return CardScanner::DbLoader::load_tags($ref);
+}
+
 sub load_synergies {
-    create_custom_tags();
+    
     my $ref = find_synergies();
     my $g = $ref->[0];
     my $reasons = $ref->[1];

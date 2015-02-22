@@ -354,6 +354,7 @@ sub CardScanner::TagBuilder::create_custom_tags {
     }
     
     %CardScanner::tags = %tags;
+    return \%tags;
 }
 
 return 1;

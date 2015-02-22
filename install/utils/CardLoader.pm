@@ -161,5 +161,6 @@ sub load_scores {
     print "average score is: ".($score_total/$score_count)."\n";
 }
 
+
 1;
 
