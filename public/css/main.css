@@ -103,6 +103,6 @@ html,body {
 }
 #synergies .item img{
   display: block;
-  /*width: 100%;
-  height: auto;*/
+  width: 100;
+  height: auto;
 }
