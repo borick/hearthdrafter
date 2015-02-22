@@ -31,7 +31,9 @@ function createfunc(i) {
 
 function createSynergiesDiv(id) {
     var e = $('<div id="synergies'+id+'" class="scroll-img">');
-    return e;
+    var outer = $('<div id="outer-synergies'+id+'"><h3>Synergies</h3></div>');
+    e.appendTo(outer);
+    return outer;
 }
 
 function rebindKeys() {
@@ -202,6 +204,12 @@ function removeHighlight () {
     $('div#highlight').hide();
 }
 
+function removeSynergies () {
+    for(s=0;s<3;s++) {
+        $("#outer-synergies"+s).remove();
+    }
+}
+
 function removeOdo () {
     $("#odo").remove();
     $("#odo").remove();
@@ -215,6 +223,7 @@ function getCardElement (id) {
 }
 
 function undoCardChoice (id) {
+    console.log('undo card:' + id);
     removeConfirm();
     removeHighlight();
     removeConfirmChoices();
@@ -225,6 +234,7 @@ function undoCardChoice (id) {
     }
     initCardClick(id);
     removeOdo();
+    removeSynergies();
 }
 
 function makeCardElement (img) {
@@ -253,7 +263,7 @@ function layoutCardChosen (card_option, text, id) {
 //CARD CLICKED.
 function showClassCards(id) {
     selected_index = 0;
-    
+    console.log('showClassCards:' + id);
     var card_option = getCardElement(id);
     var card_names = $('#cards');
     card_names.css({"display": "block", "z-index":9999});
@@ -278,6 +288,7 @@ function showClassCards(id) {
             undoCardChoice(id);
             event.stopPropagation();
         });
+        undoButton.text('Correct Card Choice');
         userList.clear();
         $(".search").hide();
         $('body').append(card_names);//move the list back out lest we destory it
@@ -308,7 +319,7 @@ function showClassCards(id) {
                     for(j = 0; j < selected.length; j++) {
                         var tmp_index = j + 1;
                         var tmp_card_name = ".card"+tmp_index;
-                        createInputButton($(tmp_card_name), {}, 'I Picked This Card', j, function ( event ) {
+                        var ipicked = createInputButton($(tmp_card_name), {}, 'I Picked This Card', j, function ( event ) {
                             event.preventDefault();
                             event.stopPropagation();
                             var selindex = event.data.id;
@@ -356,7 +367,7 @@ function showClassCards(id) {
                             console.log('my syn: ' + sync);
                             console.log('my reason: ' + reason);
                             var tmp_div = $('<div class="item"></div>');
-                            tmp_div.appendTo(synergies);
+                            tmp_div.appendTo(synergies.find('[id^="synergies"]'));
                             makeCardElement(getCardFile(sync)).appendTo(tmp_div);
 
                         }
@@ -364,12 +375,10 @@ function showClassCards(id) {
                         card_pane = $('.card'+(name_to_id[myvar]+1));
                         synergies.appendTo(card_pane);
                         for(s=0;s<3;s++) {
-                            $("#synergies"+s).owlCarousel({
-                                autoPlay: 3000, //Set AutoPlay to 3 seconds
-                                items : 2,
-                            });
+                            $("#synergies"+s).owlCarousel();
                         };
                     }
+                    
                     var sel_card = '.card' + (n+1);
                     //TODO:add more messages
                     
