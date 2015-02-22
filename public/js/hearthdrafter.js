@@ -14,11 +14,7 @@ function createElement(e, name, css) {
     e.append(div);
     return div;
 }
-function toTitleCase(str) {
-    return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
-}
-function createInputButton(e, css, name, id, callback){
-
+function createInputButton (e, css, name, id, callback) {
     div = $("<br><div/>");
     div.attr({id: name, class: name});
     div.html(name);
@@ -31,6 +27,11 @@ function createInputButton(e, css, name, id, callback){
 
 function createfunc(i) {
     return function() { showClassCards(i); };
+}
+
+function createSynergiesDiv(id) {
+    var e = $('<div id="synergies'+id+'" class="scroll-img">');
+    return e;
 }
 
 function rebindKeys() {
@@ -79,9 +80,7 @@ function updateOdometer(id,value) {
     odo.show();
     odo.text(0);
     odo.text(parseInt(value*10000));
-    
 }
-
 function initCardClick(i) {
     var ele = $('.card'+(i+1));
     ele.click(createfunc(i));
@@ -94,7 +93,6 @@ function initCardClicks() {
         initCardClick(i);
     }
 }
-
 function updateNumber (newNumber) {
     $('#card_number').text( (newNumber+1) + '/30');
 }
@@ -137,6 +135,7 @@ $(document).ready(function() {
         }
     });
     $("#top_bar").css({'visibility':'visible'}).hide().fadeIn('fast', function() {} );
+    
 });
 
 function filterList() {
@@ -229,18 +228,21 @@ function undoCardChoice (id) {
 }
 
 function makeCardElement (img) {
-    return $('<center><img src="'+img+'"></center>');
+    return $('<img src="'+img+'">');
+}
+function getCardFile (text) {
+    var bg_img = img + card_ids[text] + '.png';
+    return bg_img;
 }
 
 function layoutCardChosen (card_option, text, id) {
     console.log('card ' + text + " selected");
     selected[id] = text;
     rarity = card_rarity[text];
-    var bg_img = img + card_ids[text] + '.png';
     
     card_option.html('');
     $('<p><span class="capital">'+text+'</span> selected.</p>').appendTo(card_option);
-    makeCardElement(bg_img).appendTo(card_option);
+    makeCardElement(getCardFile(text)).appendTo(card_option);
     
     card_option.off('click');
     //card_option.text(text + ' selected.');
@@ -299,9 +301,10 @@ function showClassCards(id) {
                 }
                 //get data
                 $.get(url, function( data ) {
-                    //GOT DATA!!!!!
+                    //GOT DATA!!!!! (scores n shit.)
                     console.log(data);
                     
+                    //make "picked this card" buttons
                     for(j = 0; j < selected.length; j++) {
                         var tmp_index = j + 1;
                         var tmp_card_name = ".card"+tmp_index;
@@ -311,12 +314,10 @@ function showClassCards(id) {
                             var selindex = event.data.id;
                             var url = "/draft/confirm_card_choice/"+selected[selindex]+'/'+arena_id;
                             $.get(url, function( data ) {
-                                
                                 //GOT MORE DATA!!!
                                 console.log(data);
                                 card_number += 1;
                                 if (card_number >= 31) {
-                                    
                                     //TODO: finish arena visualization!
                                     $('[class^="card"]').hide();
                                     return;
@@ -333,8 +334,12 @@ function showClassCards(id) {
 
                     var n = 0;
                     var m = -100;
+                    var name_to_id = [];
+                    var synergies;
+                    var card_pane;
                     for(j = 0; j < selected.length; j++) {
                         console.log(selected[j]);
+                        name_to_id[selected[j]] = j;
                         var score = data['scores'][selected[j]];
                         if (score > m) {
                             n = j;
@@ -342,8 +347,32 @@ function showClassCards(id) {
                         }
                         updateOdometer(j, score);
                     }
+                    for(myvar in data['synergy']) {
+                        synergies = createSynergiesDiv(name_to_id[myvar]);
+                        for (syn in data['synergy'][myvar]) {
+                            var sync = data['synergy'][myvar][syn]['card_name'];
+                            var reason = data['synergy'][myvar][syn]['reason'];
+                            console.log('my card: ' + myvar);
+                            console.log('my syn: ' + sync);
+                            console.log('my reason: ' + reason);
+                            var tmp_div = $('<div class="item"></div>');
+                            tmp_div.appendTo(synergies);
+                            makeCardElement(getCardFile(sync)).appendTo(tmp_div);
+
+                        }
+                        console.log('building synergies ui');
+                        card_pane = $('.card'+(name_to_id[myvar]+1));
+                        synergies.appendTo(card_pane);
+                        for(s=0;s<3;s++) {
+                            $("#synergies"+s).owlCarousel({
+                                autoPlay: 3000, //Set AutoPlay to 3 seconds
+                                items : 2,
+                            });
+                        };
+                    }
                     var sel_card = '.card' + (n+1);
                     //TODO:add more messages
+                    
                     removeConfirm();
                 });
             });
