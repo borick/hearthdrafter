@@ -360,6 +360,7 @@ function showClassCards(id) {
                     }
                     for(myvar in data['synergy']) {
                         synergies = createSynergiesDiv(name_to_id[myvar]);
+                        var syn_found = 0;
                         for (syn in data['synergy'][myvar]) {
                             var sync = data['synergy'][myvar][syn]['card_name'];
                             var reason = data['synergy'][myvar][syn]['reason'];
@@ -369,13 +370,15 @@ function showClassCards(id) {
                             var tmp_div = $('<div class="item"></div>');
                             tmp_div.appendTo(synergies.find('[id^="synergies"]'));
                             makeCardElement(getCardFile(sync)).appendTo(tmp_div);
-
+                            syn_found = 1;
                         }
-                        console.log('building synergies ui');
+                        if (!syn_found) {
+                            $('<p><i>empty</i>').appendTo(synergies);
+                        }
                         card_pane = $('.card'+(name_to_id[myvar]+1));
                         synergies.appendTo(card_pane);
                         for(s=0;s<3;s++) {
-                            $("#synergies"+s).owlCarousel();
+                            $("#synergies"+s).owlCarousel({items:3});
                         };
                     }
                     
