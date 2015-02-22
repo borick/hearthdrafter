@@ -203,6 +203,12 @@ function removeHighlight () {
     $('div#highlight').hide();
 }
 
+function removeOdo () {
+    $("#odo").remove();
+    $("#odo").remove();
+    $("#odo").remove();
+}
+
 function getCardElement (id) {
     var card_name = ".card"+(id+1);
     console.log('getCard:' + card_name);
@@ -219,6 +225,7 @@ function undoCardChoice (id) {
         rarity='none';
     }
     initCardClick(id);
+    removeOdo();
 }
 
 function makeCardElement (img) {
@@ -232,7 +239,7 @@ function layoutCardChosen (card_option, text, id) {
     var bg_img = img + card_ids[text] + '.png';
     
     card_option.html('');
-    $('<p><b>'+text+'</b> selected.</p>').appendTo(card_option);
+    $('<p><span class="capital">'+text+'</span> selected.</p>').appendTo(card_option);
     makeCardElement(bg_img).appendTo(card_option);
     
     card_option.off('click');
@@ -241,12 +248,14 @@ function layoutCardChosen (card_option, text, id) {
     
 }
 
+//CARD CLICKED.
 function showClassCards(id) {
     selected_index = 0;
     
     var card_option = getCardElement(id);
     var card_names = $('#cards');
     card_names.css({"display": "block", "z-index":9999});
+    card_names.addClass('capital');
     card_option.append(card_names); //move the list inside the card...
     rebuildList();
     $(".search").focus();
@@ -258,8 +267,8 @@ function showClassCards(id) {
         event.stopPropagation();
         
         card_names.css({"display": "none"});
-        
         var element = $(this);
+        
         layoutCardChosen(card_option, element.text(), id);
         //undo button
         var undoButton = createInputButton(card_option, {}, 'Undo', id, function ( event ) {
@@ -275,17 +284,18 @@ function showClassCards(id) {
             //confirm teh selection of all 3 cards...
             createInputButton($('.card2'), {}, 'Confirm Cards', 'confirm', function ( event ) {
                 
-                $(this).remove();
-                rarity = 'none';
                 event.preventDefault();
                 event.stopPropagation();
+                $(this).remove();
+                rarity = 'none';
                 var pathArray = window.location.pathname.split('/', -1);
                 var arena_id = pathArray[3];
                 var url = "/draft/card_choice/"+selected[0]+'/'+selected[1]+'/'+selected[2]+'/'+arena_id;
                 console.log('getting url: ' + url);
                 for (c=0;c<3;c++) {
-                    $('<br><b>Card value score is: </b>').appendTo(getCardElement(c));
-                    makeOdometer(c).hide().appendTo(getCardElement(c));
+                    var tmp = $('<span id="odo"><br><b>Card value score is: </b></span>');
+                    tmp.appendTo(getCardElement(c));
+                    makeOdometer(c).hide().appendTo(tmp);
                 }
                 //get data
                 $.get(url, function( data ) {

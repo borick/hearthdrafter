@@ -39,7 +39,10 @@
   float: left;
   position: relative;
 }
-
+.capital {
+  text-transform: capitalize;
+  font-weight: bold;
+}
 /* other */
 .content {
   height:100%;
