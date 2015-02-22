@@ -64,6 +64,7 @@ sub get_advice {
         my $source = $score->{'_source'};
         $out_data->{'scores'}->{$source->{'card_name'}} = $source->{'score'} / $max_score;
     }
+    print STDERR 'Scores: ' . Dumper($scores);
     
     my @card_choices;
     for my $card_option (@$card_options) {
@@ -107,6 +108,7 @@ sub get_advice {
     #mana curve
     #diminishing returns on cards
     #other?
+    print STDERR Dumper($out_data);
     return $out_data;
     
 }

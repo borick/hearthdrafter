@@ -14,7 +14,9 @@ function createElement(e, name, css) {
     e.append(div);
     return div;
 }
-    
+function toTitleCase(str) {
+    return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+}
 function createInputButton(e, css, name, id, callback){
 
     div = $("<br><div/>");
@@ -57,6 +59,29 @@ function rebindKeys() {
         }
     });
 }
+
+function makeOdometer(id) {
+    id = id + 1;
+    var new_ele = $('<div class="odometer card_'+id+'_meter">0</div>');
+    od = new Odometer({
+      el: new_ele.get(0),
+      value: 0,
+      format: '',
+      theme: 'minimal',
+    });
+    return new_ele;
+    
+}
+function updateOdometer(id,value) {
+    var card_name = '.card_'+(id+1)+'_meter';
+    console.log('updating odo with ' + card_name);
+    var odo = $(card_name);
+    odo.show();
+    odo.text(0);
+    odo.text(parseInt(value*10000));
+    
+}
+
 function initCardClick(i) {
     var ele = $('.card'+(i+1));
     ele.click(createfunc(i));
@@ -87,6 +112,7 @@ function getCurrentListLength() {
     return $("li div").length;
 }
 
+//THE BEGINNING
 $(document).ready(function() {    
     
     initCardClicks();
@@ -179,6 +205,7 @@ function removeHighlight () {
 
 function getCardElement (id) {
     var card_name = ".card"+(id+1);
+    console.log('getCard:' + card_name);
     return $(card_name);
 }
 
@@ -207,7 +234,7 @@ function layoutCardChosen (card_option, text, id) {
     card_option.html('');
     $('<p><b>'+text+'</b> selected.</p>').appendTo(card_option);
     makeCardElement(bg_img).appendTo(card_option);
-        
+    
     card_option.off('click');
     //card_option.text(text + ' selected.');
     return card_option;
@@ -247,6 +274,8 @@ function showClassCards(id) {
             
             //confirm teh selection of all 3 cards...
             createInputButton($('.card2'), {}, 'Confirm Cards', 'confirm', function ( event ) {
+                
+                $(this).remove();
                 rarity = 'none';
                 event.preventDefault();
                 event.stopPropagation();
@@ -254,6 +283,10 @@ function showClassCards(id) {
                 var arena_id = pathArray[3];
                 var url = "/draft/card_choice/"+selected[0]+'/'+selected[1]+'/'+selected[2]+'/'+arena_id;
                 console.log('getting url: ' + url);
+                for (c=0;c<3;c++) {
+                    $('<br><b>Card value score is: </b>').appendTo(getCardElement(c));
+                    makeOdometer(c).hide().appendTo(getCardElement(c));
+                }
                 //get data
                 $.get(url, function( data ) {
                     //GOT DATA!!!!!
@@ -297,13 +330,11 @@ function showClassCards(id) {
                             n = j;
                             m = score;
                         }
+                        updateOdometer(j, score);
                     }
-                    
-                    //highlight best score card 
                     var sel_card = '.card' + (n+1);
-                    //var highlight = createElement($(sel_card), 'highlight', {});
+                    //TODO:add more messages
                     removeConfirm();
-                    
                 });
             });
         }   

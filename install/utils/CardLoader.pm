@@ -88,7 +88,7 @@ sub load_cards {
                 }
                 #print $card->{'id'},"\n"; The cards we need to get images for :D
                 my %data = (
-                    'name' => $card_name,
+                    'name' => lc($card_name),
                     'id' => $card->{'id'},
                     'cost' => lc($card->{'cost'}),
                     'type' => lc($card->{'type'}),
@@ -144,9 +144,9 @@ sub load_scores {
             $score_total += $score;
             my $id = $card_name.'|'.$class_name;
             my $result = $bulk2->index({
-                id => $id,
+                id => lc($id),
                 source  => {
-                    card_name => $card_name,
+                    card_name => lc($card_name),
                     class_name => $class_name,
                     score => $score 
                 },
