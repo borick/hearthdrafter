@@ -6,6 +6,7 @@ var card_back = '/images/card_backs/small/Card_Back_Legend.png';
 var rarity = 'none';
 var number_element;
 var selected_index = 0;
+var selected_card = 0;
 var name_to_id = [];
 
 function createElement(e, name, css) {
@@ -37,10 +38,23 @@ function createSynergiesDiv(id) {
     return outer;
 }
 
+$(document).keydown(function(e) {
+    switch(e.which) {
+        case 13: // enter
+            for(z=0;z<3;z++) {
+                if(selected[z]==null) {
+                    console.log('calling...');
+                    showClassCards(z);
+                    return;
+                }
+            }
+            break;
+    }
+});
+
 function rebindKeys() {
     $(".search").off("keydown");
     $(".search").keydown(function(e) {
-        //console.log('test');
         switch(e.which) {
             case 38: // up
                 selected_index -= 1;
@@ -55,7 +69,7 @@ function rebindKeys() {
                 highlightElement(selected_index);
                 break;
             case 13: // enter
-                $($("li div")[selected_index]).click();
+                $("li div").get(selected_index).click();
                 break;
             default:
                 selected_index = 0;
@@ -64,13 +78,18 @@ function rebindKeys() {
     });
 }
 
-
+function resetTopMessage(id) {
+    return setMessageText(id, 'Press enter to select a card.');
+}
+function setMessageText(id,text) {
+    return $('<p id="top_message_'+id+'">'+text+'</p>');
+}
 function initCardClick(i) {
     var ele = $('.card'+(i+1));
     ele.click(createfunc(i));
     ele.html('');
-    $('<p>Click here to select a card.</p>').appendTo(ele);
-    makeCardElement(card_back).appendTo(ele);
+    resetTopMessage(i).appendTo(ele);
+    makeCardElement(card_back, i).addClass('glow').appendTo(ele);
 }
 function initCardClicks() {
     for(var i=0;i<3;i++) {
@@ -83,9 +102,9 @@ function updateNumber (newNumber) {
 function highlightElement(index) {
     for(i = 0;i < $($("li div")).length; i++) {
         if (i == index) {
-            $($("li div")[i]).css({"opacity":0.6});
-        } else {
             $($("li div")[i]).css({"opacity":1.0});
+        } else {
+            $($("li div")[i]).css({"opacity":0.7});
         }
     }
 }
@@ -97,6 +116,7 @@ function getCurrentListLength() {
 //THE BEGINNING
 $(document).ready(function() {    
     
+    card_selected = 0;
     initCardClicks();
     rebindKeys();
     //misc layout
@@ -106,6 +126,7 @@ $(document).ready(function() {
     number_element.css({"position":"absolute"});
     number_element.css({'top':'0', 'right':'0'});
     updateNumber(card_number);
+    
     
     //keep the search focused, where we type card names
     $(document).click(function(event) {
@@ -243,9 +264,13 @@ function removeOdo () {
 
 function getCardElement (id) {
     var card_name = ".card"+(id+1);
-    console.log('getCard:' + card_name);
     return $(card_name);
 }
+function getCardImage (id) {
+    var card_name = "#card_img_"+(id);
+    return $(card_name);
+}
+
 
 function undoCardChoice (id) {
     console.log('undo card:' + id);
@@ -253,6 +278,7 @@ function undoCardChoice (id) {
     removeHighlight();
     removeConfirmChoices();
     var card_option = getCardElement(id);
+    card_option.removeClass('highlight');
     selected[id] = null;
     if(selected[0]==null&&selected[1]==null&&selected[2]==null) {
         rarity='none';
@@ -262,8 +288,8 @@ function undoCardChoice (id) {
     removeSynergies();
 }
 
-function makeCardElement (img) {
-    return $('<img src="'+img+'">');
+function makeCardElement (img,id) {
+    return $('<img id="card_img_'+id+'"'+' src="'+img+'">');
 }
 function getCardFile (text) {
     var bg_img = img + card_ids[text] + '.png';
@@ -277,7 +303,7 @@ function layoutCardChosen (card_option, text, id) {
     
     card_option.html('');
     $('<p><span class="capital">'+text+'</span> selected.</p>').appendTo(card_option);
-    makeCardElement(getCardFile(text)).appendTo(card_option);
+    makeCardElement(getCardFile(text), id).appendTo(card_option);
     
     card_option.off('click');
     //card_option.text(text + ' selected.');
@@ -285,11 +311,12 @@ function layoutCardChosen (card_option, text, id) {
     
 }
 
-function buildConfirmChoices() {
+function buildConfirmChoices(arena_id) {
     //make "picked this card" buttons
     for(j = 0; j < selected.length; j++) {
         var tmp_index = j + 1;
         var tmp_card_name = ".card"+tmp_index;
+        $(tmp_card_name).removeClass('highlight');
         var ipicked = createInputButton($(tmp_card_name), {}, 'I Picked This Card', j, function ( event ) {
             event.preventDefault();
             event.stopPropagation();
@@ -299,7 +326,7 @@ function buildConfirmChoices() {
                 //GOT MORE DATA!!!
                 console.log(data);
                 card_number += 1;
-                if (card_number >= 31) {
+                if (card_number >= 30) {
                     //TODO: finish arena visualization!
                     $('[class^="card"]').hide();
                     return;
@@ -315,7 +342,7 @@ function buildConfirmChoices() {
     }
 }
 
-function buildSynergyUI(data) {
+function buildSynergyUI(data, id) {
     for(myvar in data['synergy']) {
         synergies = createSynergiesDiv(name_to_id[myvar]);
         var syn_found = 0;
@@ -324,13 +351,13 @@ function buildSynergyUI(data) {
             var reason = data['synergy'][myvar][syn]['reason'];
             var tmp_div = $('<div class="item"></div>');
             tmp_div.appendTo(synergies.find('[id^="synergies"]'));
-            var ce = makeCardElement(getCardFile(sync));
+            var ce = makeCardElement(getCardFile(sync), name_to_id[myvar]);
             ce.appendTo(tmp_div);
             ce.prop('title', reason);
             syn_found = 1;
         }
         if (!syn_found) {
-            $('<p><i>empty</i>').appendTo(synergies);
+            $('<p><i>None found.</i>').appendTo(synergies);
         }
         card_pane = $('.card'+(name_to_id[myvar]+1));
         synergies.appendTo(card_pane);
@@ -342,9 +369,21 @@ function buildSynergyUI(data) {
 
 //CARD CLICKED.
 function showClassCards(id) {
+    //selected card name from the list.
     selected_index = 0;
+    //selected card option, i.e. card pane.
+    selected_card = id;
     console.log('showClassCards:' + id);
     var card_option = getCardElement(id);
+    //reset the other card mesages
+    for(var c=0;c<3;c++) {
+        $('#top_message_'+c).replaceWith(resetTopMessage(c));
+        getCardElement(c).removeClass('highlight');
+        getCardImage(c).removeClass('glow');
+    }
+    card_option.addClass('highlight');
+    getCardImage(c).removeClass('glow');
+    $('#top_message_'+id).text('Please select your card.');
     var card_names = $('#cards');
     card_names.css({"display": "block", "z-index":9999});
     card_names.addClass('capital');
@@ -354,6 +393,7 @@ function showClassCards(id) {
     highlightElement(selected_index);
     //pick a card
     $(".name").button().click( function( event ) {
+        
         //card name selected
         event.preventDefault();
         event.stopPropagation();
@@ -368,15 +408,22 @@ function showClassCards(id) {
             undoCardChoice(id);
             event.stopPropagation();
         });
-        undoButton.text('Correct Card Choice');
         userList.clear();
         $(".search").hide();
         $('body').append(card_names);//move the list back out lest we destory it
-        if (selected[0] != null && selected[1] != null && selected[2] != null) {
-            
+        var flag = 0;
+        for (z = 0; z < 3; z++) {
+            if (selected[z]==null) {
+                flag = z;
+                break;
+            }   
+        }        
+        if (flag == 0) {
+                    
             //confirm teh selection of all 3 cards...
             createInputButton($('.card2'), {}, 'Confirm Cards', 'confirm', function ( event ) {
-                
+                selected_card = 0;
+                selected_index = 0;
                 event.preventDefault();
                 event.stopPropagation();
                 $(this).remove();
@@ -391,12 +438,14 @@ function showClassCards(id) {
                     console.log(data);
                     
                     removeConfirm();
-                    buildConfirmChoices();
+                    buildConfirmChoices(arena_id);
                     
                     buildScoreUI(data);
                     buildSynergyUI(data);                    
                 });
             });
-        }   
+        } /*else {
+            showClassCards(flag);
+        }*/
     });
 }

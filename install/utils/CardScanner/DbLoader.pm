@@ -13,11 +13,14 @@ my $bulk = $e->bulk_helper(
     type      => 'card_synergy',
     on_error  => sub { warn Dumper(@_) },
 );
+my $bulk_tag = $e->bulk_helper(
+    index     => 'hearthdrafter',
+    type      => 'card_tag',
+    on_error  => sub { warn Dumper(@_) },
+);
 
 sub load_synergies {
     my ($g, $reasons) = @_;
-    
-    print STDERR Dumper($g->vertices);
     
     my $debug = $CardScanner::debug;
     print "Loading synergies...\n" if $debug;
@@ -53,11 +56,26 @@ sub load_synergies {
 sub load_tags {
     my ($ref) = @_;
     for my $card_name (keys(%$ref)) {
+    
         my $inner_ref = $ref->{$card_name};
+        my $tag = {};
         for my $mech_name (keys(%$inner_ref)) {
-            print STDERR $mech_name,"\n";
+            my $weight = $inner_ref->{$mech_name};
+            $tag->{'name'} = $mech_name;
+            $tag->{'weight'} = $weight;
+            if (ref($weight) eq 'ARRAY') {
+                $tag->{'weight'} = -1.0;
+            }
         }
+        $bulk_tag->index({
+            id => $card_name,
+            source => {
+                card_name => $card_name,
+                tag => $tag,
+            }
+        });
     }
+    $bulk_tag->flush;
 }
 
 1;

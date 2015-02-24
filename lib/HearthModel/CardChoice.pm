@@ -64,15 +64,11 @@ sub get_advice {
         my $source = $score->{'_source'};
         $out_data->{'scores'}->{$source->{'card_name'}} = $source->{'score'} / $max_score;
     }
-    print STDERR 'Scores: ' . Dumper($scores);
     
     my @card_choices;
     for my $card_option (@$card_options) {
         push(@card_choices, $card_option->{card_chosen}) if exists($card_option->{card_chosen});
     }
-
-    print STDERR "Cards chosen: " . Dumper(\@card_choices);
-    
     #synergies    
     # find synergies between the existing card choices (@card_choices) and the currently available cards ($card_1, card_2, etc.)
     my $cards = [$card_1,$card_2,$card_3];
@@ -105,6 +101,7 @@ sub get_advice {
         }
     }
     $out_data->{synergy} = \%synergies;
+    $out_data->{cards_already_chosen} = \@card_choices;
     #mana curve
     #diminishing returns on cards
     #other?
