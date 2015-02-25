@@ -76,6 +76,13 @@ sub get_advice {
             push($synergies{$card}, $synergy);
         }
     }
+    $out_data->{synergy} = \%synergies;
+    $out_data->{card_choices} = \@card_choices;
+    $out_data->{card_counts} = \%card_counts;
+    #mana curve
+    #diminishing returns on cards
+    #other?
+    
     #get tier score for each card.
     my $class = $source->{class_name};
     my $scores = $self->es->search(
@@ -89,31 +96,42 @@ sub get_advice {
                 },
             },
         },
-    );
+    );    
+        
     $scores = $scores->{hits}->{hits};
-    for my $score (@$scores) {
-        my $source = $score->{'_source'};
-        $out_data->{'scores'}->{$source->{'card_name'}} = $source->{'score'} / $max_score;
-    }
+    #build a hashmap of names to scores
+    my %scores = ();
+    my %new_scores = ();
     
-    $out_data->{synergy} = \%synergies;
-    $out_data->{card_choices} = \@card_choices;
-    $out_data->{card_counts} = \%card_counts;
-    #mana curve
-    #diminishing returns on cards
-    #other?
-    print STDERR 'Out data:' . Dumper($out_data);
+    
+    for my $score (@$scores) {
+        $scores{$score->{'_source'}->{'card_name'}} = $score->{'_source'}->{'score'};
+        $out_data->{'old_scores'}->{$score->{'_source'}->{'card_name'}} = $score->{'_source'}->{'score'} / $max_score;
+    }
     
     #calculate final score
     for my $card_name (keys(%synergies)) {
         my $synergy_array = $synergies{$card_name};
+        my $cumul_weight = 0;
         for my $synergy (@$synergy_array) {
             my $weight = $synergy->{weight};
-            print STDERR "$card_name" . " " . "$weight\n";
+            my $count = $card_counts{$card_name};
+            my $total_weight = $weight * $count;
+            $cumul_weight += $total_weight;
         }
+        my $original_score = $scores{$card_name}*100;
+        #each 1 PT synergy weight increase card value by 10%.
+        my $new_score = ((1+($cumul_weight/10))*$original_score)/100;
+        $new_scores{$card_name} = $new_score;
     }
-    return $out_data;
     
+    for my $card_name (keys(%new_scores)) {
+        my $score = $new_scores{$card_name};
+        $out_data->{'scores'}->{$card_name} = $score / $max_score;
+    }
+    
+    print STDERR 'Out data:' . Dumper($out_data);
+    return $out_data;
 }
 
 1;
