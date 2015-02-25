@@ -24,6 +24,9 @@
     <li><a href="#tabs-2">Summary</a></li>
   </ul>
   <div id="tabs-1">
+     % for my $card (sort(keys($run_details->{card_counts}))) {
+        <span class="capital" id="card_name"><%== $card %></span><span id="card_count"><%== $run_details->{card_counts}->{$card} %></span><br>
+     % }
   </div>
   <div id="tabs-2">
   </div>

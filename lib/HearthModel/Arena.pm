@@ -41,6 +41,7 @@ sub get_next_index {
     return $count;
 }
 
+#return card count so JS can easy update it.
 sub confirm_card_choice {
     my ($self, $card_name, $arena_id) = @_;
     my $source = $self->continue_run($arena_id);
@@ -53,12 +54,15 @@ sub confirm_card_choice {
         $source->{end_date} = $t->strftime();
     }
     print STDERR "Confirming choice card #" . ($next_index+1) . "\n";
+    print STDERR Dumper($source);
     $self->es->index(
         index => 'hearthdrafter',
         type => 'arena_run',
         id => $arena_id,
         body => $source,
     );
+    $source = $self->continue_run($arena_id);
+    return $source->{card_counts};
 }
 
 sub abandon_run {
@@ -79,6 +83,17 @@ sub continue_run {
         id => $arena_id,
     );
     $doc->{_source}->{_id} = $doc->{_id};
+    my $card_options = $doc->{_source}->{card_options};
+    my %card_counts;
+    my @card_choices;
+    for my $card_option (@$card_options) {
+        if (exists($card_option->{card_chosen})) {
+            push(@card_choices, $card_option->{card_chosen});
+            $card_counts{$card_option->{card_chosen}} += 1;
+        }
+    }
+    $doc->{_source}->{card_choices} = \@card_choices;
+    $doc->{_source}->{card_counts} = \%card_counts;
     return $doc->{_source};
 }
 

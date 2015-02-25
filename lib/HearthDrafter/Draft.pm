@@ -34,9 +34,9 @@ sub select_card {
     } else {
 
         my $cards = $self->model->card->get_cards_by_class($run_details->{class_name});
-        print STDERR 'Run details: ' . Dumper($run_details);
         $self->stash(cards => $self->model->card->get_cards_by_class($run_details->{class_name}),
-                     card_number => $self->model->arena->get_next_index($run_details));
+                     card_number => $self->model->arena->get_next_index($run_details),
+                     run_details => $run_details);
         return $self->render('draft/select_card');
     }
 }

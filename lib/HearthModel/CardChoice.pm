@@ -26,6 +26,8 @@ sub get_advice {
     my $c = $self->c();
     my $source = $c->model->arena->continue_run($arena_id);
     print STDERR "Arena run: " . Dumper($source) . "\n";
+    my @card_choices = @{$source->{card_choices}};
+    my %card_counts = %{$source->{card_counts}};
     my $next_index = $self->get_next_index($source);
     return undef if $next_index >= 30;
     my $out_data = {};
@@ -42,33 +44,7 @@ sub get_advice {
         id => $arena_id,
         body => $source,
     );
-    #card number
-    my $class = $source->{class_name};        
-    print STDERR "Searching for: " . Dumper($card_1, $card_2, $card_3);
     
-    #tier score
-    my $scores = $self->es->search(
-        index => 'hearthdrafter',
-        type => 'card_score_by_class',
-        body => {
-            query => {
-                ids => {
-                    type => 'card_score_by_class',
-                    values => [ "$card_1|$class",  "$card_2|$class",  "$card_3|$class", ],
-                },
-            },
-        },
-    );
-    $scores = $scores->{hits}->{hits};
-    for my $score (@$scores) {
-        my $source = $score->{'_source'};
-        $out_data->{'scores'}->{$source->{'card_name'}} = $source->{'score'} / $max_score;
-    }
-    
-    my @card_choices;
-    for my $card_option (@$card_options) {
-        push(@card_choices, $card_option->{card_chosen}) if exists($card_option->{card_chosen});
-    }
     #synergies    
     # find synergies between the existing card choices (@card_choices) and the currently available cards ($card_1, card_2, etc.)
     my $cards = [$card_1,$card_2,$card_3];
@@ -100,12 +76,42 @@ sub get_advice {
             push($synergies{$card}, $synergy);
         }
     }
+    #get tier score for each card.
+    my $class = $source->{class_name};
+    my $scores = $self->es->search(
+        index => 'hearthdrafter',
+        type => 'card_score_by_class',
+        body => {
+            query => {
+                ids => {
+                    type => 'card_score_by_class',
+                    values => [ "$card_1|$class",  "$card_2|$class",  "$card_3|$class", ],
+                },
+            },
+        },
+    );
+    $scores = $scores->{hits}->{hits};
+    for my $score (@$scores) {
+        my $source = $score->{'_source'};
+        $out_data->{'scores'}->{$source->{'card_name'}} = $source->{'score'} / $max_score;
+    }
+    
     $out_data->{synergy} = \%synergies;
-    $out_data->{cards_already_chosen} = \@card_choices;
+    $out_data->{card_choices} = \@card_choices;
+    $out_data->{card_counts} = \%card_counts;
     #mana curve
     #diminishing returns on cards
     #other?
-    print STDERR Dumper($out_data);
+    print STDERR 'Out data:' . Dumper($out_data);
+    
+    #calculate final score
+    for my $card_name (keys(%synergies)) {
+        my $synergy_array = $synergies{$card_name};
+        for my $synergy (@$synergy_array) {
+            my $weight = $synergy->{weight};
+            print STDERR "$card_name" . " " . "$weight\n";
+        }
+    }
     return $out_data;
     
 }

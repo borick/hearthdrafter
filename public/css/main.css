@@ -2,7 +2,8 @@
   position: absolute;
   right: 0;
   bottom: 0;
-  height: 200px;
+  height: auto;
+  width: 400px;
 }
 #top_bar {
   width: 100%;
@@ -99,6 +100,10 @@ input:focus {
   border-color:#aaa;
 }
 
+
+#top_message_0, #top_message_1, #top_message_2 {
+  height: 50px;
+}
 /*always show scrollbars*/
 html,body {
   height: 100%;
@@ -113,4 +118,11 @@ html,body {
   display: block;
   width: 100;
   height: auto;
+}
+#card_count {
+  position: absolute;
+  margin-right: 20px;
+  font-weight: bold;
+  right: 0;
+  font-size: 125%;
 }
