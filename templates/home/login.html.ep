@@ -1,18 +1,17 @@
-% layout 'default';
-<form id='register' method='POST' accept-charset='UTF-8'>
-<fieldset >
-<legend>Log In</legend>
-
+<span id="login_status">
+% if (defined(stash("user")) && stash("user")) {
+Logged in as: <%= stash('user')->{user}->{name} %>
+% } else {
+<br><form id='register' method='POST' accept-charset='UTF-8' action='/login'>
 <label for='name' >User Name: </label>
-<input type='text' name='user_name' id='user_name' maxlength="50" /><br>
- 
+<input type='text' name='user_name' id='user_name' maxlength="50" />
 <label for='password' >Password:</label>
-<input type='password' name='password' id='password' maxlength="50" /><br>
-
-<input type='submit' name='Submit' value='Submit' />
-</fieldset>
+<input type='password' name='password' id='password' maxlength="50" />
+<input type='submit' name='Login' value='Login' />
 </form>
 % if (my $message = flash 'message') {
 <%= $message %>.
 % }
-<a href="/register">register</a><br>
+<br><a href="/register"><font color='white'>Sign Up</a>
+% }
+</span>

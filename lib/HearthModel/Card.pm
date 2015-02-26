@@ -30,4 +30,27 @@ sub get_cards_by_class {
     return \@data;
 }
 
+sub get_cards {
+    my ($self, $array) = @_;
+    my $results = $self->es->search(
+        index => 'hearthdrafter',
+        type => 'card',
+        size => 531,
+        body => {
+            query => {
+                terms => {
+                    card_name => $array,
+                    minimum_should_match => 1,
+                }
+            }
+        },
+    );
+
+    my @data = @{$results->{hits}->{hits}};
+    @data = map { $_->{_source} } @data;
+    return \@data;
+    
+}
+    
+
 1;

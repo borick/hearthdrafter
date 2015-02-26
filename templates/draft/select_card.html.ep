@@ -1,9 +1,4 @@
-% layout 'default';
-<script src="/js/libs/list.js"></script>
-<script src="/js/hearthdrafter.js"></script>
-<script src="/js/libs/odometer/odometer.js"></script>
-<script src="/js/libs/owl-carousel/owl.carousel.js"></script>
-
+% layout 'default';   
 <div id="top_bar">
     <div id="selection">
     <div class="card1"></div>

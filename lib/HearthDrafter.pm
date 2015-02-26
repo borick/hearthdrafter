@@ -19,7 +19,8 @@ my $validate_user_sub = sub {
 
 my $load_user_sub = sub {
     my ($self, $username) = @_;
-    return $self->model->user->load($username);
+    my $user_data = $self->model->user->load($username);
+    return $user_data;
 };
 
 sub startup {    

@@ -3,19 +3,14 @@
 <head>
     <meta charset="utf-8">        
     <link rel="stylesheet" type="text/css" media="screen" href="/css/main.css" />
-    <link rel="stylesheet" type="text/css" media="screen" href="/css/libs/jquery-ui.css" />
-    <link rel="stylesheet" type="text/css" media="screen" href="/js/libs/odometer/odometer-theme-minimal.css" />
-    <link rel="stylesheet" type="text/css" media="screen" href="/js/libs/owl-carousel/owl.carousel.css" />
-    <link rel="stylesheet" type="text/css" media="screen" href="/js/libs/owl-carousel/owl.theme.css" />
-    <link rel="stylesheet" type="text/css" media="screen" href="/js/libs/owl-carousel/owl.transitions.css" />
-    
-    <script src="/js/libs/jquery-1.11.2.min.js"></script>
-    <script src="/js/libs/jquery-ui.min.js"></script>
+    <link rel="stylesheet" type="text/css" media="screen" href="/css/libs/jquery-ui.css" />    
+    <link href="/favicon.ico" rel="icon" type="image/x-icon" /> 
 </head>
 <body>
-<!--<div class="header">
-<b>hearthdrafter.com.</b>
-</div>-->
+<div class="header">
+<img src="/images/hearthdrafter_logo.png"/>
+    %= include 'home/login'
+</div>
 <div class="content">
 <%= content %>
 </div>

@@ -102,7 +102,8 @@ sub get_advice {
     #build a hashmap of names to scores
     my %scores = ();
     my %new_scores = ();
-    
+    my @unique_cards = keys(%card_counts);
+    ##### GET LIST OF CARDS FOR MANA.....
     
     for my $score (@$scores) {
         $scores{$score->{'_source'}->{'card_name'}} = $score->{'_source'}->{'score'};
@@ -114,8 +115,9 @@ sub get_advice {
         my $synergy_array = $synergies{$card_name};
         my $cumul_weight = 0;
         for my $synergy (@$synergy_array) {
+            my $card_name_2 = $synergy->{card_name};
             my $weight = $synergy->{weight};
-            my $count = $card_counts{$card_name};
+            my $count = $card_counts{$card_name_2};
             my $total_weight = $weight * $count;
             $cumul_weight += $total_weight;
         }

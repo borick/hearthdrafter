@@ -1,5 +1,4 @@
 % layout 'default';
-Logged in as: <%= $user->{user}->{user_name} %> <br>
 
 <a href="/draft/select_class">Start New Draft</a><br>
 % my $runs = stash 'runs';
@@ -9,5 +8,3 @@ Logged in as: <%= $user->{user}->{user_name} %> <br>
 or <a href="/draft/arena_action/abandon_arena_<%= $run->{_id} %>/">Abandon This Run.</a> <br>
 
 % }
-
-<a href="/logout">Log Out</a>
