@@ -1,6 +1,7 @@
 <span id="login_status">
 % if (defined(stash("user")) && stash("user")) {
-Logged in as: <%= stash('user')->{user}->{name} %>
+Logged in as: <%= stash('user')->{user}->{name} %><br><br>
+<a href="/logout"><font color='white'>Log Out</a>
 % } else {
 <br><form id='register' method='POST' accept-charset='UTF-8' action='/login'>
 <label for='name' >User Name: </label>
