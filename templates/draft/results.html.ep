@@ -2,15 +2,34 @@
 <form id='results' method='POST' accept-charset='UTF-8'>
 <fieldset >
 <legend>Arena Results</legend>
-
-<input type="hidden" name="arena_id" value='<%== stash('arena_id') %>'/>
-
+<%== defined(stash('error')) ? stash('error') : '' %>
+<label for="wins"># of Wins:</label>
 <input type="text" name="wins" value=""/>
+<br />
+<label for="losses"># of Losses:</label>
 <input type="text" name="losses" value=""/>
+<br />
+<label for="gold">Gold:</label>
 <input type="text" name="gold" value=""/>
+<br />
+<label for="dust">Dust:</label>
 <input type="text" name="dust" value=""/>
+<br />
+<label for="Packs">Packs:</label>
 <input type="text" name="packs" value="1"/>
+<br />
+<label for="card">Card:</label><input type="checkbox" name="card" value="Card"/>
 
+<label for="card">Golden:</label><input type="checkbox" name="card" value="Card"/>
+
+<label for="card">Rarity:</label>
+Common<input type="radio" name="rarity" value="Classic" checked>
+Rare<input type="radio" name="rarity" value="Rare">
+Epic<input type="radio" name="rarity" value="Epic">
+Legendary<input type="radio" name="rarity" value="Legendary">
+<br />
 <input type='submit' name='Submit' value='Submit' />
 </fieldset>
 </form>
+
+<a href="/home">Back</a>

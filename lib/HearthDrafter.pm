@@ -19,10 +19,7 @@ my $validate_user_sub = sub {
 
 my $load_user_sub = sub {
     my ($self, $username) = @_;
-    print STDERR "Loading user...\n";
     my $user_data = $self->model->user->load($username);
-    use Data::Dumper;
-    print STDERR Dumper($user_data);
     return $user_data;
 };
 
@@ -59,6 +56,8 @@ sub startup {
     $r->get('/draft/select_card/:arena_id')->to('draft#select_card');
     $r->get('/draft/card_choice/:card1/:card2/:card3/:arena_id/')->to('draft#card_choice');
     $r->get('/draft/confirm_card_choice/:card_name/:arena_id/')->to('draft#confirm_card_choice');
+    $r->get('/draft/results/:arena_id/')->to('draft#results');
+    $r->post('/draft/results/:arena_id/')->to('draft#results_post');
 }
 
 1;

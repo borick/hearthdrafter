@@ -69,6 +69,8 @@
                 },
                 "results" : {
                     "properties" : {
+                        "wins" : {"type" : "integer"},
+                        "losses" : {"type" : "integer"},
                         "gold" : {"type" : "integer"},
                         "dust" : {"type" : "integer"},
                         "packs" : {"type" : "integer"},

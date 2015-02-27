@@ -38,6 +38,9 @@ sub select_card {
         $self->stash(message=>'No arena with that ID exists.');
         return $self->redirect_to('/home');
     } else {
+        if (exists($run_details->{end_date})) {
+            return $self->redirect_to('/draft/results/'.$self->stash('arena_id'));
+        }
         my $cards = $self->model->card->get_cards_by_class($run_details->{class_name});
         $self->stash(cards => $self->model->card->get_cards_by_class($run_details->{class_name}),
                      card_number => $self->model->arena->get_next_index($run_details),
@@ -73,7 +76,20 @@ sub results {
     if (!$self->is_user_authenticated()) {
         return $self->redirect_to('/login');
     }
-    $self->render('draft/select_card');
+    $self->render('draft/results');
+}
+sub results_post {
+    my $self = shift;
+    if (!$self->is_user_authenticated()) {
+        return $self->redirect_to('/login');
+    }
+    my $result = $self->model->arena->provide_results($self->stash('arena_id'), $self->req->body_params);
+    if ($result) {
+        $self->stash(message=>'Arena results updated successfully.');
+        return $self->redirect_to('/login');
+    } else {
+        $self->stash(error=>'There was a problem updating the arena result.');
+    }
 }
 
 
