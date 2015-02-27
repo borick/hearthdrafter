@@ -16,6 +16,7 @@
 #card_number {
   padding: 8px;
   padding-right:14px;
+  color: #fff;
 }
 #cards {
   text-align: left;
@@ -130,6 +131,7 @@ form {
 }
 .content {
   margin-top: 100px;
+  color: #000;
 }
 .header {
   background: #28353f;

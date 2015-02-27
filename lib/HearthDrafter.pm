@@ -19,7 +19,10 @@ my $validate_user_sub = sub {
 
 my $load_user_sub = sub {
     my ($self, $username) = @_;
+    print STDERR "Loading user...\n";
     my $user_data = $self->model->user->load($username);
+    use Data::Dumper;
+    print STDERR Dumper($user_data);
     return $user_data;
 };
 

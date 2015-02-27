@@ -1,0 +1,16 @@
+% layout 'default';
+<form id='results' method='POST' accept-charset='UTF-8'>
+<fieldset >
+<legend>Arena Results</legend>
+
+<input type="hidden" name="arena_id" value='<%== stash('arena_id') %>'/>
+
+<input type="text" name="wins" value=""/>
+<input type="text" name="losses" value=""/>
+<input type="text" name="gold" value=""/>
+<input type="text" name="dust" value=""/>
+<input type="text" name="packs" value="1"/>
+
+<input type='submit' name='Submit' value='Submit' />
+</fieldset>
+</form>
