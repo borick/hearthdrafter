@@ -1,32 +1,118 @@
 % layout 'default';
+
+<script src="/js/libs/jquery-1.11.2.min.js"></script>
+<script src="/js/libs/jquery-ui.min.js"></script>
+<script src="/js/libs/rangeslider.js"></script>
+
+<script type="text/javascript">
+    function removeCard() {
+//         var num_cards = parseInt($('#num_cards').text());
+//         if (num_cards <= 0)
+//             return;
+//         num_cards -= 1;
+//         $('#num_cards').text(num_cards);
+        $("#card_awards option:last-child").remove();
+        
+    }
+    function addCard() {
+//         var num_cards = parseInt($('#num_cards').text());
+//         if (num_cards > 4)
+//             return;
+//         num_cards += 1;
+//         $('#num_cards').text(num_cards);
+        
+        var golden = $('#golden').prop('checked');
+        var rarity = $("input[name=rarity]:checked").val();
+        var set    = $("input[name=set]:checked").val();
+        $("<option selected readonly>"+(golden?'Golden ':'')+' '+set+' '+rarity+ " Card</option>").appendTo($("#card_awards"));
+    }
+</script>
+
 <form id='results' method='POST' accept-charset='UTF-8'>
 <fieldset >
 <legend>Arena Results</legend>
 <%== defined(stash('error')) ? stash('error') : '' %>
-<label for="wins"># of Wins:</label>
-<input type="text" name="wins" value=""/>
-<br />
-<label for="losses"># of Losses:</label>
-<input type="text" name="losses" value=""/>
-<br />
-<label for="gold">Gold:</label>
-<input type="text" name="gold" value=""/>
-<br />
-<label for="dust">Dust:</label>
-<input type="text" name="dust" value=""/>
-<br />
-<label for="Packs">Packs:</label>
-<input type="text" name="packs" value="1"/>
-<br />
-<label for="card">Card:</label><input type="checkbox" name="card" value="Card"/>
+<div id="slider">
+    <h3># of Wins:</h3>
+    <br>
+    <input type="range" min="0" max="12" step="1" value="0" name="wins" data-rangeslider>
+    <output></output>
+</div>
+<div id="slider">
+    <h3># of Losses:</h3>
+    <br>
+    <input type="range" min="0" max="3" step="1" value="3" name="losses" data-rangeslider>
+    <output></output>
+</div>
+<div id="slider">
+    <h3>Gold:</h3>
+    <br>
+    <input type="range" min="0" max="610" step="5" value="0" name="gold" data-rangeslider>
+    <output></output>
+</div>
+<div id="slider">
+    <h3>Dust:</h3>
+    <br>
+    <input type="range" min="0" max="100" step="5" value="0" name="dust" data-rangeslider>
+    <output></output>
+</div>
+<div id="slider">
+    <h3>Packs:</h3>
+    <br>
+    <input type="range" min="1" max="2" step="1" value="1" name="packs" data-rangeslider>
+    <output></output>
+</div>
+<script type="text/javascript">
+$(function() {
+    var $document   = $(document),
+        selector    = '[data-rangeslider]',
+        $inputRange = $(selector);
+            
+    function valueOutput(element) {
+        var value = element.value,
+            output = element.parentNode.getElementsByTagName('output')[0];
+        output.innerHTML = value;
+    }
+    for (var i = $inputRange.length - 1; i >= 0; i--) {
+        valueOutput($inputRange[i]);
+    };
+    $document.on('input', selector, function(e) {
+        valueOutput(e.target);
+    });
+        
+    $('input[type="range"]').rangeslider({polyfill: false});
+    
+    $("#card_awards").mousedown(function(e){ return false; });
+});
+</script>
 
-<label for="card">Golden:</label><input type="checkbox" name="card" value="Card"/>
+<br />
+<fieldset>
+    <b>Cards Selected:</b><br>
+    <select name="cards" id="card_awards" multiple="multiple" readonly>
+    </select>
+    <br>
+    <label for="golden">Golden:</label>
+    <input type="checkbox" name="golden" id="golden" value="Golden"/>
+    
+    <br>
+    
+    <label for="rarity">Rarity:</label>
+    Common<input type="radio" name="rarity" id="rarity" value="Common" checked>
+    Rare<input type="radio" name="rarity" id="rare" value="Rare">
+    Epic<input type="radio" name="rarity" id="epic" value="Epic">
+    Legendary<input type="radio" name="rarity" id="elite" value="Legendary">
 
-<label for="card">Rarity:</label>
-Common<input type="radio" name="rarity" value="Classic" checked>
-Rare<input type="radio" name="rarity" value="Rare">
-Epic<input type="radio" name="rarity" value="Epic">
-Legendary<input type="radio" name="rarity" value="Legendary">
+    <br>
+    
+    <label for="set">Set:</label>
+    Classic<input type="radio" name="set" id="set" value="Classic" checked>
+    GvG<input type="radio" name="set" id="set" value="GvG">
+    <br>
+    <input type='button' name='AddCard' value='Add Card' onClick='javascript: addCard();'/>
+    <input type='button' name='RemoveCard' value='Remove Card' onClick='javascript: removeCard();'/>
+</fieldset>
+
 <br />
 <input type='submit' name='Submit' value='Submit' />
 </fieldset>

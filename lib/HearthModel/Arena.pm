@@ -167,36 +167,25 @@ sub list_runs_no_results {
     return $out;
 }
 
-#                 "results" : {
-#                     "properties" : {
-#                         "gold" : {"type" : "integer"},
-#                         "dust" : {"type" : "integer"},
-#                         "packs" : {"type" : "integer"},
-#                         "card" : {
-#                             "properties": {
-#                                 "rarity" : {"type": "string", "index": "not_analyzed"},
-#                                 "golden" : {"type" : "boolean"}
-#                             }
-#                         }
-#                     }
-#                 }
-# $data is Mojo::Parameters
+
 sub provide_results {
     my ($self, $arena_id, $data) = @_;
     my $hash = $data->to_hash;
     delete($hash->{Submit});
+    delete($hash->{rarity});
+    delete($hash->{set});
     my $doc = $self->es->get(
         index => 'hearthdrafter',
         type => 'arena_run',
         id => $arena_id,
     );
     $doc->{_source}->{'results'} = $hash;
-    print STDERR Dumper($doc->{_source});
     my $results = $self->es->index(
         index => 'hearthdrafter',
         type => 'arena_run',
         id => $arena_id,
         body => $doc->{_source},
     );
+    return 0; #success
 }
 1;

@@ -132,6 +132,7 @@ form {
 .content {
   margin-top: 100px;
   color: #000;
+  max-width: 1024px;
 }
 .header {
   background: #28353f;
@@ -140,6 +141,7 @@ form {
   position: fixed;
   top: 0;
   color: white;
+  z-index: 10;
 }
 #login_status {
   text-align: right;

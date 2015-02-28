@@ -84,11 +84,11 @@ sub results_post {
         return $self->redirect_to('/login');
     }
     my $result = $self->model->arena->provide_results($self->stash('arena_id'), $self->req->body_params);
-    if ($result) {
+    if (!$result) {
         $self->stash(message=>'Arena results updated successfully.');
         return $self->redirect_to('/login');
     } else {
-        $self->stash(error=>'There was a problem updating the arena result.');
+        $self->stash(error=>"There was a problem updating the arena result: $result\n");
     }
 }
 
