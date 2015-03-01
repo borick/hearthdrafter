@@ -13,16 +13,18 @@
   text-align: left;
   height:100%;
 }
-#card_number {
-  padding: 8px;
-  padding-right:14px;
-  color: #fff;
-}
 #cards {
   text-align: left;
   clear: both;
   display: none;
   /*opacity: 0.8;*/
+}
+#card_number {
+  padding: 8px;
+  padding-right:14px;
+  color: #000;
+  margin-top: 100px;
+  font-weight: bold;
 }
 .confirm {
   float: left;
@@ -47,19 +49,19 @@
 }
 /* other */
 .highlight {
- font-weight: bold;
- opacity: 1.0;
+  font-weight: bold;
+  opacity: 1.0;
 }
 .glow {
- /*box-shadow:0 0 30px #AA6F2B;*/
+  /*box-shadow:0 0 30px #AA6F2B;*/
 }
 #synergies {
- margin: 0px;
+  margin: 0px;
 }
 .search {
   padding: 0; margin: 0;
 }
-.ui-button-text {
+.ui-button {
   padding: 0;
 }
 .list {

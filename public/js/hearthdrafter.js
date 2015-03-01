@@ -10,6 +10,9 @@ var number_element;
 var selected_index = 0;
 var selected_card = 0;
 var name_to_id = [];
+var mode = 'start';
+var d = new Date();
+var action_time = d.getTime();
 
 /* Generic Functions */
 function createElement(e, name, css) {
@@ -19,15 +22,27 @@ function createElement(e, name, css) {
     e.append(div);
     return div;
 }
-function createInputButton (e, css, name, id, callback) {
-    div = $("<br><div/>");
+/**
+ * createInputButtom
+ * 
+ * css - css style to apply
+ * name - ID to apply
+ * id - ID to pass into the "click" function callback
+ * callback - function to call, on click
+ */
+
+function createInputButton (e, css, label, name, id, callback) {
+    div = $("<div/>");
     div.attr({id: name, class: name});
-    div.html(name);
+    div.html(label);
     e.append(div);
     var button = div.button();
-    button.click({id: id}, callback);
+    button.click({id: id, name: name}, callback);
     div.css(css);
-    return button;
+    
+    var obj = $('<br/>').insertBefore(button);
+    obj.wrap('<div id="'+name+'"></div>');
+    return obj;
 }
 
 //bindings
@@ -40,6 +55,10 @@ $(document).keydown(function(e) {
                     showClassCards(z);
                     return;
                 }
+            }
+            console.log('enter pressed');
+            if (mode == 'waiting_for_confirm' && (new Date().getTime() - action_time) > 1000 ) {
+                confirmCards();
             }
             break;
     }
@@ -65,6 +84,7 @@ function rebindKeys() {
                 $("li div").get(selected_index).click();
                 break;
             default:
+                console.log('default: ' + selected_index);
                 selected_index = 0;
                 highlightElement(selected_index);
         }
@@ -114,6 +134,33 @@ $(document).ready(function() {
     
 });
 
+function confirmCards() {
+    action_time = new Date().getTime();
+    mode = 'waiting_for_card';
+    selected_card = 0;
+    selected_index = 0;
+    rarity = 'none';
+    var pathArray = window.location.pathname.split('/', -1);
+    var arena_id = pathArray[3];
+    var url = "/draft/card_choice/"+selected[0]+'/'+selected[1]+'/'+selected[2]+'/'+arena_id;
+    console.log('getting url: ' + url);                
+    //get data
+    $.get(url, function( data ) {
+        //GOT DATA!!!!! (scores n shit.)
+        console.log(data);
+        
+        removeConfirm();
+        buildConfirmChoices(arena_id);
+        buildScoreUI(data);
+        buildSynergyUI(data);         
+        
+        
+        highlightElementGeneric(0, "");
+        
+        
+    });
+}
+
 //RESPOND TO CARD SELECTION
 function showClassCards(id) {
     //selected card name from the list.
@@ -150,7 +197,7 @@ function showClassCards(id) {
         
         layoutCardChosen(card_option, element.text(), id);
         //undo button
-        var undoButton = createInputButton(card_option, {}, 'Undo', id, function ( event ) {
+        var undoButton = createInputButton(card_option, {}, 'Undo', "undo", id, function ( event ) {
             $(this).remove();
             undoCardChoice(id);
             event.stopPropagation();
@@ -165,31 +212,15 @@ function showClassCards(id) {
                 break;
             }   
         }        
-        if (flag == 0) {
-                    
+        if (flag == 0 && !($('#confirm').length)) {
+            mode = 'waiting_for_confirm';
+            action_time = new Date().getTime();
             //confirm teh selection of all 3 cards...
-            createInputButton($('.card2'), {}, 'Confirm Cards', 'confirm', function ( event ) {
-                selected_card = 0;
-                selected_index = 0;
+            createInputButton($('.card2'), {}, 'Confirm Cards', 'confirm', null, function ( event ) {
+                $(this).remove();
+                confirmCards();
                 event.preventDefault();
                 event.stopPropagation();
-                $(this).remove();
-                rarity = 'none';
-                var pathArray = window.location.pathname.split('/', -1);
-                var arena_id = pathArray[3];
-                var url = "/draft/card_choice/"+selected[0]+'/'+selected[1]+'/'+selected[2]+'/'+arena_id;
-                console.log('getting url: ' + url);                
-                //get data
-                $.get(url, function( data ) {
-                    //GOT DATA!!!!! (scores n shit.)
-                    console.log(data);
-                    
-                    removeConfirm();
-                    buildConfirmChoices(arena_id);
-                    
-                    buildScoreUI(data);
-                    buildSynergyUI(data);                    
-                });
             });
         } /*else {
             showClassCards(flag);
@@ -198,9 +229,11 @@ function showClassCards(id) {
 }
 
 
-function resetTopMessage(id) {
+function resetTopMessage(id, msg) {
     if (id==0) {
         return setMessageText(id, 'Click or press enter to select.');
+    } else if (msg) {
+        return setMessageText(id, msg);
     } else {
         return setMessageText(id, 'Click to select.');
     }
@@ -224,7 +257,8 @@ function updateNumber (newNumber) {
 
 //highlight card names when using arrow keys to select.
 function highlightElement(index) {
-    for(i = 0;i < $($("li div")).length; i++) {
+    console.log('checking: ' + index);
+    for(var i = 0;i < $($("li div")).length; i++) {
         if (i == index) {
             $($("li div")[i]).css({"opacity":1.0});
         } else {
@@ -232,6 +266,20 @@ function highlightElement(index) {
         }
     }
 }
+
+//highlight any element
+function highlightElementGeneric(index, selector) {
+    console.log('checking: ' + index);
+    for(var i = 0;i < $($(selector)).length; i++) {
+        console.log(i+':'+index+':'+selector);
+        if (i == index) {
+            $($(selector)[i]).css({"opacity":1.0});
+        } else {
+            $($(selector)[i]).css({"opacity":0.7});
+        }
+    }
+}
+
 //used by card arrow keys selection
 function getCurrentListLength() {
     return $("li div").length;
@@ -278,6 +326,7 @@ function rebuildList () {
         item: '<li><div class="name"></div></li>'
     };
     userList = new List('cards', options, cards);
+    userList.on('searchComplete', function() { highlightElement(selected_index) })
     filterList();
     userList.page = 1000;
     userList.sort('name');
@@ -286,16 +335,24 @@ function rebuildList () {
     rebindKeys();
 }
 
-function hideUndo () {
-    $('.Undo').hide();
+function removeUndo () {
+    removeElement("#undo");
 }
 
 function removeConfirm () {
-    $("[id='Confirm Cards']").remove();
+    removeElement("#confirm");
+}
+
+function removeElement(selector) {
+    while($(selector).length) {
+        for (var i = 0; i < $(selector).length; i++) {
+            $(selector).remove();
+        }
+    }
 }
 
 function removeConfirmChoices() {
-    $("[id='I Picked This Card']").remove();
+    removeElement("#ipicked");
 }
 
 function removeHighlight () {
@@ -399,11 +456,9 @@ function layoutCardChosen (card_option, text, id) {
     rarity = card_rarity[text];
     
     card_option.html('');
-    $('<p><span class="capital">'+text+'</span> selected.</p>').appendTo(card_option);
-    makeCardElement(getCardFile(text), id).appendTo(card_option);
-    
+    card_option.append(resetTopMessage(id, '<span class="capital">'+text+'</span> selected.'));
+    makeCardElement(getCardFile(text), id).appendTo(card_option);    
     card_option.off('click');
-    //card_option.text(text + ' selected.');
     return card_option;
     
 }
@@ -414,7 +469,7 @@ function buildConfirmChoices(arena_id) {
         var tmp_index = j + 1;
         var tmp_card_name = ".card"+tmp_index;
         $(tmp_card_name).removeClass('highlight');
-        var ipicked = createInputButton($(tmp_card_name), {}, 'I Picked This Card', j, function ( event ) {
+        var ipicked = createInputButton($(tmp_card_name), {}, 'I Picked This Card', 'ipicked', j, function ( event ) {
             event.preventDefault();
             event.stopPropagation();
             var selindex = event.data.id;
@@ -433,7 +488,7 @@ function buildConfirmChoices(arena_id) {
                 updateNumber(card_number);
                 initCardClicks();
                 selected = [];
-                hideUndo();
+                removeUndo();
                 removeHighlight();
             });
         });
@@ -476,5 +531,12 @@ function updateChosenCardsTab (data) {
         k = keys[i];
         var new_div = $('<span class="capital" id="card_name">'+ k +'</span><span id="card_count">'+ data[k]+'</span><br>'); //has to match select_card.html.ep.
         $('#tabs-1').append(new_div);
+    }
+}
+
+function highlightButtons (id) {
+    
+    for(var i = 0; i < 3; i++) {
+        var ele = $("[id='I Picked This Card']")[i];
     }
 }

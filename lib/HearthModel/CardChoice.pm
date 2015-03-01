@@ -102,11 +102,14 @@ sub get_advice {
     #build a hashmap of names to scores
     my %scores = ();
     my %new_scores = ();
+    my %math = ();
     my @unique_cards = keys(%card_counts);
     ##### GET LIST OF CARDS FOR MANA.....
     
+    
     for my $score (@$scores) {
         $scores{$score->{'_source'}->{'card_name'}} = $score->{'_source'}->{'score'};
+        #divide by $max_score throughout so we hide our internal scoring system a bit.
         $out_data->{'old_scores'}->{$score->{'_source'}->{'card_name'}} = $score->{'_source'}->{'score'} / $max_score;
     }
     
@@ -121,15 +124,18 @@ sub get_advice {
             my $total_weight = $weight * $count;
             $cumul_weight += $total_weight;
         }
-        my $original_score = $scores{$card_name}*100;
+        my $original_score = $scores{$card_name}*100;#to avoid descreasing negative numbers
         #each 1 PT synergy weight increase card value by 10%.
-        my $new_score = ((1+($cumul_weight/10))*$original_score)/100;
-        $new_scores{$card_name} = $new_score;
+        my $synergy_modifier = (1+($cumul_weight/10));
+        my $new_score = ($synergy_modifier*$original_score)/100;
+        $new_scores{$card_name} = $new_score / $max_score;
+        $math{$card_name} = [$synergy_modifier,'*',$new_score / $max_score];
     }
     
     for my $card_name (keys(%new_scores)) {
         my $score = $new_scores{$card_name};
-        $out_data->{'scores'}->{$card_name} = $score / $max_score;
+        $out_data->{'scores'}->{$card_name} = $score;
+        $out_data->{'math'}->{$card_name} = $math{$card_name};
     }
     
     print STDERR 'Out data:' . Dumper($out_data);

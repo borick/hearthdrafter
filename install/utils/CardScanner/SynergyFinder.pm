@@ -11,6 +11,7 @@ sub _has_tag { return CardScanner::_has_tag(@_) }
 
 use constant MAX_MINION_SIZE_FOR_BUFF_SYNERGY             => 0;
 use constant MIN_MINION_HEALTH_FOR_GET_TAUNT_SYNERGY      => 3;
+use constant MIN_MINION_COST_FOR_INNERVATE_SYNERGY        => 4;
 use constant MIN_SPELL_COST_COMBO_SYNERGY                 => 1;
 use constant MIN_MINION_COST_ADJACENT_BUFF_SYNERGY        => 4;
 use constant MIN_MINION_COST_FROSTWOLF_WARLORD_SYNERGY    => 3;
@@ -75,11 +76,24 @@ sub find_synergies {
             _update_reasons("$name_x|$name_y",'The bigger the creature, the more valuable the taunt.',\%reasons);
         }
         
+        #innvervate + cost
+        if ($card_x eq 'innervate' && $type_y eq 'minion' && $cost_y >= MIN_MINION_COST_FOR_INNERVATE_SYNERGY) {            
+            $g->add_edge($name_x, $name_y, ($cost_y/6.0+0.10));
+            _update_reasons("$name_x|$name_y",'Use innervate to bring out big minions.',\%reasons);
+        }
+        
         # enrage <> pings
         if (_has_tag($tags_x, 'ping', $card_y) && _has_tag($tags_y, 'has_enrage', $card_x) && $type_y eq 'minion' && $health_y >= 2) {
             $g->add_edge($name_x, $name_y, 1.00);
             _update_reasons("$name_x|$name_y",'Pings can be used to activate enrage.',\%reasons);
         }
+        
+        # ping + mech bear cat
+        if (_has_tag($tags_x, 'ping', $card_y) && $name_y eq 'mech-bear cat') {
+            $g->add_edge($name_x, $name_y, 1.00);
+            _update_reasons("$name_x|$name_y",'Pings == more spare parts!',\%reasons);
+        }
+        
         # enrage <> health-buffs
         if (_has_tag($tags_x, 'buff_health', $card_y) && _has_tag($tags_y, 'has_enrage', $card_x) && $type_y eq 'minion') {
             $g->add_edge($name_x, $name_y, 1.00);
@@ -155,10 +169,10 @@ sub find_synergies {
         }
         
         #mech synergy
-        if (_has_tag($tags_x, 'mech_synergy', $card_y) && $race_y eq 'mech') {
+        if (_has_tag($tags_x, 'mech_synergy', $card_y) && ($race_y eq 'mech' || $name_y =~ /mech/)) {
             $g->add_edge($name_x, $name_y, 1.00);
             _update_reasons("$name_x|$name_y",'Certain cards have a special synergy with mechs.',\%reasons);
-        }        
+        }
 
         #pirate synergy
         if (_has_tag($tags_x, 'pirate_synergy', $card_y) && $race_y eq 'pirate') {
@@ -245,6 +259,20 @@ sub find_synergies {
             $g->add_edge($name_x, $name_y, 1.00);
             _update_reasons("$name_x|$name_y",'Lots of buffed minions!',\%reasons);
         }
+        
+        # power of the wild & violet teacher
+        if ($name_x eq 'power of the wild' && $name_y eq 'violet teacher') {
+            $g->add_edge($name_x, $name_y, 1.00);
+            _update_reasons("$name_x|$name_y",'Strong students!',\%reasons);
+        }
+        # stormwind knight + crazed alch
+        if ($name_x eq 'stormwind knight' && $name_y eq 'crazed alchemist') {
+            $g->add_edge($name_x, $name_y, 1.00);
+            _update_reasons("$name_x|$name_y",'Smash your knight into stuff',\%reasons);
+        }
+        
+        
+        
         
     }
     print "Finished > $count comparisons.\n" if $debug;

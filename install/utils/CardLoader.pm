@@ -67,6 +67,7 @@ sub load_cards {
     for my $set (@sets_to_load) {
         for my $card (@{$cards->{$set}}) {
             if (($card->{'id'} =~ /^..._...$/ || $card->{'id'} =~ /^NEW1_...$/ || $card->{'id'} =~ /^tt_...$/) && $card->{'type'} ne 'Hero Power' && $card->{'collectible'}) {    
+                $card->{'name'} =~ s/[.]//g; #period breaks shit like venture co.
                 print "Processing: ",$card->{'name'}, ' ', $card->{'id'}, ", #$counter\n" if $debug >= 1;
                 
                 print 'Text: ' . $card->{text} . "\n" if exists($card->{text}) and $debug >= 2;
@@ -140,6 +141,7 @@ sub load_scores {
         my $ref = $score{$class_name};
         for my $card_name (sort(keys(%$ref))) {            
             my $score = $ref->{$card_name};
+            $card_name =~ s/[.]//g; #period breaks shit like venture co. but do it after getting score.
             $max_score = $score if ($score > $max_score);
             $score_total += $score;
             my $id = $card_name.'|'.$class_name;

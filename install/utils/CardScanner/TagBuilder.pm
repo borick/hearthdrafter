@@ -175,7 +175,8 @@ sub CardScanner::TagBuilder::create_custom_tags {
         $tags{$name}->{'buff'}   = ['race:beast',  1.0] if ($name eq 'cenarius'); 
         $tags{$name}->{'buff'}   = ['attack:1',    1.0] if ($name eq 'hobgoblin'); 
         $tags{$name}->{'growth'} = ['race:mech',   1.0] if ($name eq 'junkbot');
-        $tags{$name}->{'growth'} = ['race:beast',  1.0] if ($name eq 'scavenging hyena'); 
+        $tags{$name}->{'growth'} = ['race:beast',  1.0] if ($name eq 'scavenging hyena');
+        $tags{$name}->{'growth'} = ['secret',      1.0] if ($name eq 'secretkeeper');
         
         #growing minions
         if ($text =~ /[+](\d+)/ && $type eq 'minion' && ($text =~ /each turn/ || $text =~ /whenever/) && $cost <= MIN_COST_MINION_GROWTH_TAG
@@ -310,6 +311,7 @@ sub CardScanner::TagBuilder::create_custom_tags {
         $tags{$name}->{'boardfill'}    = 1.00      if ($name eq 'unleash the hounds');
         $tags{$name}->{'boardfill'}    = 0.50      if ($name eq 'silverhand knight');
         $tags{$name}->{'boardfill'}    = 0.50      if ($name eq 'defias ringleader');
+        $tags{$name}->{'boardfill'}    = ['spell', 1.00] if ($name eq 'violet teacher');
         $tags{$name}->{'cursed'}       = 1.00      if ($name eq 'ancient watcher');
         $tags{$name}->{'cursed'}       = 1.00      if ($name eq 'fel reaver');
         $tags{$name}->{'cursed'}       = 1.00      if ($name eq 'zombie chow');
