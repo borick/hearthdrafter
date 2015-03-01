@@ -1,0 +1,7 @@
+% layout 'default';
+
+<script src="/js/libs/jquery-1.11.2.min.js"></script>
+<script src="/js/libs/jquery-ui.min.js"></script>
+% my $var = stash('completed_runs');
+
+<a href="/home">Back</a>

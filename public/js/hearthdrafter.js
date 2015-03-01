@@ -105,9 +105,7 @@ function initCardClicks() {
     }
 }
 
-//THE BEGINNING
-$(document).ready(function() {    
-    
+function loadCardSelection() {
     card_selected = 0;
     initCardClicks();
     rebindKeys();
@@ -132,8 +130,7 @@ $(document).ready(function() {
         }
     });
     $("#top_bar").css({'visibility':'visible'}).hide().fadeIn('fast', function() {} );
-    
-});
+}
 
 function confirmCards() {
     action_time = new Date().getTime();

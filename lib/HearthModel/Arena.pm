@@ -167,6 +167,44 @@ sub list_runs_no_results {
     return $out;
 }
 
+sub list_runs_completed {
+    my ($self, $user_name, $from, $size) = @_;
+    my $out = [];
+    $size = 10 if !$size;
+    $from = 0 if !$from;    
+    my $results = $self->es->search(
+        index => 'hearthdrafter',
+        type => 'arena_run',
+        size => $size,
+        from => $from,
+        body  => {
+            query => {
+                filtered => {
+                    query => {
+                        match => { user_name => $user_name }
+                    },
+                    filter => {
+                        bool => {
+                            must_not => {
+                                missing => { field => 'results' },
+                            },
+                            must_not => {
+                                missing => { field => 'end_date' },
+                            },
+                        }
+                    }
+                }
+            }
+        }
+    );
+    
+    for my $result (@{$results->{hits}->{hits}}) {
+        $result->{_source}->{_id} = $result->{_id};
+        push(@$out, $result->{_source});
+    }
+    return $out;
+}
+
 
 sub provide_results {
     my ($self, $arena_id, $data) = @_;

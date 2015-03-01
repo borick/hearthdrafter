@@ -87,7 +87,7 @@ sub load_cards {
                         push (@mechs, { name => $mech });
                     }
                 }
-                #print $card->{'id'},"\n"; The cards we need to get images for :D
+                print '"',lc($card->{'name'}),'":"',$card->{'id'},"\",\n"; #The cards we need to get images for. and the names used for building the js.
                 my %data = (
                     'name' => lc($card_name),
                     'id' => $card->{'id'},
@@ -101,7 +101,7 @@ sub load_cards {
                     'mechanics' => \@mechs,
                 );
                 my $result = $bulk->index({
-                    id => $card_name,
+                    id => lc($card_name),
                     source  => \%data
                 });
 

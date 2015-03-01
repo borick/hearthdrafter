@@ -61,6 +61,8 @@ sub startup {
     $auth_bridge->get('/confirm_card_choice/:card_name/:arena_id/')->to('draft#confirm_card_choice');
     $auth_bridge->get('/results/:arena_id/')->to('draft#results');
     $auth_bridge->post('/results/:arena_id/')->to('draft#results_post');
+    $auth_bridge->get('/view_completed_runs')->to('draft#view_completed_runs');
+    $auth_bridge->get('/view_completed_run/:arena_id')->to('draft#view_completed_run');
 }
 
 1;

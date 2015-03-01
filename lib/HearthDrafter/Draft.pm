@@ -70,10 +70,21 @@ sub results_post {
     my $result = $self->model->arena->provide_results($self->stash('arena_id'), $self->req->body_params);
     if (!$result) {
         $self->stash(message=>'Arena results updated successfully.');
+        sleep 1;#TODO: figure out how to wait for data to be propagated.
         return $self->redirect_to('/');
     } else {
         $self->stash(error=>"There was a problem updating the arena result: $result\n");
     }
+}
+
+sub view_completed_runs {
+    my $self = shift;
+    my $result = $self->model->arena->list_runs_completed($self->user->{'user'}->{'name'},
+                                                          $self->stash('from'),
+                                                          $self->stash('size'));
+    print STDERR Dumper($result);
+    $self->stash(completed_runs => $result);
+    $self->render('draft/view_completed_runs');
 }
 
 
