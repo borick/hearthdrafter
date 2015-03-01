@@ -6,6 +6,7 @@ use warnings;
 use HearthModel;
 use Mojo::Base 'Mojolicious';
 use Mojolicious::Plugin::Authentication;
+use Data::Dumper;
 
 my $model = HearthModel->new();
 has model => sub {
@@ -38,6 +39,7 @@ sub startup {
     my $model = $self->model();
     $model->connect($self);
     
+    
     #define all routes
     my $r = $self->routes;
     $r->get('/')->to('home#index');
@@ -48,16 +50,17 @@ sub startup {
     $r->get('/register')->to('home#register');
     $r->post('/register')->to('home#register_post');
     #drafting
-    $r->get('/draft/select_class/')->to('draft#select_class');
-    $r->get('/draft/arena_status/')->to('draft#arena_status');
-    $r->get('/draft/arena_status/:arena_action')->to('draft#arena_action');
-    $r->get('/draft/arena_action/:arena_action')->to('draft#arena_action');
-    $r->get('/draft/continue_arena_run')->to('draft#continue_arena_run');
-    $r->get('/draft/select_card/:arena_id')->to('draft#select_card');
-    $r->get('/draft/card_choice/:card1/:card2/:card3/:arena_id/')->to('draft#card_choice');
-    $r->get('/draft/confirm_card_choice/:card_name/:arena_id/')->to('draft#confirm_card_choice');
-    $r->get('/draft/results/:arena_id/')->to('draft#results');
-    $r->post('/draft/results/:arena_id/')->to('draft#results_post');
+    my $auth_bridge = $r->under('/draft')->to('home#auth_check');
+    $auth_bridge->get('/select_class/')->to('draft#select_class');
+    $auth_bridge->get('/arena_status/')->to('draft#arena_status');
+    $auth_bridge->get('/arena_status/:arena_action')->to('draft#arena_action');
+    $auth_bridge->get('/arena_action/:arena_action')->to('draft#arena_action');
+    $auth_bridge->get('/continue_arena_run')->to('draft#continue_arena_run');
+    $auth_bridge->get('/select_card/:arena_id')->to('draft#select_card');
+    $auth_bridge->get('/card_choice/:card1/:card2/:card3/:arena_id/')->to('draft#card_choice');
+    $auth_bridge->get('/confirm_card_choice/:card_name/:arena_id/')->to('draft#confirm_card_choice');
+    $auth_bridge->get('/results/:arena_id/')->to('draft#results');
+    $auth_bridge->post('/results/:arena_id/')->to('draft#results_post');
 }
 
 1;

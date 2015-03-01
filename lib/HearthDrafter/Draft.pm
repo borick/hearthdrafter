@@ -8,9 +8,7 @@ use Data::Dumper;
 
 sub arena_action {
     my $self = shift;
-    if (!$self->is_user_authenticated()) {
-        return $self->redirect_to('/login');
-    }
+    
     my $action = $self->stash('arena_action');
     print STDERR "Action: $action\n";
     if ($action =~ /new_arena_(\w+)/ ){
@@ -30,9 +28,7 @@ sub arena_action {
 
 sub select_card {
     my $self = shift;
-    if (!$self->is_user_authenticated()) {
-        return $self->redirect_to('/login');
-    }
+
     my $run_details;
     if (!eval { $run_details = $self->model->arena->continue_run($self->stash('arena_id')); }) {
         $self->stash(message=>'No arena with that ID exists.');
@@ -51,9 +47,6 @@ sub select_card {
 
 sub card_choice {
     my $self = shift;
-    if (!$self->is_user_authenticated()) {
-        return $self->redirect_to('/login');
-    }
     my $result = $self->model->card_choice->get_advice($self->stash('card1'),
                                                        $self->stash('card2'),
                                                        $self->stash('card3'),
@@ -63,9 +56,6 @@ sub card_choice {
 
 sub confirm_card_choice {
     my $self = shift;
-    if (!$self->is_user_authenticated()) {
-        return $self->redirect_to('/login');
-    }
     my $result = $self->model->arena->confirm_card_choice($self->stash('card_name'),
                                                           $self->stash('arena_id'));
     $self->render(json => $result);
@@ -73,16 +63,10 @@ sub confirm_card_choice {
 
 sub results {
     my $self = shift;
-    if (!$self->is_user_authenticated()) {
-        return $self->redirect_to('/login');
-    }
     $self->render('draft/results');
 }
 sub results_post {
     my $self = shift;
-    if (!$self->is_user_authenticated()) {
-        return $self->redirect_to('/login');
-    }
     my $result = $self->model->arena->provide_results($self->stash('arena_id'), $self->req->body_params);
     if (!$result) {
         $self->stash(message=>'Arena results updated successfully.');

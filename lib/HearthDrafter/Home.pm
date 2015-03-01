@@ -40,7 +40,7 @@ sub logmeout {
 sub home {
     my $self = shift;
     if (!$self->is_user_authenticated()) {
-        return $self->redirect_to('/login');
+        return $self->redirect_to('/');
     }
     $self->stash(           runs => $self->model->arena->list_open_runs($self->user->{'user'}->{'name'}),
                  runs_no_results => $self->model->arena->list_runs_no_results($self->user->{'user'}->{'name'}));
@@ -65,4 +65,9 @@ sub register_post {
     $self->redirect_to('/home');
 }
 
+sub auth_check {
+    my $self = shift;
+    $self->redirect_to('/') and return 0 unless($self->is_user_authenticated);
+    return 1;
+}
 1;
