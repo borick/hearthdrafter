@@ -27,7 +27,7 @@ sub login_post {
         $self->redirect_to('/home');
     } else {        
         $self->flash(message => 'login failed');
-        $self->redirect_to('/login');
+        $self->redirect_to('/');
     }
 }
 

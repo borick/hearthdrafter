@@ -11,9 +11,11 @@ Logged in as: <%= $user->{user}->{name} %><br><br>
 <input type='password' name='password' id='password' maxlength="50" />
 <input type='submit' name='Login' value='Login' />
 </form>
-% if (my $message = flash 'message') {
-<%= $message %>.
-% }
 <br><a href="/register"><font color='white'>Sign Up</a>
+% }
+% if (my $message = flash 'message') {
+<font color='red'><span class='capital'>
+    %= $message
+</span></font>
 % }
 </span>

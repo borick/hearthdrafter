@@ -5,7 +5,7 @@
 % my $runs_no_results = stash 'runs_no_results';
 % for my $run (@$runs) {
 
-<a href="/draft/select_card/<%= $run->{_id} %>/">Continue <%= $run->{class_name} %> Run </a>
+<a href="/draft/select_card/<%= $run->{_id} %>/">Continue <span class='capital'><%= $run->{class_name} %></span> Run </a>
 or <a href="/draft/arena_action/abandon_arena_<%= $run->{_id} %>/">Abandon This Run.</a> <br>
 
 % }

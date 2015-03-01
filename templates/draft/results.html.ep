@@ -4,27 +4,24 @@
 <script src="/js/libs/jquery-ui.min.js"></script>
 <script src="/js/libs/rangeslider.js"></script>
 
+
 <script type="text/javascript">
     function removeCard() {
-//         var num_cards = parseInt($('#num_cards').text());
-//         if (num_cards <= 0)
-//             return;
-//         num_cards -= 1;
-//         $('#num_cards').text(num_cards);
         $("#card_awards option:last-child").remove();
-        
+        if ($("#card_awards option").length == 0) {
+            $("#empty").show();            
+        }
     }
     function addCard() {
-//         var num_cards = parseInt($('#num_cards').text());
-//         if (num_cards > 4)
-//             return;
-//         num_cards += 1;
-//         $('#num_cards').text(num_cards);
-        
+        if ($("#card_awards option").length > 3) {
+            //more than 3 cards as a reward?
+            return;
+        }
         var golden = $('#golden').prop('checked');
         var rarity = $("input[name=rarity]:checked").val();
         var set    = $("input[name=set]:checked").val();
         $("<option selected readonly>"+(golden?'Golden ':'')+' '+set+' '+rarity+ " Card</option>").appendTo($("#card_awards"));
+        $("#empty").hide();
     }
 </script>
 
@@ -45,19 +42,19 @@
     <output></output>
 </div>
 <div id="slider">
-    <h3>Gold:</h3>
+    <h3>Gold Received:</h3>
     <br>
     <input type="range" min="0" max="610" step="5" value="0" name="gold" data-rangeslider>
     <output></output>
 </div>
 <div id="slider">
-    <h3>Dust:</h3>
+    <h3>Dust Received:</h3>
     <br>
     <input type="range" min="0" max="100" step="5" value="0" name="dust" data-rangeslider>
     <output></output>
 </div>
 <div id="slider">
-    <h3>Packs:</h3>
+    <h3>Packs Received:</h3>
     <br>
     <input type="range" min="1" max="2" step="1" value="1" name="packs" data-rangeslider>
     <output></output>
@@ -88,26 +85,26 @@ $(function() {
 
 <br />
 <fieldset>
-    <b>Cards Selected:</b><br>
-    <select name="cards" id="card_awards" multiple="multiple" readonly>
-    </select>
-    <br>
-    <label for="golden">Golden:</label>
-    <input type="checkbox" name="golden" id="golden" value="Golden"/>
+    <legend>Cards Received:</legend>
+    <div id="cards_list">
+        <span id="empty"><i>Cards list is empty.</i></span>
+        <select name="cards" id="card_awards" multiple="multiple" readonly>
+        </select>
+    </div>
     
+    <span class="results_heading">Golden</span><input type="checkbox" name="golden" id="golden" value="Golden"/>
     <br>
-    
-    <label for="rarity">Rarity:</label>
-    Common<input type="radio" name="rarity" id="rarity" value="Common" checked>
-    Rare<input type="radio" name="rarity" id="rare" value="Rare">
-    Epic<input type="radio" name="rarity" id="epic" value="Epic">
-    Legendary<input type="radio" name="rarity" id="elite" value="Legendary">
-
+    <span class="results_heading">Rarity</span>
     <br>
-    
-    <label for="set">Set:</label>
-    Classic<input type="radio" name="set" id="set" value="Classic" checked>
-    GvG<input type="radio" name="set" id="set" value="GvG">
+    <span class="results_subheading">Common</span><input type="radio" name="rarity" id="rarity" value="Common" checked>
+    <span class="results_subheading">Rare</span><input type="radio" name="rarity" id="rare" value="Rare">
+    <span class="results_subheading">Epic</span><input type="radio" name="rarity" id="epic" value="Epic">
+    <span class="results_subheading">Legendary</span><input type="radio" name="rarity" id="elite" value="Legendary">
+    <br>
+    <span class="results_heading">Set</span>
+    <br>
+    <span class="results_subheading">Classic</span><input type="radio" name="set" id="set" value="Classic" checked>
+    <span class="results_subheading">GvG</span><input type="radio" name="set" id="set" value="GvG">
     <br>
     <input type='button' name='AddCard' value='Add Card' onClick='javascript: addCard();'/>
     <input type='button' name='RemoveCard' value='Remove Card' onClick='javascript: removeCard();'/>

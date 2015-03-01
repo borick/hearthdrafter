@@ -13,6 +13,7 @@ var name_to_id = [];
 var mode = 'start';
 var d = new Date();
 var action_time = d.getTime();
+var arena_id = 'unknown';
 
 /* Generic Functions */
 function createElement(e, name, css) {
@@ -22,6 +23,7 @@ function createElement(e, name, css) {
     e.append(div);
     return div;
 }
+
 /**
  * createInputButtom
  * 
@@ -30,7 +32,6 @@ function createElement(e, name, css) {
  * id - ID to pass into the "click" function callback
  * callback - function to call, on click
  */
-
 function createInputButton (e, css, label, name, id, callback) {
     div = $("<div/>");
     div.attr({id: name, class: name});
@@ -41,8 +42,8 @@ function createInputButton (e, css, label, name, id, callback) {
     div.css(css);
     
     var obj = $('<br/>').insertBefore(button);
-    obj.wrap('<div id="'+name+'"></div>');
-    return obj;
+    var ret = obj.wrap('<span id="'+name+'">');//not sure why the button moves outside the wrap, but this achieves the overall effect, anyway.
+    return ret;
 }
 
 //bindings
@@ -57,7 +58,7 @@ $(document).keydown(function(e) {
                 }
             }
             console.log('enter pressed');
-            if (mode == 'waiting_for_confirm' && (new Date().getTime() - action_time) > 1000 ) {
+            if (mode == 'waiting_for_confirm' && (new Date().getTime() - action_time) > 400 ) {
                 confirmCards();
             }
             break;
@@ -141,23 +142,18 @@ function confirmCards() {
     selected_index = 0;
     rarity = 'none';
     var pathArray = window.location.pathname.split('/', -1);
-    var arena_id = pathArray[3];
+    arena_id = pathArray[3];
     var url = "/draft/card_choice/"+selected[0]+'/'+selected[1]+'/'+selected[2]+'/'+arena_id;
     console.log('getting url: ' + url);                
     //get data
     $.get(url, function( data ) {
-        //GOT DATA!!!!! (scores n shit.)
+        //GOT DATA!!!!! (scores n stuff.)
         console.log(data);
         
         removeConfirm();
         buildConfirmChoices(arena_id);
         buildScoreUI(data);
-        buildSynergyUI(data);         
-        
-        
-        highlightElementGeneric(0, "");
-        
-        
+        buildSynergyUI(data);
     });
 }
 
@@ -263,19 +259,6 @@ function highlightElement(index) {
             $($("li div")[i]).css({"opacity":1.0});
         } else {
             $($("li div")[i]).css({"opacity":0.7});
-        }
-    }
-}
-
-//highlight any element
-function highlightElementGeneric(index, selector) {
-    console.log('checking: ' + index);
-    for(var i = 0;i < $($(selector)).length; i++) {
-        console.log(i+':'+index+':'+selector);
-        if (i == index) {
-            $($(selector)[i]).css({"opacity":1.0});
-        } else {
-            $($(selector)[i]).css({"opacity":0.7});
         }
     }
 }
@@ -481,6 +464,8 @@ function buildConfirmChoices(arena_id) {
                 if (card_number >= 30) {
                     //TODO: finish arena visualization!
                     $('[class^="card"]').hide();
+                    //redirect to results input
+                    document.location.href = '/draft/results/'+arena_id;
                     return;
                 }
                 updateChosenCardsTab(data);

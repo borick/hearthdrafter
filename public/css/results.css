@@ -1,9 +1,11 @@
+/* see rangeslider.css in js/libs for more stuff. */
+
 output {
     display: block;
-    font-size: 30px;
+    font-size: 20px;
     font-weight: bold;
     text-align: center;
-    margin: 30px 0;
+    margin: 10px 0;
 }
 
 .rangeslider__fill, .rangeslider {
@@ -14,8 +16,34 @@ label {
     text-align: center;
     position: relative;
     font-weight: bold;
+    width: 100px;
 }
 
 #slider {
     width:100%;
+}
+#cards_list {
+    border: 1px solid;
+    position: relative;
+    height: 75px;
+}
+#empty {
+    z-index: 10;
+    position: absolute;
+}
+select {
+    position: absolute;
+    right: 0px;
+    height: 75px;
+    width:200px;
+}
+.results_heading {
+    font-weight: bold;
+    width: 100px;
+}
+.results_subheading {
+    width: 75px;
+}
+input[type='checkbox'],input[type='radio'] {
+    width: 25px;
 }

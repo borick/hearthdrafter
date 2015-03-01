@@ -13,10 +13,9 @@
 </head>
 <body>
 <div class="header">
-<img src="/images/hearthdrafter_logo.png"/>
+<a href="/"><img src="/images/hearthdrafter_logo.png"/></a>
     %= include '/home/login'
 </div>
-<div clss="fake_header"/>
 <div class="content">
 <%= content %>
 </div>
