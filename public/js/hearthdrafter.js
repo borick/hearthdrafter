@@ -105,6 +105,7 @@ function initCardClicks() {
     }
 }
 
+//invoked from select_card.html.ep
 function loadCardSelection() {
     card_selected = 0;
     initCardClicks();

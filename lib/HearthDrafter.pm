@@ -63,6 +63,10 @@ sub startup {
     $auth_bridge->post('/results/:arena_id/')->to('draft#results_post');
     $auth_bridge->get('/view_completed_runs')->to('draft#view_completed_runs');
     $auth_bridge->get('/view_completed_run/:arena_id')->to('draft#view_completed_run');
+    $auth_bridge->websocket('/reader_socket')->to('reader#connect'); #cant figure out how to get rid of this extra one.
+    $auth_bridge->websocket('/reader_socket/:arena_id')->to('reader#connect');
+    $auth_bridge->get('/reader_card_choice/:card1/:card2/:card3/:arena_id/')->to('reader#card_choice');
+    $auth_bridge->get('/reader_confirm_card_choice/:card_name/:arena_id/')->to('reader#confirm_card_choice');
 }
 
 1;

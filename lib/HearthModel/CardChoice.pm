@@ -96,16 +96,15 @@ sub get_advice {
                 },
             },
         },
-    );    
-        
+    );
     $scores = $scores->{hits}->{hits};
+    die 'bad cards' if (@$scores <= 0);
     #build a hashmap of names to scores
     my %scores = ();
     my %new_scores = ();
     my %math = ();
     my @unique_cards = keys(%card_counts);
     ##### GET LIST OF CARDS FOR MANA.....
-    
     
     for my $score (@$scores) {
         $scores{$score->{'_source'}->{'card_name'}} = $score->{'_source'}->{'score'};

@@ -73,8 +73,15 @@ $(function() {
     });
 });
 
-//do the card selection stuff
+//do the card selection stuff inside hearthdrafter.js
 $(document).ready(function() {    
     loadCardSelection();
+    //load the card reader :D
+    var ws = new WebSocket('<%= url_for('reader_socket')->to_abs . "/" . stash('arena_id')%>');
+    
+    // Incoming messages
+    ws.onmessage = function(event) {
+        console.log(event.data);
+    };
 });
 </script>

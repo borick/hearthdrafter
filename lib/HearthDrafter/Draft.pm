@@ -87,6 +87,4 @@ sub view_completed_runs {
     $self->render('draft/view_completed_runs');
 }
 
-
-
 1;
