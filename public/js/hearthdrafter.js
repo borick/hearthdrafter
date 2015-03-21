@@ -14,6 +14,8 @@ var mode = 'start';
 var d = new Date();
 var action_time = d.getTime();
 var arena_id = 'unknown';
+var pathArray = window.location.pathname.split('/', -1);
+arena_id = pathArray[3];
 
 /* Generic Functions */
 function createElement(e, name, css) {
@@ -148,8 +150,6 @@ function confirmCards() {
     selected_card = 0;
     selected_index = 0;
     rarity = 'none';
-    var pathArray = window.location.pathname.split('/', -1);
-    arena_id = pathArray[3];
     var url = "/draft/card_choice/"+selected[0]+'/'+selected[1]+'/'+selected[2]+'/'+arena_id;
     console.log('getting url: ' + url);                
     //get data
@@ -448,6 +448,49 @@ function layoutCardChosen (text, id) {
     
 }
 
+function confirmCardByName(name,data) {
+    for (i = 0; i < selected.length; i++) {
+        if (selected[i] == name) {
+            confirmCard(i,data);
+            return;
+        }
+    }
+}
+function finishConfirm(data) {
+    //GOT MORE DATA!!!
+    console.log(data);
+    card_number += 1;
+    if (card_number >= 30) {
+        //TODO: finish arena visualization!
+        $('[class^="card"]').hide();
+        //redirect to results input
+        document.location.href = '/draft/results/'+arena_id;
+        return;
+    }
+    updateChosenCardsTab(data);
+    removeConfirmChoices();
+    updateNumber(card_number);
+    initCardClicks();
+    selected = [];
+    removeUndo();
+    removeHighlight();
+}
+function confirmCard(selindex,auto) {
+    if (!auto) {
+        var url = "/draft/confirm_card_choice/"+selected[selindex]+'/'+arena_id;
+        $.get(url, function( data ) {
+            finishConfirm(data);
+        });
+    } else {
+        finishConfirm(auto);
+    }
+}
+function confirmCardChoice (event) {
+    event.preventDefault();
+    event.stopPropagation();
+    confirmCard(event.data.id);
+}
+
 function buildConfirmChoices(arena_id) {
     //make "picked this card" buttons
     for(j = 0; j < selected.length; j++) {
@@ -455,29 +498,7 @@ function buildConfirmChoices(arena_id) {
         var tmp_card_name = ".card"+tmp_index;
         $(tmp_card_name).removeClass('highlight');
         var ipicked = createInputButton($(tmp_card_name), {}, 'I Picked This Card', 'ipicked', j, function ( event ) {
-            event.preventDefault();
-            event.stopPropagation();
-            var selindex = event.data.id;
-            var url = "/draft/confirm_card_choice/"+selected[selindex]+'/'+arena_id;
-            $.get(url, function( data ) {
-                //GOT MORE DATA!!!
-                console.log(data);
-                card_number += 1;
-                if (card_number >= 30) {
-                    //TODO: finish arena visualization!
-                    $('[class^="card"]').hide();
-                    //redirect to results input
-                    document.location.href = '/draft/results/'+arena_id;
-                    return;
-                }
-                updateChosenCardsTab(data);
-                removeConfirmChoices();
-                updateNumber(card_number);
-                initCardClicks();
-                selected = [];
-                removeUndo();
-                removeHighlight();
-            });
+            confirmCardChoice(event);
         });
     }
 }

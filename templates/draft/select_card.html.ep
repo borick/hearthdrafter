@@ -87,12 +87,18 @@ $(document).ready(function() {
                 var data = event.data;
                 data = JSON.parse(data);
                 var cur_cards = data['current_cards'];
-                console.log(data);
-                console.log(cur_cards);
-                for(c=0;c<cur_cards.length;c++) {
-                    layoutCardChosen(cur_cards[c], c);
+                if (typeof cur_cards !== 'undefined') {
+                    console.log(data);
+                    console.log(cur_cards);
+                    for(c=0;c<cur_cards.length;c++) {
+                        layoutCardChosen(cur_cards[c], c);
+                    }
+                    loadChosenCards(data);
+                } else {
+                    // this is a confirmation.
+                    console.log('got confirm');
+                    confirmCardByName(data['card'], data['data']);
                 }
-                loadChosenCards(data);
             };
         } catch (err) {
             console.log(err);

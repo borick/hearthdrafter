@@ -11,24 +11,23 @@ $HearthDrafter::Reader::clients = {};
 sub _get_params {
     my ($c) = @_;
     die 'must be logged in' if !exists($c->user->{user});
-    die 'must provide arena id' if !$c->stash('arena_id');
     my $username = $c->user->{user}->{name};
-    my $arena_id = $c->stash('arena_id');
-    return ($c->stash('arena_id'), $c->user->{user}->{name}, _make_key($username, $arena_id));
+    return ($c->user->{user}->{name}, _make_key($username));
 }
 
 sub _make_key {
-    my ($val1, $val2) = @_;
-    return $val1.'____'.$val2;
+    my ($val1) = @_;
+    return $val1;
 }
 
 #websocket
 sub connect {
     my $c = shift;
     
-    my ($arena_id, $username, $key) = _get_params($c);
+    my $arena_id = $c->stash('arena_id');
+    my ($username, $key) = _get_params($c);
     
-    $HearthDrafter::Reader::clients->{$key} = $c->tx;
+    $HearthDrafter::Reader::clients->{$key} = [$c->tx, $arena_id];
     $c->app->log->debug("Client $username with arena_id $arena_id connected");
     $c->inactivity_timeout(6000); #1 hour
     $c->on(message => sub {
@@ -45,8 +44,9 @@ sub connect {
 
 sub card_choice {
     my $c = shift;
-    my ($arena_id, $username, $key) = _get_params($c);
-    my $socket = $HearthDrafter::Reader::clients->{$key};
+    my ($username, $key) = _get_params($c);
+    my $socket = $HearthDrafter::Reader::clients->{$key}->[0];
+    my $arena_id = $HearthDrafter::Reader::clients->{$key}->[1];
     my $result = $c->model->card_choice->get_advice($c->stash('card1'),
                                                     $c->stash('card2'),
                                                     $c->stash('card3'),
@@ -57,10 +57,12 @@ sub card_choice {
 
 sub confirm_card_choice {
     my $c = shift;
-    my ($arena_id, $username, $key) = _get_params($c);
-    my $socket = $HearthDrafter::Reader::clients->{$key};
+    my ($username, $key) = _get_params($c);
+    my $socket = $HearthDrafter::Reader::clients->{$key}->[0];
+    my $arena_id = $HearthDrafter::Reader::clients->{$key}->[1];
     my $result = $c->model->arena->confirm_card_choice($c->stash('card_name'),
                                                        $arena_id);
-    $socket->send({json => $result});
-    $c->render(json=> $result);
+    my $out = { card => $c->stash('card_name'), data => $result };
+    $socket->send({json => $out });
+    $c->render(json => $out);
 }
