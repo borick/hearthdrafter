@@ -118,7 +118,6 @@ function loadCardSelection() {
     number_element.css({'top':'0', 'right':'0'});
     updateNumber(card_number);
     
-    
     //keep the search focused, where we type card names
     $(document).click(function(event) {
         $(".search").focus();
@@ -133,6 +132,16 @@ function loadCardSelection() {
     $("#top_bar").css({'visibility':'visible'}).hide().fadeIn('fast', function() {} );
 }
 
+function loadChosenCards(data) {
+    //GOT DATA!!!!! (scores n stuff.)
+    console.log(data);
+    
+    removeConfirm();
+    buildConfirmChoices(arena_id);
+    buildScoreUI(data);
+    buildSynergyUI(data);
+}
+
 function confirmCards() {
     action_time = new Date().getTime();
     mode = 'waiting_for_card';
@@ -145,13 +154,7 @@ function confirmCards() {
     console.log('getting url: ' + url);                
     //get data
     $.get(url, function( data ) {
-        //GOT DATA!!!!! (scores n stuff.)
-        console.log(data);
-        
-        removeConfirm();
-        buildConfirmChoices(arena_id);
-        buildScoreUI(data);
-        buildSynergyUI(data);
+        loadChosenCards(data);
     });
 }
 
@@ -189,7 +192,7 @@ function showClassCards(id) {
         card_names.css({"display": "none"});
         var element = $(this);
         
-        layoutCardChosen(card_option, element.text(), id);
+        layoutCardChosen(element.text(), id);
         //undo button
         var undoButton = createInputButton(card_option, {}, 'Undo', "undo", id, function ( event ) {
             $(this).remove();
@@ -431,7 +434,8 @@ function getCardFile (text) {
     return bg_img;
 }
 
-function layoutCardChosen (card_option, text, id) {
+function layoutCardChosen (text, id) {
+    var card_option = getCardElement(id);
     console.log('card ' + text + " selected");
     selected[id] = text;
     rarity = card_rarity[text];

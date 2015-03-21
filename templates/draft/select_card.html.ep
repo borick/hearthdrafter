@@ -77,11 +77,27 @@ $(function() {
 $(document).ready(function() {    
     loadCardSelection();
     //load the card reader :D
-    var ws = new WebSocket('<%= url_for('reader_socket')->to_abs . "/" . stash('arena_id')%>');
-    
-    // Incoming messages
-    ws.onmessage = function(event) {
-        console.log(event.data);
+    var connect = function() {
+        try {
+            var ws = new WebSocket('<%= url_for('reader_socket')->to_abs . "/" . stash('arena_id')%>');
+            ws.onopen = function () {
+                console.log('Connection opened');
+            };
+            ws.onmessage = function(event) {
+                var data = event.data;
+                data = JSON.parse(data);
+                var cur_cards = data['current_cards'];
+                console.log(data);
+                console.log(cur_cards);
+                for(c=0;c<cur_cards.length;c++) {
+                    layoutCardChosen(cur_cards[c], c);
+                }
+                loadChosenCards(data);
+            };
+        } catch (err) {
+            console.log(err);
+        }
     };
+    connect();
 });
 </script>

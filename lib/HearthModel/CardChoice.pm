@@ -79,6 +79,8 @@ sub get_advice {
     $out_data->{synergy} = \%synergies;
     $out_data->{card_choices} = \@card_choices;
     $out_data->{card_counts} = \%card_counts;
+    $out_data->{current_cards} = $cards;
+    
     #mana curve
     #diminishing returns on cards
     #other?

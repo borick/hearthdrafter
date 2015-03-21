@@ -31,10 +31,16 @@ sub connect {
     $HearthDrafter::Reader::clients->{$key} = $c->tx;
     $c->app->log->debug("Client $username with arena_id $arena_id connected");
     $c->inactivity_timeout(6000); #1 hour
+    $c->on(message => sub {
+        my ($self, $msg) = @_;
+        $c->app->log->debug('Client msg: ' . $msg);
+        #do nothing
+    });
     $c->on(finish => sub {
         $c->app->log->debug('Client disconnected');
         delete $HearthDrafter::Reader::clients->{$arena_id};
     });
+    
 }
 
 sub card_choice {
@@ -46,6 +52,7 @@ sub card_choice {
                                                     $c->stash('card3'),
                                                     $arena_id);
     $socket->send({json => $result});
+    $c->render(json=> $result);
 }
 
 sub confirm_card_choice {
@@ -55,4 +62,5 @@ sub confirm_card_choice {
     my $result = $c->model->arena->confirm_card_choice($c->stash('card_name'),
                                                        $arena_id);
     $socket->send({json => $result});
+    $c->render(json=> $result);
 }
