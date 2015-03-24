@@ -104,16 +104,24 @@ sub get_advice {
     #build a hashmap of names to scores
     my %scores = ();
     my %new_scores = ();
-    my %math = ();
+    #my %math = ();
     my @unique_cards = keys(%card_counts);
     ##### GET LIST OF CARDS FOR MANA.....
     
     for my $score (@$scores) {
         $scores{$score->{'_source'}->{'card_name'}} = $score->{'_source'}->{'score'};
-        #divide by $max_score throughout so we hide our internal scoring system a bit.
+        #divide by $max_score throughout so we hide our internal scoring system
         $out_data->{'old_scores'}->{$score->{'_source'}->{'card_name'}} = $score->{'_source'}->{'score'} / $max_score;
     }
     
+    my $messages = { the_default => "We'll base this solely on card value ratings.",
+                     
+                   };
+                   
+    my $best = { score => 0, 
+                 score_index => -1};
+    
+    my $i = 0;
     #calculate final score
     for my $card_name (keys(%synergies)) {
         my $synergy_array = $synergies{$card_name};
@@ -125,18 +133,26 @@ sub get_advice {
             my $total_weight = $weight * $count;
             $cumul_weight += $total_weight;
         }
-        my $original_score = $scores{$card_name}*100;#to avoid descreasing negative numbers
+        my $original_score = $scores{$card_name}*100;#to avoid decreasing negative numbers
+        
+        #keep track of the best card by score, for message purposes.
+        if ($original_score > $best->{score}) {
+            $best->{score} = $original_score;
+            $best->{score_index} = $i;
+        }
+        
         #each 1 PT synergy weight increase card value by 10%.
         my $synergy_modifier = (1+($cumul_weight/10));
         my $new_score = ($synergy_modifier*$original_score)/100;
         $new_scores{$card_name} = $new_score / $max_score;
-        $math{$card_name} = [$synergy_modifier,'*',$new_score / $max_score];
+        #$math{$card_name} = [$synergy_modifier,'*',$new_score / $max_score];
+        $i += 1;
     }
     
     for my $card_name (keys(%new_scores)) {
         my $score = $new_scores{$card_name};
         $out_data->{'scores'}->{$card_name} = $score;
-        $out_data->{'math'}->{$card_name} = $math{$card_name};
+        #$out_data->{'math'}->{$card_name} = $math{$card_name};
     }
     
     print STDERR 'Out data:' . Dumper($out_data);

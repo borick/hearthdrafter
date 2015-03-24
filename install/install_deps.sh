@@ -44,4 +44,8 @@ cpanm Text::Format
 cpanm Graph::Simple
 cpanm Algorithm::Combinatorics
 cpanm Time::Piece
+cpanm Cache::Memcached::Fast
 echo Done
+
+echo Installing Memcached
+cpanm memcached

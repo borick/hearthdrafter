@@ -7,6 +7,7 @@ use HearthModel;
 use Mojo::Base 'Mojolicious';
 use Mojolicious::Plugin::Authentication;
 use Data::Dumper;
+use Mojo::Log;
 
 my $model = HearthModel->new();
 has model => sub {
@@ -26,6 +27,7 @@ my $load_user_sub = sub {
 
 sub startup {    
     my $self = shift;    
+    $self->config(hypnotoad => {workers => 1, proxy => 1});
     $self->secrets(['to.prevent.the.warning...']);
     $self->helper(model => sub { $model });
     $self->plugin('authentication' => {
@@ -35,10 +37,10 @@ sub startup {
         'validate_user' => $validate_user_sub,
         'current_user_fn' => 'user',
     });
-    #connect the model and pass ourself for convenience!
+    
+    #connect the model and pass ourself for convenience
     my $model = $self->model();
     $model->connect($self);
-    
     
     #define all routes
     my $r = $self->routes;

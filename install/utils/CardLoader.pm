@@ -87,7 +87,8 @@ sub load_cards {
                         push (@mechs, { name => $mech });
                     }
                 }
-                print '"',lc($card->{'name'}),'":"',$card->{'id'},"\",\n"; #The cards we need to get images for. and the names used for building the js.
+                #print '"',lc($card->{'name'}),'":"',$card->{'id'},"\",\n"; #The cards we need to get images for. and the names used for building the js.
+                print '{"',$card->{'id'},'":"',lc($card->{'name'}),"\"},\n"; 
                 my %data = (
                     'name' => lc($card_name),
                     'id' => $card->{'id'},

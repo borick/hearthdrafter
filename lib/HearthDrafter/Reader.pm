@@ -7,7 +7,7 @@ use Mojo::Base 'Mojolicious::Controller';
 use Data::Dumper;
 
 $HearthDrafter::Reader::clients = {};
-
+     
 sub _get_params {
     my ($c) = @_;
     die 'must be logged in' if !exists($c->user->{user});
@@ -39,7 +39,6 @@ sub connect {
         $c->app->log->debug('Client disconnected');
         delete $HearthDrafter::Reader::clients->{$arena_id};
     });
-    
 }
 
 sub card_choice {
