@@ -226,4 +226,15 @@ sub provide_results {
     );
     return 0; #success
 }
+
+sub undo_card_choice {
+    my ($self, $arena_id, $index) = @_;
+    my $doc = $self->es->get(
+        index => 'hearthdrafter',
+        type => 'arena_run',
+        id => $arena_id,
+    );
+    print STDERR 'card_choice: ' . Dumper($doc);
+}
+
 1;

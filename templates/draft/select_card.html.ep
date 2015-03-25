@@ -13,21 +13,22 @@
   <input class="search" placeholder="search" />
   <ul class="list"></ul>
 </div>
-<!--
+
 <div id="tabs">
   <ul>
-    <li><a href="#tabs-1">Choices</a></li>
-    <li><a href="#tabs-2">Summary</a></li>
+    <li><a href="#tabs-1">Chosen Cards!</a></li>
+    <!--<li><a href="#tabs-2">Summary</a></li>-->
   </ul>
   <div id="tabs-1">
+  <table border="0" width="100%" id="cards_chosen">
      % for my $card (sort(keys($run_details->{card_counts}))) {
-        <span class="capital" id="card_name"><%== $card %></span><span id="card_count"><%== $run_details->{card_counts}->{$card} %></span><br>
+        <tr>
+            <td id="card_name"><span class="capital"><%== $card %></span></td>
+            <td id="card_count"><%== $run_details->{card_counts}->{$card} %></td>
+        </tr>
      % }
-  </div>
-  <div id="tabs-2">
-  </div>
+  </table></div>
 </div>
--->
 
 <script type="text/javascript">
 
@@ -43,16 +44,26 @@ var cards = [
 % for my $card (@$cards) {
      {name:"<%== $card->{name} %>",
       id: "<%== $card->{id} %>",
+      cost: "<%== $card->{cost} %>",
       rarity: "<%== $card->{rarity} %>"},
 % }
 ];
-
+var card_data = [];
 //preload the images!
 var images = [card_back];
 for (i = 0; i < cards.length; i++) {
     images.push(img + cards[i]['id'] + '.png');
+    card_data[cards[i]['name']] = cards[i];
 }
 preload(images);
+console.log(card_data);
+//add the cost to the list of cards
+rows = $('#tabs-1 table tr');
+for (i = 0; i < rows.length; i++) {
+    jrows = jQuery(rows[i]);
+    text = jrows.find('[id=card_name]').text();
+    jrows.prepend($('<td id="cost">'+card_data[text]['cost']+'</td>'));
+}
 
 //create a dict to map names to IDs since not sure how else to get this into list.js.
 var card_ids = {};
@@ -61,6 +72,7 @@ for (i = 0; i < cards.length; i++) {
     card_ids[cards[i]['name']] = cards[i]['id'];
     card_rarity[cards[i]['name']] = cards[i]['rarity'];
 }
+sortTable();
 
 //tab it up
 $(function() {
@@ -72,6 +84,23 @@ $(function() {
         }
     });
 });
+
+function sortTable(){
+    var tbl = document.getElementById("cards_chosen").tBodies[0];
+    var store = [];
+    for(var i=0, len=tbl.rows.length; i<len; i++){
+        var row = tbl.rows[i];
+        var sortnr = parseFloat(row.cells[0].textContent || row.cells[0].innerText);
+        if(!isNaN(sortnr)) store.push([sortnr, row]);
+    }
+    store.sort(function(x,y){
+        return y[0] - x[0];
+    });
+    for(var i=0, len=store.length; i<len; i++){
+        tbl.appendChild(store[i][1]);
+    }
+    store = null;
+}
 
 //do the card selection stuff inside hearthdrafter.js
 $(document).ready(function() {    

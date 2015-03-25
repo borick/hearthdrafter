@@ -120,6 +120,11 @@ function loadCardSelection() {
     number_element.css({'top':'0', 'right':'0'});
     updateNumber(card_number);
     
+    cancel_link = createElement($("#top_bar"), 'undo_last_card', {});
+    cancel_link.css({"position":"absolute"});
+    cancel_link.css({'top':'0', 'right':'0'});
+    cancel_link.html('<a href="#" onclick="undoLastCard(); return false;">Undo Last Card</a>');
+    
     //keep the search focused, where we type card names
     $(document).click(function(event) {
         $(".search").focus();
@@ -475,6 +480,14 @@ function finishConfirm(data) {
     removeUndo();
     removeHighlight();
 }
+function undoLastCard() {
+    var url = '/draft/undo_last_card/'+arena_id;
+    console.log('undo...');
+    $.get(url, function( data ) {
+        console.log('undo last card completed.');
+        });
+}
+
 function confirmCard(selindex,auto) {
     if (!auto) {
         var url = "/draft/confirm_card_choice/"+selected[selindex]+'/'+arena_id;

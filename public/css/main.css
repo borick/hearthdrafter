@@ -45,7 +45,7 @@
 
 .capital {
   text-transform: capitalize;
-  font-weight: bold;
+  /*font-weight: bold;*/
 }
 /* other */
 .highlight {
@@ -126,12 +126,16 @@ form {
   width: 100;
   height: auto;
 }
-#card_count {
-  position: absolute;
-  margin-right: 20px;
-  font-weight: bold;
-  right: 0;
+#cost {
   font-size: 125%;
+  font-weight: bold;
+}
+#card_name {
+  width: 100%;
+}
+#card_count {
+  font-weight: bold;
+  text-align: right;
 }
 .content {
   margin-top: 100px;
@@ -153,4 +157,9 @@ form {
   top: 50%;
   margin-top:-2em;
   right: 5%;
+}
+
+#undo_last_card {
+  margin-left: auto;
+  margin-top: 150px;
 }
