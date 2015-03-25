@@ -205,7 +205,6 @@ sub list_runs_completed {
     return $out;
 }
 
-
 sub provide_results {
     my ($self, $arena_id, $data) = @_;
     my $hash = $data->to_hash;
@@ -218,6 +217,7 @@ sub provide_results {
         id => $arena_id,
     );
     $doc->{_source}->{'results'} = $hash;
+    print STDERR "Providing results: " + Dumper($hash);
     my $results = $self->es->index(
         index => 'hearthdrafter',
         type => 'arena_run',
@@ -227,14 +227,23 @@ sub provide_results {
     return 0; #success
 }
 
-sub undo_card_choice {
-    my ($self, $arena_id, $index) = @_;
+sub undo_last_card {
+    my ($self, $arena_id, $user) = @_;
     my $doc = $self->es->get(
         index => 'hearthdrafter',
         type => 'arena_run',
         id => $arena_id,
     );
-    print STDERR 'card_choice: ' . Dumper($doc);
+    die 'not your arena' if $user ne $doc->{_source}->{user_name};
+    shift(@{$doc->{_source}->{card_options}});
+    $self->es->index(
+        index => 'hearthdrafter',
+        type => 'arena_run',
+        id => $arena_id,
+        body => $doc->{_source},
+    );
+    my $source = $self->continue_run($arena_id);
+    return $source->{card_counts};
 }
 
 1;

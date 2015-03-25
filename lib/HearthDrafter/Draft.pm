@@ -22,6 +22,10 @@ sub arena_action {
         $self->model->arena->abandon_run($arena_id, $self->user->{'user'}->{'name'});
         sleep 1;#TODO: figure out how to wait for data to be propagated.
         return $self->redirect_to('/home');
+    } elsif ($action =~ /undo_last_card_([a-zA-Z0-9_-]+)/ ){
+        my $arena_id = $1;
+        my $result = $self->model->arena->undo_last_card($arena_id, $self->user->{'user'}->{'name'});
+        return $self->render(json => $result);
     }
     warn "bad action $action";
 }

@@ -123,7 +123,7 @@ function loadCardSelection() {
     cancel_link = createElement($("#top_bar"), 'undo_last_card', {});
     cancel_link.css({"position":"absolute"});
     cancel_link.css({'top':'0', 'right':'0'});
-    cancel_link.html('<a href="#" onclick="undoLastCard(); return false;">Undo Last Card</a>');
+    cancel_link.html('<a href="#" onclick="undoLastCard(); return false;">Undo last card</a>');
     
     //keep the search focused, where we type card names
     $(document).click(function(event) {
@@ -254,7 +254,10 @@ function createSynergiesDiv(id) {
 
 //update the number at the end of each turn.
 function updateNumber (newNumber) {
-    $('#card_number').text( (newNumber+1) + '/30');
+    if (newNumber == 0) {
+        $('#undo_last_card').hide();
+    }
+    $('#card_number').text( (newNumber) + '/30');
 }
 
 //highlight card names when using arrow keys to select.
@@ -480,12 +483,25 @@ function finishConfirm(data) {
     removeUndo();
     removeHighlight();
 }
+
 function undoLastCard() {
-    var url = '/draft/undo_last_card/'+arena_id;
-    console.log('undo...');
-    $.get(url, function( data ) {
-        console.log('undo last card completed.');
+    if (window.confirm("Are you sure you want to undo the last card choice? There is no redo.")) {
+        var url = '/draft/arena_action/undo_last_card_'+arena_id;
+        console.log('undo...');
+        $.get(url, function( data ) {
+            if (card_number == 0) {
+                return;
+            }
+            card_number -= 1;
+            removeConfirmChoices();
+            updateNumber(card_number);
+            initCardClicks();
+            selected = [];
+            removeUndo();
+            removeHighlight(); 
+            updateChosenCardsTab(data);
         });
+    }
 }
 
 function confirmCard(selindex,auto) {
@@ -547,12 +563,13 @@ function updateChosenCardsTab (data) {
     var keys = Object.keys(data),
         i, len = keys.length;
     keys.sort();
-    $('#tabs-1').html('');
+    $('#cards_chosen').html('');
     for (i = 0; i < len; i++) {
         k = keys[i];
-        var new_div = $('<span class="capital" id="card_name">'+ k +'</span><span id="card_count">'+ data[k]+'</span><br>'); //has to match select_card.html.ep.
-        $('#tabs-1').append(new_div);
+        var new_div = $('<tr><td id="card_name"><span class="capital">'+ k +'</span></td><td id="card_count">'+ data[k]+'</td></tr>'); //has to match select_card.html.ep.
+        $('#cards_chosen').append(new_div);
     }
+    updateManaCostChosenCards();//from select_card.html.ep.
 }
 
 function highlightButtons (id) {

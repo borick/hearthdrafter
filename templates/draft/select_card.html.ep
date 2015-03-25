@@ -56,14 +56,19 @@ for (i = 0; i < cards.length; i++) {
     card_data[cards[i]['name']] = cards[i];
 }
 preload(images);
-console.log(card_data);
-//add the cost to the list of cards
-rows = $('#tabs-1 table tr');
-for (i = 0; i < rows.length; i++) {
-    jrows = jQuery(rows[i]);
-    text = jrows.find('[id=card_name]').text();
-    jrows.prepend($('<td id="cost">'+card_data[text]['cost']+'</td>'));
+//console.log(card_data);
+function updateManaCostChosenCards() {
+    //add the cost to the list of cards
+    rows = $('#tabs-1 table tr');
+    for (i = 0; i < rows.length; i++) {
+        jrows = jQuery(rows[i]);
+        text = jrows.find('[id=card_name]').text();
+        jrows.prepend($('<td id="cost">'+card_data[text]['cost']+'</td>'));
+    }
+    sortTable();
 }
+
+updateManaCostChosenCards();
 
 //create a dict to map names to IDs since not sure how else to get this into list.js.
 var card_ids = {};
@@ -72,7 +77,6 @@ for (i = 0; i < cards.length; i++) {
     card_ids[cards[i]['name']] = cards[i]['id'];
     card_rarity[cards[i]['name']] = cards[i]['rarity'];
 }
-sortTable();
 
 //tab it up
 $(function() {
@@ -87,6 +91,8 @@ $(function() {
 
 function sortTable(){
     var tbl = document.getElementById("cards_chosen").tBodies[0];
+    if (tbl == null)
+        return;
     var store = [];
     for(var i=0, len=tbl.rows.length; i<len; i++){
         var row = tbl.rows[i];
