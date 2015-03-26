@@ -15,7 +15,10 @@ sub arena_action {
         my $class = $1;
         my $results = $self->model->arena->begin_arena($class, $self->user->{'user'}->{'name'});
         if (defined($results) && exists($results->{_id})) {
-            return $self->redirect_to('/draft/select_card/'.$results->{_id});
+            return $self->redirect_to('/draft/select_region/'.$results->{_id});
+        } else {
+            $self->stash('message' => 'Could not create new arena.');
+            return $self->redirect_to('/home');
         }
     } elsif ($action =~ /abandon_arena_([a-zA-Z0-9_-]+)/ ){
         my $arena_id = $1;
@@ -26,8 +29,17 @@ sub arena_action {
         my $arena_id = $1;
         my $result = $self->model->arena->undo_last_card($arena_id, $self->user->{'user'}->{'name'});
         return $self->render(json => $result);
+    } elsif ($action =~ /set_region_([a-z]+)_([a-zA-Z0-9_-]+)/ ){
+        my $region = $1;
+        my $arena_id = $2;
+        my $result = $self->model->arena->set_region($arena_id, $self->user->{'user'}->{'name'}, $region);
+        return $self->redirect_to('/draft/select_card/'.$arena_id);
     }
     warn "bad action $action";
+}
+
+sub select_region {
+    shift->render('draft/select_region');
 }
 
 sub select_card {

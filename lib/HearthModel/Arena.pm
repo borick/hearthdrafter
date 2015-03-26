@@ -217,7 +217,7 @@ sub provide_results {
         id => $arena_id,
     );
     $doc->{_source}->{'results'} = $hash;
-    print STDERR "Providing results: " + Dumper($hash);
+    print STDERR "Providing results: " . Dumper($hash);
     my $results = $self->es->index(
         index => 'hearthdrafter',
         type => 'arena_run',
@@ -244,6 +244,27 @@ sub undo_last_card {
     );
     my $source = $self->continue_run($arena_id);
     return $source->{card_counts};
+}
+
+sub set_region {
+    my ($self, $arena_id, $user, $region) = @_;
+    my $doc = $self->es->get(
+        index => 'hearthdrafter',
+        type => 'arena_run',
+        id => $arena_id,
+    );
+    my $region_map = { 'americas' => 1,
+                       'europe' => 1,
+                       'asia' => 1 };
+    die 'not your arena' if $user ne $doc->{_source}->{user_name};
+    die 'invalid region' if !exists($region_map->{$region});
+    $doc->{_source}->{region} = $region;
+    $self->es->index(
+        index => 'hearthdrafter',
+        type => 'arena_run',
+        id => $arena_id,
+        body => $doc->{_source},
+    );
 }
 
 1;

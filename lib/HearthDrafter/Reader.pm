@@ -29,7 +29,7 @@ sub connect {
     
     $HearthDrafter::Reader::clients->{$key} = [$c->tx, $arena_id];
     $c->app->log->debug("Client $username with arena_id $arena_id connected");
-    $c->inactivity_timeout(6000); #1 hour
+    $c->inactivity_timeout(180);
     $c->on(message => sub {
         my ($self, $msg) = @_;
         $c->app->log->debug('Client msg: ' . $msg);

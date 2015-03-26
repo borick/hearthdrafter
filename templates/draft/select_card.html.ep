@@ -110,7 +110,6 @@ function sortTable(){
 
 //do the card selection stuff inside hearthdrafter.js
 $(document).ready(function() {    
-    loadCardSelection();
     //load the card reader :D
     var connect = function() {
         try {
@@ -135,10 +134,18 @@ $(document).ready(function() {
                     confirmCardByName(data['card'], data['data']);
                 }
             };
+            //ping to keep the server alive.
+            setInterval(function(){ ws.send('!')}, 30000);
         } catch (err) {
             console.log(err);
         }
     };
     connect();
+    loadCardSelection();
+    if (card_number > 0) {
+        $("#undo_last_card").show();
+    } else {
+        $("#undo_last_card").hide();
+    }
 });
 </script>

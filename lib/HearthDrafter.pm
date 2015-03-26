@@ -58,6 +58,7 @@ sub startup {
     $auth_bridge->get('/arena_status/:arena_action')->to('draft#arena_action');
     $auth_bridge->get('/arena_action/:arena_action')->to('draft#arena_action');
     $auth_bridge->get('/continue_arena_run')->to('draft#continue_arena_run');
+    $auth_bridge->get('/select_region/:arena_id')->to('draft#select_region');
     $auth_bridge->get('/select_card/:arena_id')->to('draft#select_card');
     $auth_bridge->get('/card_choice/:card1/:card2/:card3/:arena_id/')->to('draft#card_choice');
     $auth_bridge->get('/confirm_card_choice/:card_name/:arena_id/')->to('draft#confirm_card_choice');

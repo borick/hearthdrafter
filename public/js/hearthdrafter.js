@@ -136,7 +136,6 @@ function loadCardSelection() {
             e.preventDefault();
         }
     });
-    $("#top_bar").css({'visibility':'visible'}).hide().fadeIn('fast', function() {} );
 }
 
 function loadChosenCards(data) {
@@ -254,9 +253,6 @@ function createSynergiesDiv(id) {
 
 //update the number at the end of each turn.
 function updateNumber (newNumber) {
-    if (newNumber == 0) {
-        $('#undo_last_card').hide();
-    }
     $('#card_number').text( (newNumber) + '/30');
 }
 
@@ -303,7 +299,7 @@ function filterList() {
         }
         if (add) {
             newItems.push(objr);
-        }                                    
+        }
     }
     userList.items = newItems;
 }
