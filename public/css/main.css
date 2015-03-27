@@ -140,6 +140,11 @@ form {
   margin-top: 100px;
   color: #000;
   max-width: 1024px;
+  width: 95%;
+  height: 95%;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 5px;
 }
 .header {
   background: #28353f;
@@ -163,4 +168,32 @@ form {
   margin-right: 9px;
   font-weight: bold;
   font-size: 70%;
+}
+
+/********/
+.wrapper {
+  padding-top: 25px;
+  height: 95%;
+}
+.maincontent {
+  background: #D9DBDD;
+  border: 2px solid #28353f;
+  border-radius: 12px;
+  padding: 7px 7px 7px 7px;
+}
+.maincontent a {
+  color: #000;
+  text-shadow: 0 0 12px #fff, 0 0 4px #fff, 1px 1px 2px #fff;
+  font-weight: bold;
+}
+.maincontent a:hover {
+  color: #fff !important;
+  text-shadow: 0 0 24px #000, 0 0 2px #000, 1px 1px 2px #000;
+  font-weight: bold;
+}
+a:link {
+  text-decoration: none;
+}
+a:visited {
+  text-decoration: none;
 }

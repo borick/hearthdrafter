@@ -23,11 +23,13 @@
 <a href="/"><img src="/images/hearthdrafter_logo.png"/></a>
     %= include '/home/login'
 </div>
-<div class="content">
-<%= content %>
-</div>
-<div class="message">
-%= stash("message")
+<div class="wrapper">
+    <div class="content">
+    <%= content %>
+        <span class="message">
+        %= stash("message")
+        </span>
+    </div>
 </div>
 </body>
 </html>

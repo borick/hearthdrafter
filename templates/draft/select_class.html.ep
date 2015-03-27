@@ -1,4 +1,5 @@
 % layout 'default';
+<div class="maincontent">
 <a href="/draft/arena_action/new_arena_druid">Druid</a>
 <a href="/draft/arena_action/new_arena_hunter">Hunter</a>
 <a href="/draft/arena_action/new_arena_mage">Mage</a>
@@ -8,3 +9,4 @@
 <a href="/draft/arena_action/new_arena_shaman">Shaman</a>
 <a href="/draft/arena_action/new_arena_warlock">Warlock</a>
 <a href="/draft/arena_action/new_arena_warrior">Warrior</a>
+</div>
