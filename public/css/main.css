@@ -30,16 +30,19 @@
   color: white;
 }
 .card1, .card2, .card3 {
-  overflow-y: scroll;
-  border: 0px;
+  /*overflow-y: scroll;*/
+  /*border: 0px;
   border-right: 2px;
   border-color: black;
-  border-style: solid;
-  width:250px;
-  height:100%;
+  border-style: solid;*/
+  margin: 0;
+  padding: 0;
+  width:280px;
   display: block;
   float: left;
   position: relative;
+}
+.card1:hover, .card2:hover, .card3:hover {
 }
 
 .capital {
@@ -50,9 +53,6 @@
 .highlight {
   font-weight: bold;
   opacity: 1.0;
-}
-.glow {
-  /*box-shadow:0 0 30px #AA6F2B;*/
 }
 #synergies {
   margin: 0px;
@@ -78,6 +78,7 @@ input {
 }
 img {
   max-width: 100%;
+  display: block;
 }
 h3 {
   font-size: 16px;

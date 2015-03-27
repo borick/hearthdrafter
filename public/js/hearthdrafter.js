@@ -4,7 +4,7 @@ var selected = [null, null, null];
 var userList = null;
 var dat = {};
 var img = "/images/cards_small/";
-var card_back = '/images/card_backs/small/Card_Back_Legend.png';
+var card_back = '/images/card_selection_back.png';
 var rarity = 'none';
 var number_element;
 var selected_index = 0;
@@ -98,7 +98,6 @@ function initCardClick(i) {
     var ele = $('.card'+(i+1));
     ele.click(function() { showClassCards(i); });
     ele.html('');
-    resetTopMessage(i).appendTo(ele);
     makeCardElement(card_back, i).addClass('glow').appendTo(ele);
 }
 function initCardClicks() {
@@ -170,15 +169,6 @@ function showClassCards(id) {
     selected_card = id;
     console.log('showClassCards:' + id);
     var card_option = getCardElement(id);
-    //reset the other card mesages
-    for(var c=0;c<3;c++) {
-        $('#top_message_'+c).replaceWith(resetTopMessage(c));
-        getCardElement(c).removeClass('highlight');
-        getCardImage(c).removeClass('glow');
-    }
-    card_option.addClass('highlight');
-    getCardImage(c).removeClass('glow');
-    $('#top_message_'+id).text('Please select your card.');
     var card_names = $('#cards');
     card_names.css({"display": "block", "z-index":9999});
     card_names.addClass('capital');
@@ -229,16 +219,6 @@ function showClassCards(id) {
     });
 }
 
-
-function resetTopMessage(id, msg) {
-    if (id==0) {
-        return setMessageText(id, 'Click or press enter to select.');
-    } else if (msg) {
-        return setMessageText(id, msg);
-    } else {
-        return setMessageText(id, 'Click to select.');
-    }
-}
 
 function setMessageText(id,text) {
     return $('<p id="top_message_'+id+'">'+text+'</p>');
@@ -409,8 +389,8 @@ function getCardElement (id) {
     return $(card_name);
 }
 function getCardImage (id) {
-    var card_name = "#card_img_"+(id);
-    return $(card_name);
+//     var card_name = "#card_img_"+(id);
+//     return $(card_name);
 }
 
 
@@ -420,7 +400,7 @@ function undoCardChoice (id) {
     removeHighlight();
     removeConfirmChoices();
     var card_option = getCardElement(id);
-    card_option.removeClass('highlight');
+    //card_option.removeClass('highlight');
     selected[id] = null;
     if(selected[0]==null&&selected[1]==null&&selected[2]==null) {
         rarity='none';
@@ -439,13 +419,13 @@ function getCardFile (text) {
 }
 
 function layoutCardChosen (text, id) {
+     
     var card_option = getCardElement(id);
     console.log('card ' + text + " selected");
     selected[id] = text;
     rarity = card_rarity[text];
     
     card_option.html('');
-    card_option.append(resetTopMessage(id, '<span class="capital">'+text+'</span> selected.'));
     makeCardElement(getCardFile(text), id).appendTo(card_option);    
     card_option.off('click');
     return card_option;
@@ -460,6 +440,7 @@ function confirmCardByName(name,data) {
         }
     }
 }
+
 function finishConfirm(data) {
     //GOT MORE DATA!!!
     console.log(data);
@@ -496,6 +477,7 @@ function undoLastCard() {
             removeUndo();
             removeHighlight(); 
             updateChosenCardsTab(data);
+            updateUndoLink();
         });
     }
 }
@@ -505,6 +487,7 @@ function confirmCard(selindex,auto) {
         var url = "/draft/confirm_card_choice/"+selected[selindex]+'/'+arena_id;
         $.get(url, function( data ) {
             finishConfirm(data);
+            updateUndoLink();
         });
     } else {
         finishConfirm(auto);
@@ -521,7 +504,7 @@ function buildConfirmChoices(arena_id) {
     for(j = 0; j < selected.length; j++) {
         var tmp_index = j + 1;
         var tmp_card_name = ".card"+tmp_index;
-        $(tmp_card_name).removeClass('highlight');
+        //$(tmp_card_name).removeClass('highlight');
         var ipicked = createInputButton($(tmp_card_name), {}, 'I Picked This Card', 'ipicked', j, function ( event ) {
             confirmCardChoice(event);
         });
@@ -572,5 +555,13 @@ function highlightButtons (id) {
     
     for(var i = 0; i < 3; i++) {
         var ele = $("[id='I Picked This Card']")[i];
+    }
+}
+
+function updateUndoLink() {
+    if (card_number > 0) {
+        $("#undo_last_card").show();
+    } else {
+        $("#undo_last_card").hide();
     }
 }

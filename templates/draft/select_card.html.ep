@@ -1,19 +1,18 @@
 % layout 'default';
 <div id="top_bar">
     <div id="selection">
-    <div class="card1"></div>
-    <div class="card2"></div>
-    <div class="card3"></div>
-    <div class="confirm"></div>
-    <div class="correction"></div>
-    <style>clear: both;</style>
+        <div class="card1"></div>
+        <div class="card2"></div>
+        <div class="card3"></div>
+        <style>clear: both;</style>
+    </div>
+    <div id="inner_search_panel">
+        <div id="cards">
+        <input class="search" placeholder="search" />
+        <ul class="list"></ul>
+        </div>
     </div>
 </div>
-<div id="cards">
-  <input class="search" placeholder="search" />
-  <ul class="list"></ul>
-</div>
-
 <div id="tabs">
   <ul>
     <li><a href="#tabs-1">Chosen Cards!</a></li>
@@ -107,7 +106,6 @@ function sortTable(){
     }
     store = null;
 }
-
 //do the card selection stuff inside hearthdrafter.js
 $(document).ready(function() {    
     //load the card reader :D
@@ -142,10 +140,7 @@ $(document).ready(function() {
     };
     connect();
     loadCardSelection();
-    if (card_number > 0) {
-        $("#undo_last_card").show();
-    } else {
-        $("#undo_last_card").hide();
-    }
+    updateUndoLink();
+    
 });
 </script>
