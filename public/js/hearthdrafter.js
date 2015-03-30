@@ -3,7 +3,7 @@
 var selected = [null, null, null];
 var userList = null;
 var dat = {};
-var img = "/images/cards_small/";
+var img = "/images/cards_medium/";
 var card_back = '/images/card_selection_back.png';
 var rarity = 'none';
 var number_element;
@@ -37,15 +37,12 @@ function createElement(e, name, css) {
 function createInputButton (e, css, label, name, id, callback) {
     div = $("<div/>");
     div.attr({id: name, class: name});
-    div.html(label);
-    e.append(div);
-    var button = div.button();
-    button.click({id: id, name: name}, callback);
+    div.html();//label);
     div.css(css);
-    
-    var obj = $('<br/>').insertBefore(button);
-    var ret = obj.wrap('<span id="'+name+'">');//not sure why the button moves outside the wrap, but this achieves the overall effect, anyway.
-    return ret;
+    e.prepend(div);
+    //var button = div.button();
+    var button = $('<a href="#">'+label+'</a>').prependTo(div);
+    button.click({id: id, name: name}, callback);
 }
 
 //bindings
@@ -144,7 +141,6 @@ function loadChosenCards(data) {
     removeConfirm();
     buildConfirmChoices(arena_id);
     buildScoreUI(data);
-    buildSynergyUI(data);
 }
 
 function confirmCards() {
@@ -178,21 +174,12 @@ function showClassCards(id) {
     highlightElement(selected_index);
     //pick a card
     $(".name").button().click( function( event ) {
-        
         //card name selected
         event.preventDefault();
         event.stopPropagation();
-        
         card_names.css({"display": "none"});
         var element = $(this);
-        
         layoutCardChosen(element.text(), id);
-        //undo button
-        var undoButton = createInputButton(card_option, {}, 'Undo', "undo", id, function ( event ) {
-            $(this).remove();
-            undoCardChoice(id);
-            event.stopPropagation();
-        });
         userList.clear();
         $(".search").hide();
         $('body').append(card_names);//move the list back out lest we destory it
@@ -213,9 +200,7 @@ function showClassCards(id) {
                 event.preventDefault();
                 event.stopPropagation();
             });
-        } /*else {
-            showClassCards(flag);
-        }*/
+        }
     });
 }
 
@@ -388,11 +373,6 @@ function getCardElement (id) {
     var card_name = ".card"+(id+1);
     return $(card_name);
 }
-function getCardImage (id) {
-//     var card_name = "#card_img_"+(id);
-//     return $(card_name);
-}
-
 
 function undoCardChoice (id) {
     console.log('undo card:' + id);
@@ -400,7 +380,6 @@ function undoCardChoice (id) {
     removeHighlight();
     removeConfirmChoices();
     var card_option = getCardElement(id);
-    //card_option.removeClass('highlight');
     selected[id] = null;
     if(selected[0]==null&&selected[1]==null&&selected[2]==null) {
         rarity='none';
@@ -424,12 +403,15 @@ function layoutCardChosen (text, id) {
     console.log('card ' + text + " selected");
     selected[id] = text;
     rarity = card_rarity[text];
-    
-    card_option.html('');
     makeCardElement(getCardFile(text), id).appendTo(card_option);    
     card_option.off('click');
+    //undo button
+    var undoButton = createInputButton(card_option, {}, 'Undo', "undo", id, function ( event ) {
+        $(this).remove();
+        undoCardChoice(id);
+        event.stopPropagation();
+    });
     return card_option;
-    
 }
 
 function confirmCardByName(name,data) {
@@ -504,36 +486,10 @@ function buildConfirmChoices(arena_id) {
     for(j = 0; j < selected.length; j++) {
         var tmp_index = j + 1;
         var tmp_card_name = ".card"+tmp_index;
-        //$(tmp_card_name).removeClass('highlight');
         var ipicked = createInputButton($(tmp_card_name), {}, 'I Picked This Card', 'ipicked', j, function ( event ) {
             confirmCardChoice(event);
         });
     }
-}
-
-function buildSynergyUI(data, id) {
-    for(myvar in data['synergy']) {
-        synergies = createSynergiesDiv(name_to_id[myvar]);
-        var syn_found = 0;
-        for (syn in data['synergy'][myvar]) {
-            var sync = data['synergy'][myvar][syn]['card_name'];
-            var reason = data['synergy'][myvar][syn]['reason'];
-            var tmp_div = $('<div class="item"></div>');
-            tmp_div.appendTo(synergies.find('[id^="synergies"]'));
-            var ce = makeCardElement(getCardFile(sync), name_to_id[myvar]);
-            ce.appendTo(tmp_div);
-            ce.prop('title', reason);
-            syn_found = 1;
-        }
-        if (!syn_found) {
-            $('<p><i>None found.</i>').appendTo(synergies);
-        }
-        card_pane = $('.card'+(name_to_id[myvar]+1));
-        synergies.appendTo(card_pane);
-        for(s=0;s<3;s++) {
-            $("#synergies"+s).owlCarousel({items:3});
-        };
-    }   
 }
 
 function updateChosenCardsTab (data) {

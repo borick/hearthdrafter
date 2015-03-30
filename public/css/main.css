@@ -16,7 +16,14 @@
   text-align: left;
   clear: both;
   display: none;
+  position: absolute;
+  height: 244px;
+  overflow: hidden;
   /*opacity: 0.8;*/
+}
+#card_img_0, #card_img_1, #card_img_2 {
+  position: absolute;
+  width: 250px;
 }
 #card_number {
   padding: 8px;
@@ -24,32 +31,25 @@
   color: #000;
   margin-top: 100px;
   font-weight: bold;
+  overflow: none;
 }
 .confirm {
-  float: left;
   color: white;
 }
 .card1, .card2, .card3 {
-  /*overflow-y: scroll;*/
-  /*border: 0px;
-  border-right: 2px;
-  border-color: black;
-  border-style: solid;*/
+  float: left;
   margin: 0;
   padding: 0;
   width:280px;
+  height:244px;
   display: block;
-  float: left;
-  position: relative;
 }
 .card1:hover, .card2:hover, .card3:hover {
 }
-
 .capital {
   text-transform: capitalize;
-  /*font-weight: bold;*/
 }
-/* other */
+/******************/
 .highlight {
   font-weight: bold;
   opacity: 1.0;
@@ -170,7 +170,10 @@ form {
   font-weight: bold;
   font-size: 70%;
 }
-
+#undo {
+  position: absolute;
+  z-index: 10;
+}
 /********/
 .wrapper {
   padding-top: 25px;
@@ -183,14 +186,15 @@ form {
   padding: 7px 7px 7px 7px;
 }
 .maincontent a {
-  color: #000;
-  text-shadow: 0 0 12px #fff, 0 0 4px #fff, 1px 1px 2px #fff;
-  font-weight: bold;
-}
-.maincontent a:hover {
-  color: #fff !important;
-  text-shadow: 0 0 24px #000, 0 0 2px #000, 1px 1px 2px #000;
-  font-weight: bold;
+  -webkit-appearance:button;
+  -moz-appearance:button;
+  -o-appearance:button;
+  -ms-appearance:button;    
+
+  width:100px;
+  text-align:center;
+  font-size:13px;
+  padding:3px;
 }
 a:link {
   text-decoration: none;
@@ -198,3 +202,4 @@ a:link {
 a:visited {
   text-decoration: none;
 }
+/******************/
