@@ -12,7 +12,6 @@ var selected_card = 0;
 var name_to_id = [];
 var mode = 'start';
 var d = new Date();
-var action_time = d.getTime();
 var arena_id = 'unknown';
 var pathArray = window.location.pathname.split('/', -1);
 arena_id = pathArray[3];
@@ -56,10 +55,6 @@ $(document).keydown(function(e) {
                     return;
                 }
             }
-            console.log('enter pressed');
-            if (mode == 'waiting_for_confirm' && (new Date().getTime() - action_time) > 400 ) {
-                confirmCards();
-            }
             break;
     }
 });
@@ -95,7 +90,8 @@ function initCardClick(i) {
     var ele = $('.card'+(i+1));
     ele.click(function() { showClassCards(i); });
     ele.html('');
-    makeCardElement(card_back, i).addClass('glow').appendTo(ele);
+    //make the card back.
+    $('<img id="card_back_'+i+'" src="'+card_back+'">').appendTo(ele);
 }
 function initCardClicks() {
     for(var i=0;i<3;i++) {
@@ -144,7 +140,6 @@ function loadChosenCards(data) {
 }
 
 function confirmCards() {
-    action_time = new Date().getTime();
     mode = 'waiting_for_card';
     selected_card = 0;
     selected_index = 0;
@@ -190,16 +185,9 @@ function showClassCards(id) {
                 break;
             }   
         }        
-        if (flag == 0 && !($('#confirm').length)) {
-            mode = 'waiting_for_confirm';
-            action_time = new Date().getTime();
-            //confirm teh selection of all 3 cards...
-            createInputButton($('.card2'), {}, 'Confirm Cards', 'confirm', null, function ( event ) {
-                $(this).remove();
-                confirmCards();
-                event.preventDefault();
-                event.stopPropagation();
-            });
+        if (flag == 0) {
+            //get the card choice data once all 3 are chosen.
+            confirmCards();
         }
     });
 }
@@ -389,9 +377,6 @@ function undoCardChoice (id) {
     removeSynergies();
 }
 
-function makeCardElement (img,id) {
-    return $('<img id="card_img_'+id+'"'+' src="'+img+'">');
-}
 function getCardFile (text) {
     var bg_img = img + card_ids[text] + '.png';
     return bg_img;
@@ -403,10 +388,14 @@ function layoutCardChosen (text, id) {
     console.log('card ' + text + " selected");
     selected[id] = text;
     rarity = card_rarity[text];
-    makeCardElement(getCardFile(text), id).appendTo(card_option);    
+    //create a new span element, make the card background the card image for alignment
+    var card_bg_element = $('<div id="card_img_'+id+'"/>');
+    card_bg_element.css({'background-image': 'url("'+getCardFile(text)+'")'});
+    card_bg_element.appendTo(card_option);
+    card_bg_element.addClass('type_'+card_data[text]['type']);
     card_option.off('click');
     //undo button
-    var undoButton = createInputButton(card_option, {}, 'Undo', "undo", id, function ( event ) {
+    var undoButton = createInputButton(card_option, {}, '<img src="/images/cancel.png"/>', "undo", id, function ( event ) {
         $(this).remove();
         undoCardChoice(id);
         event.stopPropagation();
@@ -505,13 +494,6 @@ function updateChosenCardsTab (data) {
         $('#cards_chosen').append(new_div);
     }
     updateManaCostChosenCards();//from select_card.html.ep.
-}
-
-function highlightButtons (id) {
-    
-    for(var i = 0; i < 3; i++) {
-        var ele = $("[id='I Picked This Card']")[i];
-    }
 }
 
 function updateUndoLink() {

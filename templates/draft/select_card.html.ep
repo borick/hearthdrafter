@@ -43,6 +43,7 @@ var cards = [
 % for my $card (@$cards) {
      {name:"<%== $card->{name} %>",
       id: "<%== $card->{id} %>",
+      type: "<%== $card->{type} %>",
       cost: "<%== $card->{cost} %>",
       rarity: "<%== $card->{rarity} %>"},
 % }

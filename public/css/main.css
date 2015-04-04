@@ -12,19 +12,6 @@
   text-align: left;
   height:100%;
 }
-#cards {
-  text-align: left;
-  clear: both;
-  display: none;
-  position: absolute;
-  height: 244px;
-  overflow: hidden;
-  /*opacity: 0.8;*/
-}
-#card_img_0, #card_img_1, #card_img_2 {
-  position: absolute;
-  width: 250px;
-}
 #card_number {
   padding: 8px;
   padding-right:14px;
@@ -163,6 +150,7 @@ form {
   margin-top:-2em;
   right: 5%;
 }
+/** card display */
 #undo_last_card {
   margin-left: auto;
   margin-top: 149px;
@@ -173,6 +161,47 @@ form {
 #undo {
   position: absolute;
   z-index: 10;
+  margin-left: 225px;
+}
+#card_back_0, #card_back_1, #card_back_2 {
+  position: absolute;
+  width: 250px;
+}
+#card_img_0, #card_img_1, #card_img_2 {
+  position: absolute;
+}
+.type_minion {
+  height: 72px;
+  width: 59px;
+  background-repeat: no-repeat;
+  background-position: -70px -56px;
+  margin-left: 166px;
+  margin-top: 11px;
+}
+.type_spell {
+  height: 72px;
+  width: 59px;
+  background-repeat: no-repeat;
+  background-position: -50px -74px;
+  margin-left: 166px;
+  margin-top: 11px;
+}
+.type_weapon {
+  height: 72px;
+  width: 59px;
+  background-repeat: no-repeat;
+  background-position: -70px -56px;
+  margin-left: 166px;
+  margin-top: 11px;
+}
+#cards {
+  text-align: left;
+  clear: both;
+  display: none;
+  position: absolute;
+  height: 250px;
+  overflow: hidden;
+  /*opacity: 0.8;*/
 }
 /********/
 .wrapper {
