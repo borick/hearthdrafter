@@ -85,13 +85,15 @@ function rebindKeys() {
         }
     });
 }
-
+function resetBG(i) {
+    var ele = $('.card'+(i+1));
+    ele.css({'background-image':'url('+card_back+')'});
+}
 function initCardClick(i) {
     var ele = $('.card'+(i+1));
     ele.click(function() { showClassCards(i); });
     ele.html('');
-    ele.css({'background-image':'url('+card_back+')'});
-    //make the card back.
+    resetBG(i);
 }
 function initCardClicks() {
     for(var i=0;i<3;i++) {
@@ -154,10 +156,13 @@ function confirmCards() {
 
 //RESPOND TO CARD SELECTION
 function showClassCards(id) {
-    //selected card name from the list.
-    selected_index = 0;
-    //selected card option, i.e. card pane.
-    selected_card = id;
+    selected_index = 0; //reset selection using keyboard to 0.
+    selected_card = id;//selected card option, i.e. card pane.
+    for(var i=0;i<3;i++) {
+        if (id != i && selected[i] == null) {
+            resetBG(i);
+        }
+    }
     var card_option = getCardElement(id);
     card_option.css({background: 'rgba(0,0,0,.75)'});
     var card_names = $('#cards');
@@ -211,7 +216,6 @@ function updateNumber (newNumber) {
 
 //highlight card names when using arrow keys to select.
 function highlightElement(index) {
-    console.log('checking: ' + index);
     for(var i = 0;i < $($("li div")).length; i++) {
         if (i == index) {
             $($("li div")[i]).css({"opacity":1.0});
@@ -308,7 +312,7 @@ function removeSynergies () {
 
 function buildScoreUI (data) {
     for (c=0;c<3;c++) {
-        var tmp = $('<span id="odo"><br><b>Card value score is: </b></span>');
+        var tmp = $('<span id="odo"></span>');
         tmp.appendTo(getCardElement(c));
         makeOdometer(c).hide().appendTo(tmp);
     }
@@ -363,7 +367,6 @@ function getCardElement (id) {
 }
 
 function undoCardChoice (id) {
-    console.log('undo card:' + id);
     removeConfirm();
     removeHighlight();
     removeConfirmChoices();
@@ -385,15 +388,22 @@ function getCardFile (text) {
 function layoutCardChosen (text, id) {
      
     var card_option = getCardElement(id);
+    card_option.off('click');
+    
     console.log('card ' + text + " selected");
     selected[id] = text;
     rarity = card_rarity[text];
-    //create a new span element, make the card background the card image for alignment
+    //add image of the card.
     var card_bg_element = $('<div id="card_img_'+id+'"/>');
     card_bg_element.css({'background-image': 'url("'+getCardFile(text)+'")'});
     card_bg_element.appendTo(card_option);
-    card_bg_element.addClass('type_'+card_data[text]['type']);
-    card_option.off('click');
+    card_bg_element.addClass('type_'+card_data[text]['type']); //special alignments per type in css.
+    //add div for card name
+    var card_name_label = $('<div class="card_name_label"/>');
+    card_name_label.text(text);
+    card_name_label.appendTo(card_option);
+    card_name_label.addClass('capital');
+    
     //undo button
     var undoButton = createInputButton(card_option, {}, '<img src="/images/cancel.png"/>', "undo", id, function ( event ) {
         $(this).remove();
@@ -401,6 +411,7 @@ function layoutCardChosen (text, id) {
         event.stopPropagation();
     });
     return card_option;
+    
 }
 
 function confirmCardByName(name,data) {

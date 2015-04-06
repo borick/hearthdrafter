@@ -141,6 +141,43 @@ form {
   right: 5%;
 }
 /** card display */
+#odo {
+  position: absolute;
+  font-family: arial;
+  color: white;
+  font-size:3.5vw;
+  text-align:center;
+  width: 241px;
+}
+.ipicked a:hover {
+  color: #0094D9;
+}
+.ipicked a {
+  position: absolute;
+  margin-top: 203px;
+  margin-left: 49px;
+  border-style: solid;
+  border-color: #0094D9;
+  border-width: 3px;
+  border-radius: 8px;
+  color: white;
+  padding: 2px;
+  font-family: arial;
+  font-weight: bold;
+}
+.card_name_label {
+  text-shadow: 0px 0px 2px black;
+  color: #0094D9;
+  margin-left: 11px;
+  font-family: arial;
+  font-weight: bold;
+  width: 165px;
+  height: 98px;
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+  font-size: 2.2vw;
+}
 #cards {
   padding: 5px;
   text-align: left;
@@ -178,23 +215,21 @@ form {
 #undo {
   position: absolute;
   z-index: 10;
-  margin-left: 225px;
+  margin-left: 219px;
 }
-/*#card_back_0, #card_back_1, #card_back_2 {
-  position: absolute;
-  width: 250px;
-}*/
 #card_img_0, #card_img_1, #card_img_2 {
   position: absolute;
   border-style: solid;
-  border-width: 5px;
+  border-color: #0094D9;
+  border-width: 3px;
+  border-radius: 8px;
 }
 .type_minion {
   height: 72px;
   width: 59px;
   background-repeat: no-repeat;
   background-position: -70px -56px;
-  margin-left: 166px;
+  margin-left: 164px;
   margin-top: 11px;
 }
 .type_spell {
@@ -202,7 +237,7 @@ form {
   width: 59px;
   background-repeat: no-repeat;
   background-position: -50px -74px;
-  margin-left: 166px;
+  margin-left: 164px;
   margin-top: 11px;
 }
 .type_weapon {
@@ -210,7 +245,7 @@ form {
   width: 59px;
   background-repeat: no-repeat;
   background-position: -70px -56px;
-  margin-left: 166px;
+  margin-left: 164px;
   margin-top: 11px;
 }
 /********/
