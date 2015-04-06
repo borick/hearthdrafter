@@ -23,16 +23,6 @@
 .confirm {
   color: white;
 }
-.card1, .card2, .card3 {
-  float: left;
-  margin: 0;
-  padding: 0;
-  width:280px;
-  height:244px;
-  display: block;
-}
-.card1:hover, .card2:hover, .card3:hover {
-}
 .capital {
   text-transform: capitalize;
 }
@@ -151,6 +141,33 @@ form {
   right: 5%;
 }
 /** card display */
+#cards {
+  padding: 5px;
+  text-align: left;
+  clear: both;
+  display: none;
+  position: absolute;
+  height: 228px;
+  overflow: hidden;
+  /*opacity: 0.8;*/
+}
+.card1, .card2, .card3 {
+  float: left;
+  margin: 0;
+  padding: 0;
+  width:241px;
+  height:244px;
+  display: block;
+  margin-right: 20px;
+  background-repeat: no-repeat;
+  border-radius: 20px;
+  border-style: solid;
+  border-width: 1px;
+  background-color: black;
+}
+.card1:hover, .card2:hover, .card3:hover {
+  box-shadow: 0px 0px 15px 10px rgba(6, 130, 133, .3);
+}
 #undo_last_card {
   margin-left: auto;
   margin-top: 149px;
@@ -163,12 +180,14 @@ form {
   z-index: 10;
   margin-left: 225px;
 }
-#card_back_0, #card_back_1, #card_back_2 {
+/*#card_back_0, #card_back_1, #card_back_2 {
   position: absolute;
   width: 250px;
-}
+}*/
 #card_img_0, #card_img_1, #card_img_2 {
   position: absolute;
+  border-style: solid;
+  border-width: 5px;
 }
 .type_minion {
   height: 72px;
@@ -193,15 +212,6 @@ form {
   background-position: -70px -56px;
   margin-left: 166px;
   margin-top: 11px;
-}
-#cards {
-  text-align: left;
-  clear: both;
-  display: none;
-  position: absolute;
-  height: 250px;
-  overflow: hidden;
-  /*opacity: 0.8;*/
 }
 /********/
 .wrapper {

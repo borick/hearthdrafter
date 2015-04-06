@@ -90,8 +90,8 @@ function initCardClick(i) {
     var ele = $('.card'+(i+1));
     ele.click(function() { showClassCards(i); });
     ele.html('');
+    ele.css({'background-image':'url('+card_back+')'});
     //make the card back.
-    $('<img id="card_back_'+i+'" src="'+card_back+'">').appendTo(ele);
 }
 function initCardClicks() {
     for(var i=0;i<3;i++) {
@@ -158,8 +158,8 @@ function showClassCards(id) {
     selected_index = 0;
     //selected card option, i.e. card pane.
     selected_card = id;
-    console.log('showClassCards:' + id);
     var card_option = getCardElement(id);
+    card_option.css({background: 'rgba(0,0,0,.75)'});
     var card_names = $('#cards');
     card_names.css({"display": "block", "z-index":9999});
     card_names.addClass('capital');
@@ -167,7 +167,7 @@ function showClassCards(id) {
     rebuildList();
     $(".search").focus();
     highlightElement(selected_index);
-    //pick a card
+    //card selected...
     $(".name").button().click( function( event ) {
         //card name selected
         event.preventDefault();
