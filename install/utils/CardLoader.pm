@@ -61,7 +61,7 @@ sub load_cards {
     my $card_data_text = read_file($card_data_file);
     my $cards = decode_json $card_data_text;
 
-    my @sets_to_load = ('Basic', 'Classic', 'Curse of Naxxramas', 'Goblins vs Gnomes');
+    my @sets_to_load = ('Basic', 'Classic', 'Curse of Naxxramas', 'Goblins vs Gnomes', 'Blackrock Mountain');
     # save all the cards
 
     for my $set (@sets_to_load) {
@@ -87,8 +87,10 @@ sub load_cards {
                         push (@mechs, { name => $mech });
                     }
                 }
+                
+                #print $card->{'id'},"\n";
                 #print '"',lc($card->{'name'}),'":"',$card->{'id'},"\",\n"; #The cards we need to get images for. and the names used for building the js.
-                print '{"',$card->{'id'},'":"',lc($card->{'name'}),"\"},\n"; 
+                #print '{"',$card->{'id'},'":"',lc($card->{'name'}),"\"},\n"; 
                 my %data = (
                     'name' => lc($card_name),
                     'id' => $card->{'id'},
