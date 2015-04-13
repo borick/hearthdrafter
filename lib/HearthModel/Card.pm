@@ -30,6 +30,27 @@ sub get_cards_by_class {
     return \@data;
 }
 
+sub get_data {
+    my ($self, $unique_cards) = @_;
+    my $result = $self->es->search(
+            index => 'hearthdrafter',
+            type => 'card',
+            size => 9999,
+            body => {
+                filter => {
+                    terms => {
+                        name => $unique_cards,
+                    },
+                },   
+            },
+        );
+    my %cards = ();
+    for my $res (@{$result->{hits}->{hits}}) { 
+        $cards{$res->{_id}} = $res->{_source};
+    }
+    return \%cards;
+}
+
 sub get_cards {
     my ($self, $array) = @_;
     my $results = $self->es->search(
