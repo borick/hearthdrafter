@@ -1,0 +1,270 @@
+5
+Bomb Lobber
+80.32
+3
+Illuminator
+43.97
+3
+Goblin Sapper
+43.97
+2
+Bloodsail Raider
+52.14
+3
+Razorfen Hunter
+51.76
+1
+Worgen Infiltrator
+60.60
+2
+Ancient Watcher
+1.55
+3
+Lightning Storm
+91.96
+2
+Mana Addict
+11.60
+4
+Oasis Snapjaw
+42.84
+2
+Faerie Dragon
+57.21
+2
+Frostwolf Grunt
+33.94
+2
+Dire Wolf Alpha
+52.89
+3
+Stoneskin Gargoyle
+1.14
+2
+Flametongue Totem
+72.88
+2
+Stonesplinter Trogg
+53.68
+1
+Zombie Chow
+70.10
+1
+Cogmaster
+20.70
+3
+Raid Leader
+23.74
+0
+Totemic Might
+13.40
+1
+Shieldbearer
+12.84
+5
+Darkscale Healer
+55.01
+6
+Fire Elemental
+94.99
+4
+Piloted Shredder
+92.55
+4
+Dragonling Mechanic
+46.85
+1
+Earth Shock
+58.32
+3
+Thrallmar Farseer
+10.24
+8
+Gruul
+70.67
+9
+Mekgineer Thermaplugg
+80.02
+7
+Neptulon
+90.57
+3
+Dancing Swords
+39.66
+3
+Shattered Sun Cleric
+75.19
+1
+Frost Shock
+39.35
+2
+Reincarnate
+7.94
+2
+Flametongue Totem
+66.31
+5
+Spectral Knight
+73.34
+1
+Lightning Bolt
+65.63
+2
+Stormforged Axe
+81.36
+7
+Core Hound
+22.94
+4
+Oasis Snapjaw
+51.33
+2
+Novice Engineer
+47.21
+3
+Dancing Swords
+31.45
+5
+Salty Dog
+33.44
+3
+Silverback Patriarch
+8.33
+4
+Dark Iron Dwarf
+84.90
+2
+Wild Pyromancer
+69.08
+4
+Kezan Mystic
+49.15
+4
+Dunemaul Shaman
+38.38
+2
+Bloodsail Raider
+55.28
+1
+Earth Shock
+50.40
+1
+Young Dragonhawk
+2.13
+2
+Stormforged Axe
+82.56
+5
+Gurubashi Berserker
+44.93
+6
+Windfury Harpy
+29.39
+2
+Whirling Zap-o-matic
+56.39
+5
+Bloodlust
+54.90
+5
+Fen Creeper
+71.65
+5
+Sludge Belcher
+87.80
+1
+Murloc Tidecaller
+7.21
+2
+Ancestral Spirit
+43.19
+2
+Kobold Geomancer
+35.80
+1
+Goldshire Footman
+7.72
+3
+Shattered Sun Cleric
+65.75
+4
+Dread Corsair
+36.45
+2
+Annoy-o-Tron
+46.42
+1
+Grimscale Oracle
+1.40
+3
+Flesheating Ghoul
+46.70
+4
+Mogu'shan Warden
+35.67
+1
+Argent Squire
+40.07
+4
+Dread Corsair
+35.46
+1
+Frost Shock
+38.98
+3
+Raging Worgen
+44.66
+2
+Murloc Tidehunter
+48.17
+3
+Razorfen Hunter
+40.66
+2
+River Crocolisk
+47.22
+3
+Flesheating Ghoul
+39.15
+2
+Unstable Ghoul
+35.64
+2
+River Crocolisk
+47.33
+4
+Burly Rockjaw Trogg
+70.54
+3
+Unbound Elemental
+54.85
+2
+Youthful Brewmaster
+46.57
+2
+Windfury
+32.62
+2
+Bloodfen Raptor
+44.64
+2
+Micro Machine
+49.77
+2
+Murloc Tidehunter
+37.63
+4
+Windspeaker
+43.30
+8
+Force-Tank MAX
+60.18
+1
+Angry Chicken
+0.99
+5
+Stampeding Kodo
+74.19
+4
+Kezan Mystic
+42.13

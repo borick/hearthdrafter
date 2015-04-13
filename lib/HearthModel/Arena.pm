@@ -54,8 +54,8 @@ sub confirm_card_choice {
     } 
     if ($next_index <= 29) {
         $source->{card_options}->[$next_index]->{card_chosen} = $card_name;
-        print STDERR "Confirming choice card #" . ($next_index+1) . "\n";
-        print STDERR Dumper($source);
+        #print STDERR "Confirming choice card #" . ($next_index+1) . "\n";
+        #print STDERR Dumper($source);
         $self->es->index(
             index => 'hearthdrafter',
             type => 'arena_run',
@@ -68,7 +68,13 @@ sub confirm_card_choice {
 }
 
 sub abandon_run {
-    my ($self, $arena_id) = @_;
+    my ($self, $arena_id, $user) = @_;
+    my $doc = $self->es->get(
+        index => 'hearthdrafter',
+        type => 'arena_run',
+        id => $arena_id,
+    );
+    die 'not your arena' if $user ne $doc->{_source}->{user_name};
     $self->es->delete(
         index => 'hearthdrafter',
         type => 'arena_run',

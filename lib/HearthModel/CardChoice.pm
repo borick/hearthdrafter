@@ -25,7 +25,7 @@ sub get_advice {
     
     my $c = $self->c();
     my $source = $c->model->arena->continue_run($arena_id);
-    print STDERR "Arena run: " . Dumper($source) . "\n";
+    #print STDERR "Arena run: " . Dumper($source) . "\n";
     my @card_choices = @{$source->{card_choices}};
     my %card_counts = %{$source->{card_counts}};
     my $next_index = $self->get_next_index($source);
@@ -36,7 +36,7 @@ sub get_advice {
     $card_options->[$next_index] = {card_name   => $card_1,
                                     card_name_2 => $card_2,
                                     card_name_3 => $card_3};
-    print STDERR "Updating card selection for Card #".($next_index+1) . "\n";
+    #print STDERR "Updating card selection for Card #".($next_index+1) . "\n";
     #reindex
     $self->es->index(
         index => 'hearthdrafter',
@@ -111,7 +111,7 @@ sub get_advice {
     for my $score (@$scores) {
         $scores{$score->{'_source'}->{'card_name'}} = $score->{'_source'}->{'score'};
         #divide by $max_score throughout so we hide our internal scoring system
-        $out_data->{'old_scores'}->{$score->{'_source'}->{'card_name'}} = $score->{'_source'}->{'score'} / $max_score;
+        $out_data->{'scores'}->{$score->{'_source'}->{'card_name'}} = $score->{'_source'}->{'score'} / $max_score;
     }
     
     my $messages = { the_default => "We'll base this solely on card value ratings.",
@@ -149,11 +149,22 @@ sub get_advice {
         $i += 1;
     }
     
+    my $best_card_n = -1;
+    my $best_card_score = -1;
+    
     for my $card_name (keys(%new_scores)) {
+    
         my $score = $new_scores{$card_name};
+        
+        if ($score > $best_card_score) {
+            $best_card_n = $card_name;
+            $best_card_score = $score;
+        }
+        
         $out_data->{'scores'}->{$card_name} = $score;
         #$out_data->{'math'}->{$card_name} = $math{$card_name};
     }
+    $out_data->{'best_card'} = $best_card_n;
     
     print STDERR 'Out data:' . Dumper($out_data);
     return $out_data;
