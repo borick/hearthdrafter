@@ -21,6 +21,17 @@ my $pbkdf2 = Crypt::PBKDF2->new(
 sub register {
     my ($self, $user_name, $email, $fname, $lname, $password) = @_;
     
+    die "bad bad characters in username '$user_name'" if ($user_name) !~ /^\w+$/;
+    my $existing = undef;
+    eval { 
+        $existing = $self->es->get(
+            index   => 'hearthdrafter',
+            type    => 'user',
+            id      => $user_name,
+        );
+    };
+    die 'username already exists' if defined($existing);
+    
     my $hash = $pbkdf2->generate($password);
     print STDERR "Registering with hash: $hash\n";
     $self->es->index(
@@ -35,6 +46,7 @@ sub register {
             password => $hash,
         }
     );
+    return 1;
 }
 
 # Read

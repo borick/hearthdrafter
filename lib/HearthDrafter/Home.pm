@@ -26,7 +26,7 @@ sub login_post {
     if ($self->authenticate($user_name, $password)) {
         $self->redirect_to('/home');
     } else {        
-        $self->flash(message => 'login failed');
+        $self->flash(login_message => 'Login Failed');
         $self->redirect_to('/');
     }
 }
@@ -57,12 +57,26 @@ sub register_post {
     my $fname = $self->req->body_params->param('first_name');
     my $lname = $self->req->body_params->param('last_name');
     my $password = $self->req->body_params->param('password');
-    if ($self->model->user->register($user_name, $email, $fname, $lname, $password)) {
-        $self->flash(message => 'failed');
+    my $result = undef;
+    eval {
+        $result = $self->model->user->register($user_name, $email, $fname, $lname, $password);
+    };
+    if (!defined($result)) {
+        my $msg = undef;
+        if ($@ =~ /(.*) at .* line \d+.$/) {
+            $msg = $1;
+        } else {
+            $msg = 'User creation failed.';
+        }
+        print STDERR "User Creation Failed...\n";
+        $self->flash(error_message => $msg);
+        $self->redirect_to('/register');
     } else {
-        $self->flash(message => 'success');
+        print STDERR "User Creation Success!\n";
+        $self->flash(success_message => 'User created!');
+        $self->redirect_to('/');
     }
-    $self->redirect_to('/home');
+    
 }
 
 sub auth_check {

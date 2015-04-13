@@ -13,7 +13,7 @@ Logged in as: <%= $user->{user}->{name} %><br><br>
 </form>
 <br><a href="/register"><font color='white'>Sign Up</a>
 % }
-% if (my $message = flash 'message') {
+% if (my $message = flash 'login_message') {
 <font color='red'><span class='capital'>
     %= $message
 </span></font>
