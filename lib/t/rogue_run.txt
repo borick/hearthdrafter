@@ -1,0 +1,270 @@
+2
+Nerubian Egg
+35.90
+3
+Perdition's Blade
+66.09
+1
+Lightwarden
+10.02
+3
+Flesheating Ghoul
+47.19
+5
+Darkscale Healer
+54.67
+3
+Razorfen Hunter
+47.27
+7
+War Golem
+43.86
+2
+Mad Bomber
+65.76
+3
+Blackwing Technician
+45.88
+1
+Shieldbearer
+16.50
+8
+Force-Tank MAX
+58.72
+5
+Silver Hand Knight
+73.55
+5
+Nightblade
+26.40
+7
+Core Hound
+27.96
+2
+Eviscerate
+84.19
+5
+Azure Drake
+82.70
+5
+Grim Patron
+19.20
+3
+Headcrack
+0.22
+1
+Voodoo Doctor
+30.66
+1
+Worgen Infiltrator
+64.23
+1
+Clockwork Gnome
+46.52
+5
+Spiteful Smith
+78.78
+2
+Gang Up
+0.11
+6
+Frost Elemental
+59.69
+3
+Headcrack
+0.82
+3
+Demolisher
+43.52
+3
+Emperor Cobra
+66.53
+7
+Troggzor the Earthinator
+80.50
+9
+Malygos
+55.80
+2
+Nat Pagle
+23.12
+2
+Dire Wolf Alpha
+51.67
+1
+Zombie Chow
+73.32
+3
+Earthen Ring Farseer
+69.41
+3
+Dalaran Mage
+12.94
+0
+Shadowstep
+17.72
+2
+Gang Up
+-0.46
+5
+Silver Hand Knight
+64.16
+5
+Assassin's Blade
+46.75
+1
+Goldshire Footman
+15.74
+6
+Vanish
+17.68
+3
+Ogre Brute
+73.16
+5
+Assassin's Blade
+45.38
+3
+Shattered Sun Cleric
+67.16
+4
+Oasis Snapjaw
+49.62
+2
+Annoy-o-Tron
+50.83
+3
+Acolyte of Pain
+50.73
+1
+Abusive Sergeant
+51.86
+2
+Gang Up
+-1.53
+3
+Magma Rager
+7.12
+4
+Dread Corsair
+57.82
+7
+Stormwind Champion
+87.46
+2
+Haunted Creeper
+66.36
+4
+Stormwind Knight
+62.70
+5
+Booty Bay Bodyguard
+29.29
+3
+Spider Tank
+72.47
+3
+Jungle Panther
+51.33
+7
+Stormwind Champion
+89.64
+3
+Emperor Cobra
+60.59
+1
+Young Priestess
+46.39
+1
+Lightwarden
+32.18
+1
+Cold Blood
+49.83
+3
+Tinkertown Technician
+36.54
+2
+Unstable Ghoul
+30.61
+6
+Argent Commander
+80.47
+3
+Gnomish Experimenter
+57.22
+1
+Murloc Tidecaller
+5.81
+6
+Lord of the Arena
+45.93
+2
+Sap
+57.10
+1
+Sinister Strike
+10.55
+4
+Mechanical Yeti
+126.45
+3
+Gnomeregan Infantry
+38.85
+7
+Sprint
+68.61
+2
+Unstable Ghoul
+44.11
+5
+Assassinate
+76.77
+3
+Spider Tank
+72.67
+6
+Vanish
+2.23
+3
+Ironfur Grizzly
+56.37
+3
+Acolyte of Pain
+57.68
+7
+Sprint
+71.29
+7
+Stormwind Champion
+80.97
+2
+Explosive Sheep
+36.56
+1
+Undertaker
+27.97
+3
+Razorfen Hunter
+50.35
+0
+Shadowstep
+15.43
+5
+Salty Dog
+25.67
+3
+Jungle Panther
+43.03
+2
+Betrayal
+62.15
+5
+Abomination
+35.58
+7
+Ravenholdt Assassin
+42.10
+1
+Young Priestess
+55.55

@@ -7,7 +7,7 @@ use LWP::Simple;
 use JSON;
 use Data::Dumper;
 
-my $data_dir = 'ha_tier_data';
+my $data_dir = '../ha_tier_data';
                                                                        # class - card 1 - card 2 - card 3
 my $url_prefix = "http://draft.heartharena.com/arena/option-multi-score/";#/-/#-#-#
 my $id_file = 'list_ha_ids.txt';
@@ -51,7 +51,7 @@ for my $x (1..9) {
             next;
         }
         $text = get_data($x, $suffix, $out_file_name);
-        sleep 1;
+        #sleep 1;
     }
     @unique = @copy;
 }
