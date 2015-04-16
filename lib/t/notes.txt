@@ -1,0 +1,12 @@
+--- aggro -- "high number of minions 1-4", low cost spells, extremely early game curve
+          -- needs card draw
+--- control  -- good mix of minions and spells
+          -- requires spells to deal with opponents cards
+--- tempo -- good curve, multiple choices.
+
+--- early / mid / late
+--- mana curve.
+
+--- average mana cost
+
+------ 

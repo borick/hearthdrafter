@@ -67,7 +67,7 @@ Darkscale Healer
 6
 Fire Elemental
 94.99
-4
+4 That's what I'm talking about! Fire Elemental has the most value and we could use a big drop.
 Piloted Shredder
 92.55
 4
@@ -76,7 +76,7 @@ Dragonling Mechanic
 1
 Earth Shock
 58.32
-3
+3 Earth Shock has the most value and we could use a ping.
 Thrallmar Farseer
 10.24
 8
@@ -106,19 +106,19 @@ Flametongue Totem
 5
 Spectral Knight
 73.34
-1
+1 Normally this would be a toss-up between Flametongue Totem and Spectral Knight. So, Flametongue Totem might not fit in our slower Mid-Range deck and we don't really want to end up with too many Flametongue Totems. All in all, I suggest you pick Spectral Knight in this situation.
 Lightning Bolt
 65.63
 2
 Stormforged Axe
 81.36
-7
+7 Although we don't really want to end up with too many cards with overload, I still suggest you pick Stormforged Axe as it has the most value out of these options, we could use a card to play early game and we could use a ping.
 Core Hound
 22.94
 4
 Oasis Snapjaw
 51.33
-2
+2 x
 Novice Engineer
 47.21
 3
@@ -135,8 +135,8 @@ Dark Iron Dwarf
 84.90
 2
 Wild Pyromancer
-69.08
-4
+69.08 
+4 Wild Pyromancer has the most value, we could use a board clear and we really need a two drop.
 Kezan Mystic
 49.15
 4
@@ -145,7 +145,7 @@ Dunemaul Shaman
 2
 Bloodsail Raider
 55.28
-1
+1 Normally I would pick Earth Shock. However, we really don't want to end up with too many Earth Shocks. On top of that, Bloodsail Raider has some synergy with the deck. All in all, I suggest you pick Bloodsail Raider in this situation.
 Earth Shock
 50.40
 1
@@ -153,8 +153,8 @@ Young Dragonhawk
 2.13
 2
 Stormforged Axe
-82.56
-5
+82.56 
+5 ping
 Gurubashi Berserker
 44.93
 6
@@ -216,7 +216,7 @@ Raging Worgen
 44.66
 2
 Murloc Tidehunter
-48.17
+46.17
 3
 Razorfen Hunter
 40.66

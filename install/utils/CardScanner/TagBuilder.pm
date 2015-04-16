@@ -288,6 +288,7 @@ sub CardScanner::TagBuilder::create_custom_tags {
         $tags{$name}->{'drop_4'}       = 1.00      if ($name eq 'mind games');
         $tags{$name}->{'reach'}        = 4.00/4.00 if ($name eq 'power overwhelming');
         $tags{$name}->{'reach'}        = 3.00/4.00 if ($name eq 'rockbiter weapon');
+        $tags{$name}->{'removal'}      = 1.00      if ($name eq 'rockbiter weapon');
         $tags{$name}->{'removalsmall'} = 1.00      if ($name eq 'rockbiter weapon');
         $tags{$name}->{'reach'}        = 1.00      if ($name eq 'savage roar');
         $tags{$name}->{'reach'}        = 1.00      if ($name eq 'tinker\'s sharpsword oil');

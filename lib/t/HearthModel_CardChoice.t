@@ -37,7 +37,7 @@ for (my $i = 0; $i < $choices; $i++) {
         $card = $card_3;
     }
     my $results = $hd_model->card_choice->get_advice($card_1,$card_2,$card_3,$id);
-    ok($results->{best_card} eq lc($card), $card . ' == ' . $results->{best_card});
+    ok($results->{best_card} eq lc($card), "expected $card \n");
     #$hd_model->arena->confirm_card_choice($card,$id);
     $hd_model->arena->confirm_card_choice($results->{best_card},$id);
 }
