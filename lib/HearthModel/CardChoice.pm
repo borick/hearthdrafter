@@ -14,7 +14,7 @@ $HearthModel::CardChoice::debug = 0;
 
 use Time::Piece;
 use Data::Dumper;
-$Data::Dumper::Indent = 0;
+#$Data::Dumper::Indent = 0;
 use List::Util qw(sum);
 
 sub get_next_index {
@@ -31,10 +31,13 @@ sub _print_scores {
 }
 sub get_advice {
     my ($self, $card_1, $card_2, $card_3, $arena_id) = @_;        
+    $card_1 =~ s/[.]//g;
+    $card_2 =~ s/[.]//g;
+    $card_3 =~ s/[.]//g;
     my $debug = $HearthModel::CardChoice::debug;
     $debug = '' if !defined($debug);
     my $c = $self->c();
-    my $syn_const          = 277.00; #the power of synergies....
+    my $syn_const          = 200.00; #the power of synergies....
     my $mana_const_minions = 5.00; #percentage increase per "mana diff" point for minions in general.
     my $mana_const_spells  = 3.00; #spells in general.
     my $missing_drop_const = 250.00; #just drops. const
@@ -120,7 +123,7 @@ sub get_advice {
             }
         }
     }
-    print STDERR Dumper(\%tags_data) if $debug =~ 'tags';
+    print STDERR "Tags: " . Dumper(\%tags_data),"\n" if $debug =~ 'tags';
     
     my $number_of_cards = scalar(@unique_cards);
     print STDERR "*" x 80, "\n" if $debug;
@@ -284,7 +287,7 @@ sub get_advice {
     #adjust for "missing drops"
     for my $card (sort(@$cards)) {
         my $original_score = $scores{$card};
-        my $cost = ($card_data->{$card}->{cost}< $max_cost) ? $card_data->{$card}->{cost} : $max_cost;
+        my $cost = ($card_data->{$card}->{cost} < $max_cost) ? $card_data->{$card}->{cost} : $max_cost;
         my $diff = $drop_diff_min[$cost];
         my $is_drop = 0;
         for my $key (keys(%{$card_data_tags->{$card}})) {

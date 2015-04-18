@@ -211,9 +211,9 @@ sub find_synergies {
         # adjacent buff, minions
         if (_has_tag($tags_x, 'has_adjacentbuff', $card_y) && $cost_y <= MIN_MINION_COST_ADJACENT_BUFF_SYNERGY && $type_y eq 'minion' && !_has_tag($tags_y, 'cursed', $card_x)) { #avoid ancient watcher
             if (_has_tag($tags_y, 'has_windfury', $card_x)) {
-                $g->add_edge($name_x, $name_y, _has_tag($tags_x, 'has_adjacentbuff', $card_y) * 2); #more value if windfury
+                $g->add_edge($name_x, $name_y, _has_tag($tags_x, 'has_adjacentbuff', $card_y) / 2 ); #more value if windfury
             } else {
-                $g->add_edge($name_x, $name_y, _has_tag($tags_x, 'has_adjacentbuff', $card_y));
+                $g->add_edge($name_x, $name_y, _has_tag($tags_x, 'has_adjacentbuff', $card_y) / 4);
             }
             _update_reasons("$name_x|$name_y",'Good size minions means extra damage from adjacent buff.',\%reasons);
         }

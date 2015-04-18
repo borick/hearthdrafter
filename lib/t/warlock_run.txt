@@ -1,0 +1,270 @@
+1
+Murloc Tidecaller
+4.00
+5
+Azure Drake
+81.58
+1
+Bloodsail Corsair
+17.98
+5
+Silver Hand Knight
+71.38
+1
+Cogmaster
+23.23
+3
+Sense Demons
+36.57
+2
+Bluegill Warrior
+51.02
+1
+Soulfire
+67.27
+0
+Wisp
+10.85
+4
+Mogu'shan Warden
+38.63
+1
+Blood Imp
+53.84
+2
+Acidic Swamp Ooze
+68.68
+2
+Haunted Creeper
+63.61
+3
+Jungle Panther
+55.40
+1
+Mortal Coil
+78.76
+5
+Junkbot
+0.22
+10
+Sea Giant
+84.94
+3
+Big Game Hunter
+65.41
+3
+Acolyte of Pain
+43.64
+4
+Hellfire
+61.19
+2
+Haunted Creeper
+67.28
+5
+Spectral Knight
+67.70
+4
+Oasis Snapjaw
+45.31
+2
+Nerub'ar Weblord
+23.94
+2
+Demonfire
+48.87
+1
+Power Overwhelming
+58.63
+2
+Micro Machine
+58.80
+2
+Pint-Sized Summoner
+48.24
+1
+Angry Chicken
+3.33
+7
+Ravenholdt Assassin
+50.93
+4
+Wailing Soul
+47.92
+5
+Stampeding Kodo
+74.46
+3
+Felguard
+42.80
+3
+Flying Machine
+10.69
+1
+Stonetusk Boar
+33.72
+6
+Lord of the Arena
+52.88
+2
+Ironbeak Owl
+41.64
+5
+Floating Watcher
+59.24
+4
+Dark Iron Dwarf
+85.46
+5
+Fen Creeper
+66.71
+3
+Drain Life
+52.66
+1
+Blood Imp
+54.96
+4
+Silvermoon Guardian
+52.00
+6
+Priestess of Elune
+28.69
+1
+Argent Squire
+50.01
+3
+Scarlet Crusader
+91.61
+3
+Stoneskin Gargoyle
+7.36
+1
+Grimscale Oracle
+2.97
+4
+Fel Cannon
+52.44
+4
+Violet Teacher
+77.83
+2
+Master Swordsmith
+19.56
+5
+Captain Greenskin
+23.48
+9
+Lord Jaraxxus
+68.88
+4
+Baron Rivendare
+31.18
+2
+Annoy-o-Tron
+70.57
+7
+Stormwind Champion
+44.42
+1
+Voidwalker
+56.45
+4
+Ancient Mage
+14.86
+2
+Ancient Watcher
+-2.13
+2
+Wild Pyromancer
+71.26
+2
+Micro Machine
+57.49
+4
+Dragonling Mechanic
+33.70
+4
+Gnomish Inventor
+51.75
+5
+Booty Bay Bodyguard
+32.10
+3
+Shattered Sun Cleric
+82.53
+4
+Ancient Brewmaster
+47.56
+5
+Spiteful Smith
+49.17
+2
+Micro Machine
+53.62
+7
+Core Hound
+15.20
+1
+Young Dragonhawk
+5.06
+3
+Jungle Panther
+68.48
+2
+River Crocolisk
+41.10
+2
+Haunted Creeper
+50.39
+3
+Flying Machine
+8.62
+2
+Bluegill Warrior
+58.00
+7
+War Golem
+33.73
+7
+Core Hound
+17.09
+1
+Worgen Infiltrator
+69.94
+6
+Windfury Harpy
+21.69
+3
+Ironforge Rifleman
+38.58
+6
+Dread Infernal
+69.49
+4
+Stormwind Knight
+60.84
+4
+Piloted Shredder
+89.12
+2
+Amani Berserker
+46.57
+4
+Hellfire
+71.22
+4
+Chillwind Yeti
+73.12
+2
+Succubus
+16.50
+2
+Mana Addict
+8.44
+4
+Arcane Nullifier X-21
+60.00
+5
+Bomb Lobber
+76.35

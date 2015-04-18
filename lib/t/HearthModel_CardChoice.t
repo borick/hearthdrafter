@@ -22,7 +22,9 @@ $hd_model->connect($hd);
 my @classes = ($class);
 if ($class eq 'unknown') {
    @classes = ('rogue',
-               'shaman');
+               'shaman',
+               'warlock',
+               'hunter');
 }   
 for my $class (@classes) {
     my $arena = $hd_model->arena->begin_arena($class, 'test');
@@ -49,6 +51,9 @@ for my $class (@classes) {
         } else {
             $card = $card_3;
         }
+        $card_1 =~ s/[.]//g;
+        $card_2 =~ s/[.]//g;
+        $card_3 =~ s/[.]//g;
         my $results = $hd_model->card_choice->get_advice($card_1,$card_2,$card_3,$id);
         ok($results->{best_card} eq lc($card), "cards should match [$card =? $results->{best_card}]\n");
         #$hd_model->arena->confirm_card_choice($card,$id);
@@ -60,4 +65,4 @@ for my $class (@classes) {
 done_testing();
 
 # use to get data.
-# hxnormalize -l 240 -x /mnt/ntfs1/Users/Boris/Documents/Hearthstone/Hearth\ Arena\ -\ Beyond\ the\ Tier\ List\ -\ Shaman.html | hxselect -s '\n' -c 'span'
+# hxnormalize -l 240 -x /mnt/ntfs1/Users/Boris/Documents/Hearthstone/file.html | hxselect -s '\n' -c 'span'

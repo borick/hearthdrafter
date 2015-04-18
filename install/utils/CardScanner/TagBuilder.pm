@@ -39,7 +39,7 @@ sub CardScanner::TagBuilder::create_custom_tags {
         }        
         #Freeze
         if ($text =~ /freeze/) {
-            $tags{$name}->{'freeze'} = 1.0;
+            $tags{$name}->{'freeze'} = 0.5;
         }
         #Drops
         if ($type eq 'minion') {
@@ -124,17 +124,19 @@ sub CardScanner::TagBuilder::create_custom_tags {
         if ( ($text =~ /give a friendly minion [+](\d+)\/[+](\d+)/ || $text =~ /give a minion [+](\d+)\/[+](\d+)/)
              && $text !~ /dies. horribly/
                 ) {
-            $tags{$name}->{'buff'} = 1.0;
+            $tags{$name}->{'buff'} = (0.5 * ($1+$2)/2);
         } elsif ($text =~ /give a(?:nother)? (?:random)? ?(?:friendly)? ?minion [+](\d+) health/) {
-            $tags{$name}->{'buff_health'} = 1.0;
+            $tags{$name}->{'buff_health'} = (0.25 * ($1)/2);
         } elsif ($text =~ /give a(?:nother)? ?(?:random)? ?(friendly)? ?minion [+](\d+) attack/) {
             my $friend = $1;
+            my $amt = $2;
             if (defined($friend) && $friend ne '') {
-                $tags{$name}->{'buff_friend_attack'} = 1.0;
+                $tags{$name}->{'buff_friend_attack'} = (0.5 * ($amt));
+                $tags{$name}->{'buff_attack'} = (0.5 * ($amt));
             } else {
-                $tags{$name}->{'buff_enemy_attack'} = 1.0;
+                $tags{$name}->{'buff_enemy_attack'} = (0.5 * ($amt));
+                $tags{$name}->{'buff_attack'} = (0.5 * ($amt));
             }
-            $tags{$name}->{'buff_attack'} = 1.0;
         }
         #weapon synergy
         if ( ($text =~ /your weapon/) ) {
@@ -176,15 +178,15 @@ sub CardScanner::TagBuilder::create_custom_tags {
         $tags{$name}->{'buff'}   = ['race:beast',  0.5] if ($name eq 'cenarius'); 
         $tags{$name}->{'buff'}   = ['attack:1',    0.5] if ($name eq 'hobgoblin'); 
         $tags{$name}->{'buff'}   =                 0.25 if ($name eq 'stormwind champion'); 
-        $tags{$name}->{'growth'} = ['race:mech',   1.0] if ($name eq 'junkbot');
-        $tags{$name}->{'growth'} = ['race:beast',  1.0] if ($name eq 'scavenging hyena');
-        $tags{$name}->{'growth'} = ['secret',      1.0] if ($name eq 'secretkeeper');
+        $tags{$name}->{'growth'} = ['race:mech',   0.25] if ($name eq 'junkbot');
+        $tags{$name}->{'growth'} = ['race:beast',  0.25] if ($name eq 'scavenging hyena');
+        $tags{$name}->{'growth'} = ['secret',      0.25]if ($name eq 'secretkeeper');
         
         #growing minions
         if ($text =~ /[+](\d+)/ && $type eq 'minion' && ($text =~ /each turn/ || $text =~ /whenever/) && $cost <= MIN_COST_MINION_GROWTH_TAG
                 && $name !~ /bolvar/ && $name ne 'hobgoblin' && $text !~ /this turn./) {
                 
-            $tags{$name}->{'growth'} = 1.0;
+            $tags{$name}->{'growth'} = 0.25;
             
         }
         #pings
@@ -209,10 +211,10 @@ sub CardScanner::TagBuilder::create_custom_tags {
                 $tags{$name}->{'survivability'} = 0.4;
             }
             if (($name eq 'sunfury protector') || (!exists($tags{$name}->{'has_taunt'}) && $text !~ /choose/ && $text !~ /summon/)) {
-                $tags{$name}->{'gives_taunt'} = 1.0;
-                $tags{$name}->{'gives_taunt'} = ['race:beast',  1.0] if ($name eq 'houndmaster');
+                $tags{$name}->{'gives_taunt'} = 0.5;
+                $tags{$name}->{'gives_taunt'} = ['race:beast',  0.5] if ($name eq 'houndmaster');
             } else {
-                $tags{$name}->{'has_taunt'} = 1.0;
+                $tags{$name}->{'has_taunt'} = 0.5;
             }
         }
         #Card Draw
@@ -240,11 +242,11 @@ sub CardScanner::TagBuilder::create_custom_tags {
         }
         #i.e. ancient mage
         if ($text =~ /spell damage/ && !exists($blizz_tags{'spellpower'})) {
-            $tags{$name}->{'has_spellpower'} =  1.0;
+            $tags{$name}->{'has_spellpower'} =  0.75;
         }
         #rebirth
         if ($text =~ /return it to life/) {
-            $tags{$name}->{'rebirth'} = 1.00;
+            $tags{$name}->{'rebirth'} = 0.50;
         }
         #secret_synergy
         if ($text =~ /(?<!^)secret/ && $name ne 'flare' && $name ne 'kezan mystic') {
@@ -261,35 +263,35 @@ sub CardScanner::TagBuilder::create_custom_tags {
         $tags{$name}->{'aoe'}          = 1.25      if ($name eq 'blade flurry');
         $tags{$name}->{'reach'}        = 0.55      if ($name eq 'blade flurry');
         $tags{$name}->{'reach'}        = 1.00      if ($name eq 'blessed champion');
-        $tags{$name}->{'reach'}        = 5.00/4.00 if ($name eq 'blessing of kings');
-        $tags{$name}->{'reach'}        = 5.00/3.00 if ($name eq 'blessing of might');
+        $tags{$name}->{'reach'}        = 1.00      if ($name eq 'blessing of kings');
+        $tags{$name}->{'reach'}        = 1.00      if ($name eq 'blessing of might');
         $tags{$name}->{'reach'}        = 1.00      if ($name eq 'bloodlust');
         $tags{$name}->{'aoe'}          = 1.50      if ($name eq 'brawl');
         $tags{$name}->{'aoe'}          = 0.75      if ($name eq 'circle of healing');
-        $tags{$name}->{'reach'}        = 5.00/4.00 if ($name eq 'cold blood');
+        $tags{$name}->{'reach'}        = 1.00      if ($name eq 'cold blood');
         $tags{$name}->{'removal'}      = 1.00      if ($name eq 'crackle');
         $tags{$name}->{'removalsmall'} = 1.00      if ($name eq 'crackle');
         $tags{$name}->{'removalbig'}   = 1.00      if ($name eq 'crackle');
         $tags{$name}->{'reach'}        = 1.00      if ($name eq 'crackle');
         $tags{$name}->{'removalsmall'} = 1.00      if ($name eq 'claw');
-        $tags{$name}->{'reach'}        = 3.00/4.00 if ($name eq 'claw');
+        $tags{$name}->{'reach'}        = 1.00      if ($name eq 'claw');
         $tags{$name}->{'removalsmall'} = 1.00      if ($name eq 'deadly poison');
-        $tags{$name}->{'reach'}        = 3.00/4.00 if ($name eq 'deadly poison');
+        $tags{$name}->{'reach'}        = 1.00      if ($name eq 'deadly poison');
         $tags{$name}->{'removalbig'}   = 1.00      if ($name eq 'deadly shot');
         $tags{$name}->{'removal'}      = 1.00      if ($name eq 'deadly shot');
         $tags{$name}->{'draw'}         = 1.00      if ($name eq 'divine favor');
         $tags{$name}->{'draw'}         = 1.00      if ($name eq 'echo of medivh');
         $tags{$name}->{'removalbig'}   = 1.00      if ($name eq 'equality');
         $tags{$name}->{'removalbig'}   = 1.00      if ($name eq 'execute');
-        $tags{$name}->{'reach'}        = 4.00/4.00 if ($name eq 'heroic strike');
+        $tags{$name}->{'reach'}        = 1.00 if ($name eq 'heroic strike');
         $tags{$name}->{'removalbig'}   = 0.50      if ($name eq 'humility');
         $tags{$name}->{'removalbig'}   = 0.50      if ($name eq 'hunter\'s mark');
         $tags{$name}->{'aoe'}          = 1.00      if ($name eq 'lightbomb');
         $tags{$name}->{'removalbig'}   = 1.00      if ($name eq 'mind control');
         $tags{$name}->{'drop_1'}       = 1.00      if ($name eq 'mind vision');
         $tags{$name}->{'drop_4'}       = 1.00      if ($name eq 'mind games');
-        $tags{$name}->{'reach'}        = 4.00/4.00 if ($name eq 'power overwhelming');
-        $tags{$name}->{'reach'}        = 3.00/4.00 if ($name eq 'rockbiter weapon');
+        $tags{$name}->{'reach'}        = 1.00 if ($name eq 'power overwhelming');
+        $tags{$name}->{'reach'}        = 1.00 if ($name eq 'rockbiter weapon');
         $tags{$name}->{'removal'}      = 1.00      if ($name eq 'rockbiter weapon');
         $tags{$name}->{'removalsmall'} = 1.00      if ($name eq 'rockbiter weapon');
         $tags{$name}->{'reach'}        = 1.00      if ($name eq 'savage roar');
@@ -302,7 +304,7 @@ sub CardScanner::TagBuilder::create_custom_tags {
         $tags{$name}->{'enrage'}       = 1.00      if ($name eq 'gurubashi berserker');
         $tags{$name}->{'survivability'}= 1.00      if ($name eq 'alexstrasza');
         $tags{$name}->{'reach'}        = 1.00      if ($name eq 'alexstrasza');
-        $tags{$name}->{'reach'}        = 2.00/4.00 if ($name eq 'abusive sergeant');
+        $tags{$name}->{'reach'}        = 0.500 if ($name eq 'abusive sergeant');
         $tags{$name}->{'removalbig'}   = 0.50      if ($name eq 'aldor peacekeeper');
         #board fill
         $tags{$name}->{'boardfill'}    = 1.00      if ($name eq 'imp master');

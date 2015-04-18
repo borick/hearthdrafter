@@ -1,0 +1,271 @@
+0
+Target Dummy
+18.00
+2
+Knife Juggler
+74.01
+1
+Lightwarden
+10.01
+1
+Goldshire Footman
+10.62
+4
+Sen'jin Shieldmasta
+70.94
+3
+Dancing Swords
+32.04
+3
+Raid Leader
+17.74
+4
+Stormwind Knight
+51.92
+1
+Abusive Sergeant
+55.55
+3
+Questing Adventurer
+53.62
+1
+Murloc Tidecaller
+5.26
+2
+Nerubian Egg
+45.68
+1
+Webspinner
+66.25
+2
+Haunted Creeper
+75.87
+3
+Shattered Sun Cleric
+70.50
+4
+Mechanical Yeti
+81.94
+5
+Booty Bay Bodyguard
+27.16
+0
+Hunter's Mark
+62.08
+3
+Earthen Ring Farseer
+65.55
+5
+Cobra Shot
+28.82
+1
+Timber Wolf
+25.45
+2
+Dire Wolf Alpha
+63.09
+4
+Sen'jin Shieldmasta
+70.02
+2
+Quick Shot
+73.83
+3
+Injured Blademaster
+58.64
+2
+Misdirection
+33.67
+5
+Explosive Shot
+90.66
+4
+Kezan Mystic
+44.72
+2
+Pint-Sized Summoner
+50.81
+3
+Coldlight Oracle
+14.53
+2
+Bloodsail Raider
+54.27
+3
+Raid Leader
+32.45
+5
+Venture Co. Mercenary
+60.87
+3
+Silverback Patriarch
+7.07
+4
+Ogre Magi
+47.82
+4
+Gnomish Inventor
+53.87
+3
+Injured Blademaster
+62.70
+3
+Alarm-o-Bot
+4.96
+4
+Jeeves
+36.29
+4
+Dragonling Mechanic
+38.85
+3
+Raging Worgen
+58.41
+2
+Freezing Trap
+63.53
+4
+Ancient Brewmaster
+42.06
+1
+Goldshire Footman
+14.73
+3
+Jungle Panther
+69.90
+5
+Fen Creeper
+60.06
+2
+Acidic Swamp Ooze
+66.97
+1
+Cogmaster
+30.69
+5
+Tundra Rhino
+46.26
+0
+Hunter's Mark
+65.02
+4
+Ogre Magi
+47.03
+5
+Starving Buzzard
+22.66
+2
+Quick Shot
+79.76
+3
+Silverback Patriarch
+7.16
+1
+Abusive Sergeant
+65.06
+4
+Dragonling Mechanic
+44.11
+5
+Gurubashi Berserker
+44.54
+3
+Deathlord
+54.50
+3
+Coldlight Seer
+12.36
+3
+Gnomish Experimenter
+65.36
+2
+Quick Shot
+71.77
+4
+Sen'jin Shieldmasta
+79.36
+3
+Unleash the Hounds
+104.66
+2
+Glaivezooka
+111.63
+4
+Mogu'shan Warden
+29.36
+4
+Houndmaster
+80.32
+3
+Kill Command
+84.57
+3
+Animal Companion
+99.47
+2
+Explosive Trap
+36.24
+1
+Elven Archer
+64.89
+3
+Harvest Golem
+73.53
+4
+Multi-Shot
+63.14
+7
+Stormwind Champion
+124.18
+2
+Haunted Creeper
+86.72
+2
+Glaivezooka
+112.21
+2
+Mad Bomber
+72.52
+4
+Multi-Shot
+63.18
+3
+Ogre Brute
+58.80
+1
+Cogmaster
+40.64
+7
+Stormwind Champion
+115.26
+2
+Quick Shot
+73.64
+2
+Novice Engineer
+41.60
+2
+Murloc Tidehunter
+51.96
+6
+Priestess of Elune
+9.28
+4
+Ogre Magi
+64.76
+5
+Frostwolf Warlord
+95.21
+1
+Argent Squire
+60.22
+1
+Angry Chicken
+24.98
+6
+Gadgetzan Auctioneer
+58.82
+5
+Azure Drake
+83.55
+
