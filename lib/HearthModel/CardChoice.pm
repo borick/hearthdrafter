@@ -35,7 +35,7 @@ sub get_advice {
     $debug = '' if !defined($debug);
     my $c = $self->c();
     my $syn_const          = 20.00; #the power of synergies....
-    my $mana_const_minions = 7.00; #percentage increase per "mana diff" point for minions in general.
+    my $mana_const_minions = 5.00; #percentage increase per "mana diff" point for minions in general.
     my $mana_const_spells  = 3.00; #spells in general.
     my $missing_drop_const = 500.00; #just drops. const
     my $duplicate_constant = 0.03; #percent amount decrease / 1
@@ -48,7 +48,7 @@ sub get_advice {
     
     
     my $deck_type = "value";                          #0, 1, 2, 3, 4, 5, 6, 7 +              
-    my $ideal_curves    = { value => {     minions => [0, 0, 5, 3, 6, 4, 2, 2],
+    my $ideal_curves    = { value => {     minions => [0, 0, 5, 3, 6, 4, 3, 2],
                                            spells =>  [0, 0, 4, 1, 1, 1, 1, 0],
                                            drops =>   [0, 0, 4, 2, 3, 2, 1, 1], },
                                            
@@ -105,12 +105,14 @@ sub get_advice {
     my $card_data = $c->model->card->get_data(\@data_for);
     # {name => {tag => value, tag2 => value}}
     my $card_data_tags = $c->model->card->get_tags(\@data_for);
+    my %tags_data = ();
     # build a "drop__" curve.
     my @drop_curve =    (0,0,0,0,0,0,0,0);
     my $num_drops = 0;
     my $total_drop_cost = 0;
     for my $card_name_key (keys(%$card_data_tags)) {
         for my $card_tag (keys(%{$card_data_tags->{$card_name_key}})) {
+            $tags_data{$card_tag} += 1;
             if ($card_tag =~ /drop_(\d+)/) {
                 $drop_curve[$1] += 1;
                 $total_drop_cost += $card_data->{$card_name_key}->{cost};
@@ -118,6 +120,8 @@ sub get_advice {
             }
         }
     }
+    print STDERR Dumper(\%tags_data) if $debug =~ 'tags';
+    
     my $number_of_cards = scalar(@unique_cards);
     my %type_breakdown = ();
     my $average_drop = $total_drop_cost / $num_drops;
@@ -314,11 +318,11 @@ sub get_advice {
     print "[deck type: $deck_type]\n" if $debug =~ 'deck';
     for my $card (sort(@$cards)) {
         for my $tag (@{$tags_wanted->{$deck_type}}) {
-            if (exists($card_data_tags->{$card}->{$tag})) {
+            #if (exists($card_data_tags->{$card}->{$tag}) && ($tags_data{$tag}) <= 2) {
                 my $original_score = $scores{$card};
                 $scores{$card} = $scores{$card} + ($scores{$card} * ($tag_needed_mult*$complete));
                 push($scores_hist{$card}, ['tags', $scores{$card}]);
-            }
+            #}
         }
     }
     
