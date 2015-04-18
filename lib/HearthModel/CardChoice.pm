@@ -34,12 +34,12 @@ sub get_advice {
     my $debug = $HearthModel::CardChoice::debug;
     $debug = '' if !defined($debug);
     my $c = $self->c();
-    my $syn_const          = 275.00; #the power of synergies....
+    my $syn_const          = 277.00; #the power of synergies....
     my $mana_const_minions = 5.00; #percentage increase per "mana diff" point for minions in general.
     my $mana_const_spells  = 3.00; #spells in general.
-    my $missing_drop_const = 500.00; #just drops. const
-    my $duplicate_constant = 0.03; #percent amount decrease / 1
-    my $tag_needed_mult    = 0.03; #percent amt dmt increase / 1
+    my $missing_drop_const = 250.00; #just drops. const
+    my $duplicate_constant = 0.05; #percent amount decrease / 1
+    my $tag_needed_mult    = 0.10; #percent amt dmt increase / 1
     my $control_vs_tempo_threshold = 0.15;
                          #0,1,2,3,4,5,6,7+
     my $max_cost       = 7; #for the last column
@@ -48,7 +48,7 @@ sub get_advice {
     
     
     my $deck_type = "value";                          #0, 1, 2, 3, 4, 5, 6, 7 +              
-    my $ideal_curves    = { value => {     minions => [0, 0, 5, 3, 6, 4, 3, 2],
+    my $ideal_curves    = { value => {     minions => [0, 0, 5, 3, 5, 4, 3, 2],
                                            spells =>  [0, 0, 4, 1, 1, 1, 1, 0],
                                            drops =>   [0, 0, 4, 2, 3, 2, 1, 1], },
                                            
@@ -123,6 +123,9 @@ sub get_advice {
     print STDERR Dumper(\%tags_data) if $debug =~ 'tags';
     
     my $number_of_cards = scalar(@unique_cards);
+    print STDERR "*" x 80, "\n" if $debug;
+    print STDERR "Number of cards: $number_of_cards\n" if $debug;
+    
     my %type_breakdown = ();
     my $average_drop = $total_drop_cost / $num_drops;
     my $total_cost = 0;
@@ -159,19 +162,18 @@ sub get_advice {
     my @ideal_curve_spells = @{$ideal_curves->{$deck_type}->{spells}};
     my @diff_curve_minions = ();
     my @diff_curve_spells= ();
-    
     for my $key (0..7) {
-        if (exists($our_curve_hash{$key})) {
-            $diff_curve_minions[$key] = ($ideal_curve_minions[$key]*$complete) - $our_curve_hash{'minions'}->{$key}; 
+        if (exists($our_curve_hash{minion}->{$key})) {
+            $diff_curve_minions[$key] = - $ideal_curve_minions[$key] + $our_curve_hash{'minion'}->{$key}; 
         } else {
-            $diff_curve_minions[$key] = ($ideal_curve_minions[$key]*$complete);
+            $diff_curve_minions[$key] = - $ideal_curve_minions[$key];
         }
     }
     for my $key (0..7) {
-        if (exists($our_curve_hash{$key})) {
-            $diff_curve_spells[$key] = ($ideal_curve_spells[$key]*$complete) - $our_curve_hash{'spells'}->{$key}; 
+        if (exists($our_curve_hash{spell}->{$key})) {
+            $diff_curve_spells[$key] = - $ideal_curve_spells[$key] + $our_curve_hash{'spell'}->{$key}; 
         } else {
-            $diff_curve_spells[$key] = ($ideal_curve_spells[$key]*$complete);
+            $diff_curve_spells[$key] = - $ideal_curve_spells[$key];
         }
     }
     #create a min drops diff curve to adjust for missing drops below.
@@ -179,10 +181,31 @@ sub get_advice {
     for my $key (0..7) {
         $drop_diff_min[$key] = $drop_curve[$key] - $min_drops[$key];
     }
-    print STDERR 'drop diff min ' . join('|', @drop_diff_min),"\n" if $debug =~ 'drops'; 
-    #print STDERR Dumper(\@diff_curve_minions);
-    #print STDERR Dumper(\@diff_curve_spells);
-    #print STDERR Dumper(\%our_curve_hash);
+    if ($debug =~ 'curve') {
+        print STDERR 'drop diff min ' . join('|', @drop_diff_min),"\n";
+        print STDERR 'ideal curve for minions ' . join('|',@ideal_curve_minions),"\n";
+        print STDERR 'diff curve for minions ' . join('|',@diff_curve_minions),"\n";
+        print STDERR 'ideal curve for minions ' . join('|',@ideal_curve_spells),"\n";
+        print STDERR 'diff curve for spells ' . join('|', @diff_curve_spells),"\n";   
+        print STDERR 'our curve minion key ';
+        for my $key(sort(keys(%{$our_curve_hash{minion}}))) {
+            print STDERR $key . '|';
+        }
+        print STDERR "\nour curve minion     ";
+        for my $key(sort(keys(%{$our_curve_hash{minion}}))) {
+            print STDERR $our_curve_hash{minion}->{$key} . '|';
+        }
+        print STDERR "\n";
+        print STDERR 'our curve spell key ';
+        for my $key(sort(keys(%{$our_curve_hash{spell}}))) {
+            print STDERR $key . '|';
+        }
+        print STDERR "\nour curve spell     ";
+        for my $key(sort(keys(%{$our_curve_hash{spell}}))) {
+            print STDERR $our_curve_hash{spell}->{$key} . '|';
+        }
+        print STDERR "\n";
+    }
     if ($debug =~ 'curve') {
         for my $key (keys(%our_curve_hash)) {
             print $key, ' ';
@@ -285,9 +308,9 @@ sub get_advice {
         $cost = $max_cost if ($cost > $max_cost);
         my $new_score = undef;
         if ($type eq 'minion'){
-            $new_score = $original_score + ($original_score * ($mana_const_minions * $diff_curve_minions[$cost] / 100));
+            $new_score = $original_score + ($original_score * ($complete * $mana_const_minions * ($diff_curve_minions[$cost]*-1) / 100));
         } elsif ($type eq 'spell') {
-            $new_score = $original_score + ($original_score * ($mana_const_spells * $diff_curve_spells[$cost] / 100));
+            $new_score = $original_score + ($original_score * ($complete * $mana_const_spells * ($diff_curve_spells[$cost]*-1) / 100));
         } else {
             $new_score = $original_score;
         }
@@ -315,7 +338,7 @@ sub get_advice {
     $best_card_before = _get_best_card(\%scores);
     
     #adjust for missing tags.
-    print "[deck type: $deck_type]\n" if $debug =~ 'deck';
+    print STDERR "[deck type: $deck_type]\n" if $debug =~ 'deck';
     for my $card (sort(@$cards)) {
         for my $tag (@{$tags_wanted->{$deck_type}}) {
             if (exists($card_data_tags->{$card}->{$tag}) && ($tags_data{$tag}) <= 2) {
@@ -324,6 +347,8 @@ sub get_advice {
                 push($scores_hist{$card}, [$tag, $scores{$card}]);
             }
         }
+        push($scores_hist{$card}, ['tags_done', $scores{$card}]);
+        
     }
     
     my $i = 0;
@@ -337,7 +362,7 @@ sub get_advice {
             my $count = $card_counts{$card_name_2};
             my $total_weight = $weight * $count;
             $cumul_weight += $total_weight;
-            print "synergy between $card_name and $card_name_2 with weight $weight\n" if $debug =~ 'synerg';
+            print STDERR "synergy between $card_name and $card_name_2 with weight $weight\n" if $debug =~ 'synerg';
         }
         my $original_score = $scores{$card_name};
         my $synergy_modifier = ($cumul_weight);

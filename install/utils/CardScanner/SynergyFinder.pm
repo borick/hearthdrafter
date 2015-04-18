@@ -116,7 +116,7 @@ sub find_synergies {
         }
         # growing minions + taunt
         if ((_has_tag($tags_x, 'growth', $card_y) && ((_has_tag($tags_y, 'has_taunt', $card_x) || _has_tag($tags_y, 'gives_taunt', $card_x))))) {
-            $g->add_edge($name_x, $name_y, 1.00);
+            $g->add_edge($name_x, $name_y, 0.25);
             _update_reasons("$name_x|$name_y",'Use taunt to protect minions that can increase in stats over time.',\%reasons);
         }
         # alarm-o-bot, big drops
