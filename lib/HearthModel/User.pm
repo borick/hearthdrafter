@@ -7,6 +7,9 @@ use Moo;
 extends 'HearthModel::DbBase';
 use Crypt::PBKDF2;
 use Data::Dumper;
+use Data::UUID;
+my $du = Data::UUID->new();
+use Mail::Sendmail;
 
 my $pbkdf2 = Crypt::PBKDF2->new(
     hash_class => 'HMACSHA2',
@@ -87,5 +90,55 @@ sub check_password {
         return 0;
     }
 }
+
+sub reset_user_pw {
+    my ($self, $user_name) = @_;
+    my $valid_code = $du->create_str();
+    $self->es->index(
+        index   => 'hearthdrafter',
+        type    => 'user',
+        id      => $user_name,
+        body    => {
+            user_name   => $user_name,
+            email => $email,
+            first_name => $fname,
+            last_name => $lname,
+            password => "locked", #should never validate to a valid hash.
+            validation_code => $valid_code,
+        }
+    );
+
+    my %mail = ( To      => $email,
+            From    => 'admin@hearthdrafter.com',
+            Subject => '[HearthDrafter.com] $user_name Account Locked';
+            Message => "Someone initiated an account lock through HearthDrafter's 'Forgotten Password' feature. Please <a href='http://hearthdrafter.com/validate/$user_name/$valid_code'>click here</a> to reset your password!",
+            );
+
+    sendmail(%mail) or die $Mail::Sendmail::error;
+
+    print "OK. Log says:\n", $Mail::Sendmail::log;
+}
+
+sub forgotten_pw_check {
+    my ($self, $user_name, $fname, $lname, $email) = @_;
+     
+    my $doc;    
+    eval {
+        $doc = $self->es->get(
+            index => 'hearthdrafter',
+            type => 'user',
+            id => $user_name);
+    };
+    
+    return 0 if !$doc;
+    my $hash = $doc->{_source};
+    if ($user_name ne $hash->{user_name} || $fname ne $hash->{first_name} || $lname ne $hash->{last_name} || $email ne $hash->{email}) {
+        return 0;
+    } else {
+        return $self->reset_user_pw($user_name);
+    }
+    
+}
+
 
 1;

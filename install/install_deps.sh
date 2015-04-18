@@ -45,6 +45,8 @@ cpanm Graph::Simple
 cpanm Algorithm::Combinatorics
 cpanm Time::Piece
 cpanm Cache::Memcached::Fast
+cpanm Data::UUID
+cpanm Mail::Sendmail
 echo Done
 
 echo Installing Memcached
