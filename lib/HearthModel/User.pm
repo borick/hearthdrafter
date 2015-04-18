@@ -92,7 +92,7 @@ sub check_password {
 }
 
 sub reset_user_pw {
-    my ($self, $user_name) = @_;
+    my ($self, $user_name, $fname, $lname, $email) = @_;
     my $valid_code = $du->create_str();
     $self->es->index(
         index   => 'hearthdrafter',
@@ -110,7 +110,7 @@ sub reset_user_pw {
 
     my %mail = ( To      => $email,
             From    => 'admin@hearthdrafter.com',
-            Subject => '[HearthDrafter.com] $user_name Account Locked';
+            Subject => "[HearthDrafter.com] $user_name Account Locked",
             Message => "Someone initiated an account lock through HearthDrafter's 'Forgotten Password' feature. Please <a href='http://hearthdrafter.com/validate/$user_name/$valid_code'>click here</a> to reset your password!",
             );
 
@@ -135,7 +135,7 @@ sub forgotten_pw_check {
     if ($user_name ne $hash->{user_name} || $fname ne $hash->{first_name} || $lname ne $hash->{last_name} || $email ne $hash->{email}) {
         return 0;
     } else {
-        return $self->reset_user_pw($user_name);
+        return $self->reset_user_pw($user_name, $fname, $lname, $email);
     }
     
 }
