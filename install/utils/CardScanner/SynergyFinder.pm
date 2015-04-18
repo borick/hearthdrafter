@@ -23,7 +23,7 @@ sub _update_reasons {
 }
 
 sub find_synergies {
-    my %cards = %CardScanner::SynergyFinder::cards;
+    my %cards = %CardScanner::SynergyFinder::cards;    
     my %tags = %CardScanner::tags;
     
     my $g = Graph::Simple->new ( is_directed => 0, is_weighted => 1);
@@ -33,7 +33,7 @@ sub find_synergies {
     my @keys = sort(keys(%cards));
     my $iter = variations(\@keys, 2);
     my $count = 0;
-    
+    my %already_reported = ();
     while (my $c = $iter->next) {
         
         my $_name_x = $c->[0];
@@ -50,29 +50,31 @@ sub find_synergies {
         $count += 1;
         next if $name_x eq $name_y;
         next if (exists($card_x->{playerClass}) && exists($card_y->{playerClass}) && $card_x->{playerClass} ne $card_y->{playerClass});
+        print "Tags for $name_x: " . Dumper($tags_x),"\n" and $already_reported{$name_x} = 1 if $debug>=2 && !exists($already_reported{$name_x});
+        print "Tags for $name_y: " . Dumper($tags_y),"\n" and $already_reported{$name_y} = 1 if $debug>=2 && !exists($already_reported{$name_y});
         
         # spell power <> spell damange
         if (_has_tag($tags_x, 'has_spellpower', $card_y) && $text_y =~ /[\$](\d+)/) {
-            $g->add_edge($name_x, $name_y, 1.00);
+            $g->add_edge($name_x, $name_y, _has_tag($tags_x, 'has_spellpower', $card_y));
            _update_reasons("$name_x|$name_y",'The damage of these cards is increased by spell power.',\%reasons);
         }
         # buff <> minion -
         if (ref($tags_x->{'buff'}) eq 'ARRAY' # has a specific requirement
             && _has_tag($tags_x, 'buff', $card_y) && $type_y eq 'minion') {
-            $g->add_edge($name_x, $name_y, 1.00);
+            $g->add_edge($name_x, $name_y, _has_tag($tags_x, 'buff', $card_y));
             _update_reasons("$name_x|$name_y",'This card meets special requirements for a buff.',\%reasons);
             
         }elsif (_has_tag($tags_x, 'buff', $card_y) && $type_y eq 'minion' && $cost_y <= MAX_MINION_SIZE_FOR_BUFF_SYNERGY) {            
-            $g->add_edge($name_x, $name_y, (0.5));
+            $g->add_edge($name_x, $name_y, _has_tag($tags_x, 'buff', $card_y));
             _update_reasons("$name_x|$name_y",'Buffs are ideal on smaller creatures.',\%reasons);   
         }
         
         # give taunt
         if (_has_tag($tags_x, 'gives_taunt', $card_y) && $name_y eq 'ancient watcher') {            
-            $g->add_edge($name_x, $name_y, 1.00);
+            $g->add_edge($name_x, $name_y, _has_tag($tags_x, 'gives_taunt', $card_y));
             _update_reasons("$name_x|$name_y",'Give Ancient Watcher taunt in order to make it useful.',\%reasons);
         }elsif (_has_tag($tags_x, 'gives_taunt', $card_y) && $type_y eq 'minion' && $health_y >= MIN_MINION_HEALTH_FOR_GET_TAUNT_SYNERGY && !_has_tag($tags_y, 'has_taunt', $card_x)) {            
-            $g->add_edge($name_x, $name_y, ($health_y/6.0+0.10));
+            $g->add_edge($name_x, $name_y, _has_tag($tags_x, 'gives_taunt', $card_y));
             _update_reasons("$name_x|$name_y",'The bigger the creature, the more valuable the taunt.',\%reasons);
         }
         
@@ -84,26 +86,33 @@ sub find_synergies {
         
         # enrage <> pings
         if (_has_tag($tags_x, 'ping', $card_y) && _has_tag($tags_y, 'has_enrage', $card_x) && $type_y eq 'minion' && $health_y >= 2) {
-            $g->add_edge($name_x, $name_y, 1.00);
+            $g->add_edge($name_x, $name_y, _has_tag($tags_x, 'ping', $card_y) + _has_tag($tags_y, 'has_enrage', $card_x));
             _update_reasons("$name_x|$name_y",'Pings can be used to activate enrage.',\%reasons);
         }
         
         # ping + mech bear cat
         if (_has_tag($tags_x, 'ping', $card_y) && $name_y eq 'mech-bear cat') {
-            $g->add_edge($name_x, $name_y, 1.00);
+            $g->add_edge($name_x, $name_y, _has_tag($tags_x, 'ping', $card_y) * 2);
             _update_reasons("$name_x|$name_y",'Pings == more spare parts!',\%reasons);
         }
         
         # enrage <> health-buffs
         if (_has_tag($tags_x, 'buff_health', $card_y) && _has_tag($tags_y, 'has_enrage', $card_x) && $type_y eq 'minion') {
-            $g->add_edge($name_x, $name_y, 1.00);
+            $g->add_edge($name_x, $name_y, _has_tag($tags_x, 'buff_health', $card_y) + _has_tag($tags_y, 'has_enrage', $card_x));
             _update_reasons("$name_x|$name_y",'+Health increases the chance of successfully triggering enrage.',\%reasons);
         }
         # windfury <> attack-buffs
-        if (_has_tag($tags_x, 'buff_friend_attack', $card_y) && _has_tag($tags_y, 'has_windfury', $card_x) && $type_y eq 'minion') {
-            $g->add_edge($name_x, $name_y, 1.00);
+        if (_has_tag($tags_x, 'buff_attack', $card_y) && _has_tag($tags_y, 'has_windfury', $card_x) && $type_y eq 'minion') {
+            $g->add_edge($name_x, $name_y, _has_tag($tags_x, 'buff_attack', $card_y) + _has_tag($tags_y, 'has_windfury', $card_x));
             _update_reasons("$name_x|$name_y",'Windfury benefits twice as much from increased attack.',\%reasons);
         }
+        
+        # buff attack + stealth = removal
+        if (_has_tag($tags_x, 'buff_attack', $card_y) && _has_tag($tags_y, 'has_stealth', $card_x) && $type_y eq 'minion') {
+            $g->add_edge($name_x, $name_y, _has_tag($tags_x, 'buff_attack', $card_y) + _has_tag($tags_y, 'has_stealth', $card_x));
+            _update_reasons("$name_x|$name_y",'Buff attack + stealth == bigger removal!',\%reasons);
+        }
+        
         # silence <> negative effects on own minions (i.e wailing soul..)
         if ((_has_tag($tags_x, 'silence', $card_y) || $name_x eq 'wailing soul') && _has_tag($tags_y, 'cursed', $card_x) && $type_y eq 'minion') {
             $g->add_edge($name_x, $name_y, 1.00);
@@ -111,12 +120,12 @@ sub find_synergies {
         }
         # weapons & minions who benefit from weapons
         if ((_has_tag($tags_x, 'weapon_synergy', $card_y) && ($type_y eq 'weapon'||(_has_tag($tags_x, 'gives_weapon', $card_y))))) {
-            $g->add_edge($name_x, $name_y, 1.00);
+            $g->add_edge($name_x, $name_y, _has_tag($tags_x, 'weapon_synergy', $card_y));
             _update_reasons("$name_x|$name_y",'These cards have a special synergy with weapons.',\%reasons);
         }
         # growing minions + taunt
         if ((_has_tag($tags_x, 'growth', $card_y) && ((_has_tag($tags_y, 'has_taunt', $card_x) || _has_tag($tags_y, 'gives_taunt', $card_x))))) {
-            $g->add_edge($name_x, $name_y, 0.25);
+            $g->add_edge($name_x, $name_y, _has_tag($tags_x, 'growth', $card_y));
             _update_reasons("$name_x|$name_y",'Use taunt to protect minions that can increase in stats over time.',\%reasons);
         }
         # alarm-o-bot, big drops
@@ -127,12 +136,12 @@ sub find_synergies {
         # alexstrasza, reach
         my $dmg_x = _has_tag($tags_x, 'direct_damage', $card_y);            
         if (defined($dmg_x) && $dmg_x >= 3 && ($name_y eq 'alexstrasza')) {
-            $g->add_edge($name_x, $name_y, 1.00);
+            $g->add_edge($name_x, $name_y, _has_tag($tags_x, 'direct_damage', $card_y));
             _update_reasons("$name_x|$name_y",'Alexstrasza + direct damage == opponent dead.',\%reasons);
         }
         # acolyte of pain + health-buff
         if (_has_tag($tags_x, 'buff_health', $card_y) && ($name_y eq 'acolyte of pain')) {
-            $g->add_edge($name_x, $name_y, 1.00);
+            $g->add_edge($name_x, $name_y, _has_tag($tags_x, 'buff_health', $card_y));
             _update_reasons("$name_x|$name_y",'More health means more pain...',\%reasons);
         }            
         # brewmaster and battle cry
@@ -146,6 +155,7 @@ sub find_synergies {
                 && $name_y !~ 'void terror'
                 && $name_y !~ 'arcane golem'
                 && $name_y !~ 'flame imp'
+                && $name_y !~ 'tinkertown technician' #TODO: make this detect if we have the proper "synergy"
                 && $name_y !~ 'felguard') {
             $g->add_edge($name_x, $name_y, 1.00);
             _update_reasons("$name_x|$name_y",'Return these cards to your hand to double-up the battlecry effect.',\%reasons);
@@ -164,53 +174,53 @@ sub find_synergies {
         
         #demon synergy
         if (_has_tag($tags_x, 'demon_synergy', $card_y) && $race_y eq 'demon') {
-            $g->add_edge($name_x, $name_y, 1.00);
+            $g->add_edge($name_x, $name_y, (10-$cost_x)/3*1.00);
             _update_reasons("$name_x|$name_y",'Certain cards have a special synergy with demons.',\%reasons);
         }
         
         #mech synergy
         if (_has_tag($tags_x, 'mech_synergy', $card_y) && ($race_y eq 'mech' || $name_y =~ /mech/)) {
-            $g->add_edge($name_x, $name_y, 1.00);
+            $g->add_edge($name_x, $name_y, (10-$cost_x)/3*1.00);
             _update_reasons("$name_x|$name_y",'Certain cards have a special synergy with mechs.',\%reasons);
         }
 
         #pirate synergy
         if (_has_tag($tags_x, 'pirate_synergy', $card_y) && $race_y eq 'pirate') {
-            $g->add_edge($name_x, $name_y, 1.00);
+            $g->add_edge($name_x, $name_y, (10-$cost_x)/3*1.00);
             _update_reasons("$name_x|$name_y",'Certain cards have a special synergy with pirates.',\%reasons);
         }
         
         # lightspawn + priest/dbl health (divine spirit, inner fire
         if ($name_x eq 'divine spirit' && $name_y eq 'lightspawn') {
-            $g->add_edge($name_x, $name_y, 1.00);
+            $g->add_edge($name_x, $name_y, 5.00);
             _update_reasons("$name_x|$name_y",'Make lightspawn a 10/10.',\%reasons);
         }
         
         # priest dbl hearth + make attack = health
         if ($name_x eq 'divine spirit' && $name_y eq 'inner fire') {
-            $g->add_edge($name_x, $name_y, 1.00);
+            $g->add_edge($name_x, $name_y, $health_x);
             _update_reasons("$name_x|$name_y",'Give a minion huge health... and attack!',\%reasons);
         }
         
         # combo, small spells
         if (_has_tag($tags_x, 'has_combo', $card_y) && $cost_y <= MIN_SPELL_COST_COMBO_SYNERGY && $type_y eq 'spell') {
-            $g->add_edge($name_x, $name_y, 1.00);
+            $g->add_edge($name_x, $name_y, _has_tag($tags_x, 'has_combo', $card_y));
             _update_reasons("$name_x|$name_y",'Small-cost spells means combo-trigger likely.',\%reasons);
         }        
         
         # adjacent buff, minions
         if (_has_tag($tags_x, 'has_adjacentbuff', $card_y) && $cost_y <= MIN_MINION_COST_ADJACENT_BUFF_SYNERGY && $type_y eq 'minion' && !_has_tag($tags_y, 'cursed', $card_x)) { #avoid ancient watcher
             if (_has_tag($tags_y, 'has_windfury', $card_x)) {
-                $g->add_edge($name_x, $name_y, 0.60); #more value if windfury
+                $g->add_edge($name_x, $name_y, _has_tag($tags_x, 'has_adjacentbuff', $card_y) * 2); #more value if windfury
             } else {
-                $g->add_edge($name_x, $name_y, 0.30);
+                $g->add_edge($name_x, $name_y, _has_tag($tags_x, 'has_adjacentbuff', $card_y));
             }
             _update_reasons("$name_x|$name_y",'Good size minions means extra damage from adjacent buff.',\%reasons);
         }
         
         # frostwolf, boardfill
         if (_has_tag($tags_x, 'boardfill', $card_y) && $name_y eq 'frostwolf warlord') {
-            $g->add_edge($name_x, $name_y, 1.00);
+            $g->add_edge($name_x, $name_y, _has_tag($tags_x, 'boardfill', $card_y));
             _update_reasons("$name_x|$name_y",'Frostwolf Warlord gets huge with cards that fill the board.',\%reasons); 
         }
         #frost wolf, low cost minion
@@ -220,7 +230,7 @@ sub find_synergies {
         }
         # sea giant, minions, implosion
         if (_has_tag($tags_x, 'boardfill', $card_y) && $name_y eq 'sea giant') {
-            $g->add_edge($name_x, $name_y, 1.00);
+            $g->add_edge($name_x, $name_y, _has_tag($tags_x, 'boardfill', $card_y));
             _update_reasons("$name_x|$name_y",'Sea Giant can be more easily cast with cards that fill the board.',\%reasons);  
         }
         if ($cost_x <= MIN_MINION_COST_SEAGIANT_SYNERGY && $type_x eq 'minion' && $name_y eq 'sea giant') {
@@ -231,19 +241,19 @@ sub find_synergies {
         # detahrattles and rebirth, but not cursed ones. or mostly useless ones.
         if (_has_tag($tags_x, 'has_deathrattle', $card_y) && $name_x ne 'feugen' && $name_x ne 'stalagg' && !_has_tag($tags_x, 'cursed', $card_y)
                 && _has_tag($tags_y, 'rebirth', $card_x)) {
-            $g->add_edge($name_x, $name_y, 1.00);
+            $g->add_edge($name_x, $name_y, _has_tag($tags_x, 'has_deathrattle', $card_y));
             _update_reasons("$name_x|$name_y",'Return deathrattles to life for extra deathrattles!',\%reasons);
         }
         
         # secret synergy
         if (_has_tag($tags_x, 'secret_synergy', $card_y) && $text_y =~ 'secret:') {
-            $g->add_edge($name_x, $name_y, 1.00);
+            $g->add_edge($name_x, $name_y, _has_tag($tags_x, 'secret_synergy', $card_y));
             _update_reasons("$name_x|$name_y",'Certain cards have a special synergy with secrets.',\%reasons);
         }
         
         # shaman overload
         if (_has_tag($tags_x, 'overload', $card_y) && $name_y eq 'unbound elemental') {
-            $g->add_edge($name_x, $name_y, 1.00);
+            $g->add_edge($name_x, $name_y, _has_tag($tags_x, 'overload', $card_y));
             _update_reasons("$name_x|$name_y",'Unbound Elemental gets bigger with more overload!',\%reasons);   
         }
         
@@ -251,36 +261,31 @@ sub find_synergies {
         # SOJ, boardfill
         # knife jungler, board fill
         if (_has_tag($tags_x, 'boardfill', $card_y) && $name_y eq 'knife juggler') {
-            $g->add_edge($name_x, $name_y, 1.00);
+            $g->add_edge($name_x, $name_y, _has_tag($tags_x, 'boardfill', $card_y));
             _update_reasons("$name_x|$name_y",'Fill the board for more knives!',\%reasons);
         }
         
         if (_has_tag($tags_x, 'boardfill', $card_y) && ($name_y eq 'sword of justice' || $name_y eq 'power of the wild')) {
-            $g->add_edge($name_x, $name_y, 1.00);
+            $g->add_edge($name_x, $name_y, _has_tag($tags_x, 'boardfill', $card_y));
             _update_reasons("$name_x|$name_y",'Lots of buffed minions!',\%reasons);
         }
         
         # power of the wild & violet teacher
         if ($name_x eq 'power of the wild' && $name_y eq 'violet teacher') {
-            $g->add_edge($name_x, $name_y, 1.00);
+            $g->add_edge($name_x, $name_y, 2.00);
             _update_reasons("$name_x|$name_y",'Strong students!',\%reasons);
         }
         # stormwind knight + crazed alch
         if ($name_x eq 'stormwind knight' && $name_y eq 'crazed alchemist') {
-            $g->add_edge($name_x, $name_y, 1.00);
+            $g->add_edge($name_x, $name_y, 0.50);
             _update_reasons("$name_x|$name_y",'Smash your knight into stuff',\%reasons);
         }
         
-        
-        
-        
     }
-    print "Finished > $count comparisons.\n" if $debug;
-
+    print "finished > $count comparisons\n" if $debug;
     my @vertices = $g->vertices;
-    print Dumper(\%reasons) if $debug >= 2;
-    print keys(%reasons) . " total synergies.\n" if $debug;
-    
+    print Dumper(\%reasons) if $debug >= 3;
+    print keys(%reasons) . " total synergies found\n";
     return [$g, \%reasons];
 }
 

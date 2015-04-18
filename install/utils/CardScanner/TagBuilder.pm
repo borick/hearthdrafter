@@ -134,6 +134,7 @@ sub CardScanner::TagBuilder::create_custom_tags {
             } else {
                 $tags{$name}->{'buff_enemy_attack'} = 1.0;
             }
+            $tags{$name}->{'buff_attack'} = 1.0;
         }
         #weapon synergy
         if ( ($text =~ /your weapon/) ) {
@@ -166,15 +167,15 @@ sub CardScanner::TagBuilder::create_custom_tags {
             $tags{$name}->{'gives_weapon'} = 1.0;
         }
         
-        $tags{$name}->{'buff'}   = ['race:demon',  2.5] if ($name eq 'demonheart');
-        $tags{$name}->{'buff'}   = ['race:demon',  1.0] if ($name eq 'demonfire');
-        $tags{$name}->{'buff'}   = ['race:beast',  1.0] if ($name eq 'houndmaster');
-        $tags{$name}->{'buff'}   = ['race:mech',   1.0] if ($name eq 'iron sensei');
-        $tags{$name}->{'buff'}   = ['race:demon',  2.0] if ($name eq 'mal\'ganis'); 
-        $tags{$name}->{'buff'}   = ['race:murloc', 2.0] if ($name eq 'murloc warleader'); 
-        $tags{$name}->{'buff'}   = ['race:beast',  1.0] if ($name eq 'cenarius'); 
-        $tags{$name}->{'buff'}   = ['attack:1',    1.0] if ($name eq 'hobgoblin'); 
-        $tags{$name}->{'buff'}   = 1                    if ($name eq 'stormwind champion'); 
+        $tags{$name}->{'buff'}   = ['race:demon',  1.0] if ($name eq 'demonheart');
+        $tags{$name}->{'buff'}   = ['race:demon',  0.5] if ($name eq 'demonfire');
+        $tags{$name}->{'buff'}   = ['race:beast',  0.5] if ($name eq 'houndmaster');
+        $tags{$name}->{'buff'}   = ['race:mech',   0.5] if ($name eq 'iron sensei');
+        $tags{$name}->{'buff'}   = ['race:demon',  0.5] if ($name eq 'mal\'ganis'); 
+        $tags{$name}->{'buff'}   = ['race:murloc', 0.5] if ($name eq 'murloc warleader'); 
+        $tags{$name}->{'buff'}   = ['race:beast',  0.5] if ($name eq 'cenarius'); 
+        $tags{$name}->{'buff'}   = ['attack:1',    0.5] if ($name eq 'hobgoblin'); 
+        $tags{$name}->{'buff'}   =                 0.25 if ($name eq 'stormwind champion'); 
         $tags{$name}->{'growth'} = ['race:mech',   1.0] if ($name eq 'junkbot');
         $tags{$name}->{'growth'} = ['race:beast',  1.0] if ($name eq 'scavenging hyena');
         $tags{$name}->{'growth'} = ['secret',      1.0] if ($name eq 'secretkeeper');

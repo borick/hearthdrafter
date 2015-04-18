@@ -21,12 +21,13 @@ my $bulk_tag = $e->bulk_helper(
 
 sub load_synergies {
     my ($g, $reasons) = @_;
-    
+    eval {
+        $e->indices->delete(index=>'card_synergy');
+    };
     my $debug = $CardScanner::debug;
     print "Loading synergies...\n" if $debug;
     for my $key (keys(%$reasons)) {
-        print "Processing: $key\n" if $debug >= 2;
-        
+        print "Processing: $key\n" if $debug >= 3;
         my @values = split(/[|]/, $key);
         die 'error, keys should contain "|"' if @values < 2;
         my $reason = $reasons->{$key};
@@ -55,6 +56,9 @@ sub load_synergies {
 
 sub load_tags {
     my ($ref) = @_;
+    eval {
+        $e->indices->delete(index=>'card_tag');
+    };
     for my $card_name (keys(%$ref)) {
     
         my $inner_ref = $ref->{$card_name};

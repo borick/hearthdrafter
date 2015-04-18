@@ -125,7 +125,7 @@ sub load_scores {
 
     # Load the card scores.
     for my $file (@files) {
-    print "Processing $file...\n" if $debug >= 2;
+    print "Processing $file...\n" if $debug >= 3;
         if ($file =~ /ha_data_(\d)_.*.txt$/) {
             my $class_num = $1;
             my $class_name = $class_id_to_name{$class_num};

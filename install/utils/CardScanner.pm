@@ -90,7 +90,7 @@ sub CardScanner::_has_tag {
         my @tokens = split(/:/, $req);
         if ($tokens[0] eq 'race') {
             if (exists($card->{race}) && lc($card->{race}) eq $tokens[1]) {
-                return $value;
+                return $value->[1];
             }
         }
     } elsif (defined($value)) {
