@@ -8,7 +8,7 @@ use Data::Dumper;
 use File::Slurp;
 use Getopt::Long;
 my $debug;
-GetOptions ("debug=s"   => \$debug) or die('error');
+GetOptions ("debug=s" => \$debug) or die('error with params');
 
 use_ok( 'HearthDrafter' );
 
@@ -17,7 +17,7 @@ my $hd_model = $hd->model();
 $HearthModel::CardChoice::debug = $debug;
 $hd_model->connect($hd);
 my @classes = (
-               'rogue',
+               #'rogue',
                'shaman',
               );
 for my $class (@classes) {
@@ -46,7 +46,7 @@ for my $class (@classes) {
             $card = $card_3;
         }
         my $results = $hd_model->card_choice->get_advice($card_1,$card_2,$card_3,$id);
-        ok($results->{best_card} eq lc($card), "expected $card \n");
+        ok($results->{best_card} eq lc($card), "cards should match [$card =? $results->{best_card}]\n");
         #$hd_model->arena->confirm_card_choice($card,$id);
         $hd_model->arena->confirm_card_choice($results->{best_card},$id);
     }

@@ -14,6 +14,7 @@ $HearthModel::CardChoice::debug = 0;
 
 use Time::Piece;
 use Data::Dumper;
+$Data::Dumper::Indent = 0;
 use List::Util qw(sum);
 
 sub get_next_index {
@@ -21,51 +22,66 @@ sub get_next_index {
     return $self->c()->model->arena->get_next_index($source);
 }
 
+sub _print_scores {
+    my $scores = shift;
+    for my $name (keys(%$scores)) {
+        print $name ," |";
+    }
+    print "\n";
+}
 sub get_advice {
     my ($self, $card_1, $card_2, $card_3, $arena_id) = @_;        
     my $debug = $HearthModel::CardChoice::debug;
     $debug = '' if !defined($debug);
-    
-    my $syn_const  = 2000.00; #the power of synergies....
-    my $mana_const_minions = 3.00; #percentage increase per "mana diff" point for minions in general.
-    my $mana_const_spells =  2.00; #spells in general.
-    my $missing_drop_const = 820.00; #just drops.
-    my $duplicate_constant = 0.03; #percent amount decrease
+    my $c = $self->c();
+    my $syn_const          = 20.00; #the power of synergies....
+    my $mana_const_minions = 7.00; #percentage increase per "mana diff" point for minions in general.
+    my $mana_const_spells  = 3.00; #spells in general.
+    my $missing_drop_const = 500.00; #just drops. const
+    my $duplicate_constant = 0.03; #percent amount decrease / 1
+    my $tag_needed_mult    = 0.10; #percent amt dmt increase / 1
     my $control_vs_tempo_threshold = 0.15;
                          #0,1,2,3,4,5,6,7+
-    my @min_drops      = (0,0,4,2,3,2,1,1);
     my $max_cost       = 7; #for the last column
     
     #my @max_drops      = (2,3,8,5,5,4,3,2);
-    my $deck_type = "value";                          #0, 1, 2, 3, 4, 5, 6, 7 +
-    my $ideal_curves    = { value => {     minions => [0, 0, 5, 3, 6, 4, 2, 2],
-                                           spells =>  [0, 0, 4, 1, 1, 1, 1, 0], },
-                            late_game => { minions => [0, 0, 6, 6, 2, 5, 5, 1], 
-                                           spells =>  [0, 1, 2, 0, 1, 0, 0, 1], },
-                            aggro => {     minions => [0, 1, 9, 6, 4, 4, 0, 1],
-                                           spells =>  [1, 2, 1, 0, 0, 0, 0, 1], },
-                            control => {   minions => [0, 3, 2, 4, 4, 4, 3, 2], 
-                                           spells =>  [0, 4, 1, 1, 1, 0, 1, 0], },
-                            stacked => {   minions => [0, 0, 6, 4, 5, 4, 1, 1], 
-                                           spells =>  [0, 0, 0, 2, 4, 0, 0, 1], } ,};
     
-    my $c = $self->c();
+    
+    my $deck_type = "value";                          #0, 1, 2, 3, 4, 5, 6, 7 +              
+    my $ideal_curves    = { value => {     minions => [0, 0, 5, 3, 6, 4, 2, 2],
+                                           spells =>  [0, 0, 4, 1, 1, 1, 1, 0],
+                                           drops =>   [0, 0, 4, 2, 3, 2, 1, 1], },
+                                           
+                            late_game => { minions => [0, 0, 6, 6, 2, 5, 5, 1], 
+                                           spells =>  [0, 1, 2, 0, 1, 0, 0, 1],
+                                           drops =>   [0, 0, 4, 2, 3, 2, 1, 1],},
+                                           
+                            aggro => {     minions => [0, 1, 9, 6, 4, 4, 0, 1],
+                                           spells =>  [1, 2, 1, 0, 0, 0, 0, 1],
+                                           drops =>   [0, 0, 6, 3, 2, 1, 1, 1],},
+                                           
+                            control => {   minions => [0, 3, 2, 4, 4, 4, 3, 2], 
+                                           spells =>  [0, 4, 1, 1, 1, 0, 1, 0],
+                                           drops =>   [0, 0, 4, 2, 4, 2, 1, 1],}};
+                                           
+    my $tags_wanted = { value => [ 'draw', 'aoe', 'removal', 'ping' ],
+                        late_game => [ 'survivability', 'aoe', 'removal', 'ping'],
+                        aggro => [ 'draw' ],
+                        control => [ 'draw', 'removal', 'ping', 'aoe' ], };
     my $source = $c->model->arena->continue_run($arena_id);
-    #print STDERR "Arena run: " . Dumper($source) . "\n";
-    my @card_choices = @{$source->{card_choices}};
-    my $card_number = scalar(@card_choices) + 1;
-    my $complete = $card_number/28; #out of 1
-    my %card_counts = %{$source->{card_counts}};
     my $next_index = $self->get_next_index($source);
     return undef if $next_index >= 30;
+    
+    my @card_choices = @{$source->{card_choices}};
+    my %card_counts = %{$source->{card_counts}};
+    my $card_number = scalar(@card_choices) + 1;
+    my $complete = $card_number/25; #out of 1
     my $out_data = {};
-    my $card_options = $source->{card_options};
+    my $card_options = $source->{card_options};    
     #update the card choices we have
     $card_options->[$next_index] = {card_name   => $card_1,
                                     card_name_2 => $card_2,
                                     card_name_3 => $card_3};
-    #print STDERR "Updating card selection for Card #".($next_index+1) . "\n";
-    #reindex
     $self->es->index(
         index => 'hearthdrafter',
         type => 'arena_run', 
@@ -79,6 +95,7 @@ sub get_advice {
     my $best_card_after;
     my $best_card_score;
     
+    my %scores_hist = ();
     #build a hashmap of names to scores
     my %scores = ();
     #my %math = ();
@@ -90,40 +107,44 @@ sub get_advice {
     my $card_data_tags = $c->model->card->get_tags(\@data_for);
     # build a "drop__" curve.
     my @drop_curve =    (0,0,0,0,0,0,0,0);
+    my $num_drops = 0;
+    my $total_drop_cost = 0;
     for my $card_name_key (keys(%$card_data_tags)) {
         for my $card_tag (keys(%{$card_data_tags->{$card_name_key}})) {
             if ($card_tag =~ /drop_(\d+)/) {
                 $drop_curve[$1] += 1;
-            }    
+                $total_drop_cost += $card_data->{$card_name_key}->{cost};
+                $num_drops += 1;
+            }
         }
     }
-    
+    my $number_of_cards = scalar(@unique_cards);
     my %type_breakdown = ();
+    my $average_drop = $total_drop_cost / $num_drops;
     my $total_cost = 0;
     for my $card (@unique_cards) {
         my $card_info = $card_data->{$card};
         $total_cost += $card_info->{cost};
         $type_breakdown{$card_info->{type}} += 1;
     }
-    my $number_of_cards = scalar(@unique_cards);
-    my $average_cost = ($number_of_cards > 0) ? ($total_cost / $number_of_cards) : 0; 
-    my $average_drop = sum(@drop_curve) / 8;
-    print STDERR "Average cost of cards: $average_cost\n" if $debug =~ 'average';
-    print STDERR "Average drop: $average_drop\n"  if $debug =~ 'average';
-    print STDERR "drops " . join('.', @drop_curve) . "\n" if $debug =~ 'drops';
-    if ($average_drop <= 1.1) {
+    if ($average_drop <= 2.5) {
         $deck_type = 'aggro';
-    } elsif ($average_drop >= 3.5) {
+    } elsif ($average_drop >= 4.0) {
         $deck_type = 'late_game';
-    } else {
-        my $spells_count = $type_breakdown{spell};
+    } elsif ($number_of_cards > 5) {
+        my $spells_count = exists($type_breakdown{spell}) ? $type_breakdown{spell} : 0;
         my $ratio = $spells_count / $number_of_cards;
         if ($ratio <= $control_vs_tempo_threshold) {
             $deck_type = 'value';
         } else {
             $deck_type = 'control';
         }
-    }   
+    }
+    my $average_cost = ($number_of_cards > 0) ? ($total_cost / $number_of_cards) : 0; 
+    my @min_drops = @{$ideal_curves->{$deck_type}->{drops}};
+    print STDERR "Average cost of cards: $average_cost\n" if $debug =~ 'average';
+    print STDERR "Average drop: $average_drop\n"  if $debug =~ 'average';
+    print STDERR "drops " . join('.', @drop_curve) . "\n" if $debug =~ 'drops';
     # build a mana curve...
     my %our_curve_hash = ();
     for my $card (keys(%$card_data)) {
@@ -227,7 +248,8 @@ sub get_advice {
     die 'bad cards' if (@$scores_result <= 0);
     for my $score (@$scores_result) {
         $scores{$score->{'_source'}->{'card_name'}} = $score->{'_source'}->{'score'};
-        print STDERR "[".$score->{'_source'}->{'card_name'}." orig score] ".$score->{'_source'}->{'score'}."\n" if $debug =~ 'score'; 
+        $scores_hist{$score->{'_source'}->{'card_name'}} = [];
+        push($scores_hist{$score->{'_source'}->{'card_name'}}, ['original', $score->{'_source'}->{'score'}]);
     }
     $best_card_before = _get_best_card(\%scores);
     $message .= "$best_card_before has the most value. ";
@@ -247,7 +269,7 @@ sub get_advice {
         if ($is_drop && $diff < 0) {
             $scores{$card} = $original_score + (($diff*-1) * ($missing_drop_const*$complete));
         }
-        print STDERR "[$card drop adjustment] ".$scores{$card}."\n" if $debug =~ 'score'; 
+        push($scores_hist{$card}, ['missing_drops', $scores{$card}]);
     }
     
     #adjust for mana curve.
@@ -265,8 +287,9 @@ sub get_advice {
         } else {
             $new_score = $original_score;
         }
-        print STDERR "[$card after mana] " . $new_score . "\n" if $debug =~ 'score'; 
+        
         $scores{$card} = $new_score;
+        push($scores_hist{$card}, ['mana', $scores{$card}]);
         
         $best_card_after = _get_best_card(\%scores);
         
@@ -282,12 +305,25 @@ sub get_advice {
         if ($best_card_before ne $best_card_after) {
             $message .= "However, we already have $count of $best_card_before. It's better to have variety. ";
         }
+        push($scores_hist{$card}, ['dups', $scores{$card}]);
     }
-           
+        
     $best_card_before = _get_best_card(\%scores);
     
+    #adjust for missing tags.
+    print "[deck type: $deck_type]\n" if $debug =~ 'deck';
+    for my $card (sort(@$cards)) {
+        for my $tag (@{$tags_wanted->{$deck_type}}) {
+            if (exists($card_data_tags->{$card}->{$tag})) {
+                my $original_score = $scores{$card};
+                $scores{$card} = $scores{$card} + ($scores{$card} * ($tag_needed_mult*$complete));
+                push($scores_hist{$card}, ['tags', $scores{$card}]);
+            }
+        }
+    }
+    
     my $i = 0;
-    #calculate final score
+    #synergies
     for my $card_name (sort(keys(%synergies))) {
         my $synergy_array = $synergies{$card_name};
         my $cumul_weight = 0;
@@ -297,16 +333,21 @@ sub get_advice {
             my $count = $card_counts{$card_name_2};
             my $total_weight = $weight * $count;
             $cumul_weight += $total_weight;
-            #print STDERR "Adjusting for $card_name, $card_name_2, $weight.\n";
         }
-        my $original_score = $scores{$card_name};#to avoid decreasing negative number;
-        #each 1 PT synergy weight increase card value by 10% by soem const value in syn const.
-        my $synergy_modifier = (1+($cumul_weight/10));
-        my $new_score = $original_score + ($synergy_modifier*$syn_const)/100;
+        my $original_score = $scores{$card_name};
+        my $synergy_modifier = ($cumul_weight);
+        my $new_score = $original_score + ($synergy_modifier*$syn_const);
         $scores{$card_name} = $new_score;
-        print STDERR "[$card_name after syn] $scores{$card_name}\n" if $debug =~ 'score'; 
+        push($scores_hist{$card_name}, ['synergy', $scores{$card_name}]);
         $i += 1;
     }
+    
+#     #deck type...
+#     if ($deck_type eq 'aggro') {
+#     
+#     } else {
+#     
+#     }
     
     ($best_card_after,$best_card_score)  = _get_best_card(\%scores, $out_data);
     if ($best_card_before ne $best_card_after) {
@@ -315,6 +356,10 @@ sub get_advice {
     $message .= "Pick \"$best_card_after\"! ";
     $out_data->{message} = $message;
     #print STDERR 'Out data:' . Dumper($out_data);
+    for my $card (@$cards) {
+    print STDERR "[$card] " . Dumper($scores_hist{$card}), "\n" if $debug =~ 'score';
+    }
+    
     return $out_data;
 }
 
