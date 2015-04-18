@@ -58,20 +58,19 @@ sub load_tags {
     for my $card_name (keys(%$ref)) {
     
         my $inner_ref = $ref->{$card_name};
-        my $tag = {};
+        my $tags = {};
         for my $mech_name (keys(%$inner_ref)) {
             my $weight = $inner_ref->{$mech_name};
-            $tag->{'name'} = $mech_name;
-            $tag->{'weight'} = $weight;
             if (ref($weight) eq 'ARRAY') {
-                $tag->{'weight'} = -1.0;
+                $weight = -1.0;
             }
+            $tags->{$mech_name} = $weight;            
         }
         $bulk_tag->index({
             id => $card_name,
             source => {
                 card_name => $card_name,
-                tag => $tag,
+                tags => $tags,
             }
         });
     }

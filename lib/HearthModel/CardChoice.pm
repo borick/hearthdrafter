@@ -26,12 +26,12 @@ sub get_advice {
     my $debug = $HearthModel::CardChoice::debug;
     $debug = '' if !defined($debug);
     
-    my $max_score  = 8500; #for visual display only.
-    my $syn_const  = 1500.00; #the power of synergies....
-    my $mana_const_minions = .40; #percentage increase per "mana diff" point for minions in general.
-    my $mana_const_spells = .40; #spells in general.
+    my $syn_const  = 2000.00; #the power of synergies....
+    my $mana_const_minions = 3.00; #percentage increase per "mana diff" point for minions in general.
+    my $mana_const_spells =  2.00; #spells in general.
     my $missing_drop_const = 820.00; #just drops.
     my $duplicate_constant = 0.03; #percent amount decrease
+    my $control_vs_tempo_threshold = 0.15;
                          #0,1,2,3,4,5,6,7+
     my @min_drops      = (0,0,4,2,3,2,1,1);
     my $max_cost       = 7; #for the last column
@@ -98,24 +98,32 @@ sub get_advice {
         }
     }
     
+    my %type_breakdown = ();
     my $total_cost = 0;
     for my $card (@unique_cards) {
         my $card_info = $card_data->{$card};
         $total_cost += $card_info->{cost};
+        $type_breakdown{$card_info->{type}} += 1;
     }
     my $number_of_cards = scalar(@unique_cards);
     my $average_cost = ($number_of_cards > 0) ? ($total_cost / $number_of_cards) : 0; 
     my $average_drop = sum(@drop_curve) / 8;
-    
     print STDERR "Average cost of cards: $average_cost\n" if $debug =~ 'average';
     print STDERR "Average drop: $average_drop\n"  if $debug =~ 'average';
     print STDERR "drops " . join('.', @drop_curve) . "\n" if $debug =~ 'drops';
-    if ($average_drop <= 1) {
+    if ($average_drop <= 1.1) {
         $deck_type = 'aggro';
-    elsif ($average_drop >= 3) {
-        
-    }
-    
+    } elsif ($average_drop >= 3.5) {
+        $deck_type = 'late_game';
+    } else {
+        my $spells_count = $type_breakdown{spell};
+        my $ratio = $spells_count / $number_of_cards;
+        if ($ratio <= $control_vs_tempo_threshold) {
+            $deck_type = 'value';
+        } else {
+            $deck_type = 'control';
+        }
+    }   
     # build a mana curve...
     my %our_curve_hash = ();
     for my $card (keys(%$card_data)) {
@@ -297,7 +305,6 @@ sub get_advice {
         my $new_score = $original_score + ($synergy_modifier*$syn_const)/100;
         $scores{$card_name} = $new_score;
         print STDERR "[$card_name after syn] $scores{$card_name}\n" if $debug =~ 'score'; 
-        #$math{$card_name} = [$synergy_modifier,'*',$new_score / $max_score];
         $i += 1;
     }
     
