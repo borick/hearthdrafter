@@ -8,7 +8,7 @@ use CardScanner;
 use Getopt::Long;
 
 my $debug = 0;
-GetOptions ("debug+" => \$debug)
+GetOptions ("debug=i" => \$debug)
     or die ("Error");
 
 print "Running...\n";

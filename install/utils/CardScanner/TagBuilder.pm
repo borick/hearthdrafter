@@ -174,6 +174,7 @@ sub CardScanner::TagBuilder::create_custom_tags {
         $tags{$name}->{'buff'}   = ['race:murloc', 2.0] if ($name eq 'murloc warleader'); 
         $tags{$name}->{'buff'}   = ['race:beast',  1.0] if ($name eq 'cenarius'); 
         $tags{$name}->{'buff'}   = ['attack:1',    1.0] if ($name eq 'hobgoblin'); 
+        $tags{$name}->{'buff'}   = 1                    if ($name eq 'stormwind champion'); 
         $tags{$name}->{'growth'} = ['race:mech',   1.0] if ($name eq 'junkbot');
         $tags{$name}->{'growth'} = ['race:beast',  1.0] if ($name eq 'scavenging hyena');
         $tags{$name}->{'growth'} = ['secret',      1.0] if ($name eq 'secretkeeper');
@@ -337,6 +338,7 @@ sub CardScanner::TagBuilder::create_custom_tags {
         }
         my $count_tags = scalar(keys(%tags));
         my $count_all = scalar(keys(%cards));
+        #print STDERR Dumper(\%tags);
         print '*'x$wchar,"\n";
         print "Total cards tagged: " . $count_tags . "\n";
         print "Total cards: " . $count_all . "\n";
@@ -348,8 +350,8 @@ sub CardScanner::TagBuilder::create_custom_tags {
         #Cards
         print "Uncovered cards: " . ($count_all-$count_tags) . "\n";
         my %uncovered_cards = ();
-        for my $card (sort(keys(%cards))) {
-            if (!exists($tags{$card})) {
+        for my $card (sort(keys(%cards))) {;
+            if (!exists($tags{lc($card)})) {
                 $uncovered_cards{$card} = 1;
             }
         }

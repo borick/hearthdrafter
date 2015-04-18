@@ -9,7 +9,7 @@ use Algorithm::Combinatorics qw(variations);
 
 sub _has_tag { return CardScanner::_has_tag(@_) }
 
-use constant MAX_MINION_SIZE_FOR_BUFF_SYNERGY             => 0;
+use constant MAX_MINION_SIZE_FOR_BUFF_SYNERGY             => 4;
 use constant MIN_MINION_HEALTH_FOR_GET_TAUNT_SYNERGY      => 3;
 use constant MIN_MINION_COST_FOR_INNERVATE_SYNERGY        => 4;
 use constant MIN_SPELL_COST_COMBO_SYNERGY                 => 1;
@@ -63,7 +63,7 @@ sub find_synergies {
             _update_reasons("$name_x|$name_y",'This card meets special requirements for a buff.',\%reasons);
             
         }elsif (_has_tag($tags_x, 'buff', $card_y) && $type_y eq 'minion' && $cost_y <= MAX_MINION_SIZE_FOR_BUFF_SYNERGY) {            
-            $g->add_edge($name_x, $name_y, (3.0/($cost_y+0.10)));
+            $g->add_edge($name_x, $name_y, (0.5));
             _update_reasons("$name_x|$name_y",'Buffs are ideal on smaller creatures.',\%reasons);   
         }
         
@@ -201,9 +201,9 @@ sub find_synergies {
         # adjacent buff, minions
         if (_has_tag($tags_x, 'has_adjacentbuff', $card_y) && $cost_y <= MIN_MINION_COST_ADJACENT_BUFF_SYNERGY && $type_y eq 'minion' && !_has_tag($tags_y, 'cursed', $card_x)) { #avoid ancient watcher
             if (_has_tag($tags_y, 'has_windfury', $card_x)) {
-                $g->add_edge($name_x, $name_y, 2.00); #more value if windfury
+                $g->add_edge($name_x, $name_y, 0.60); #more value if windfury
             } else {
-                $g->add_edge($name_x, $name_y, 1.00);
+                $g->add_edge($name_x, $name_y, 0.30);
             }
             _update_reasons("$name_x|$name_y",'Good size minions means extra damage from adjacent buff.',\%reasons);
         }
