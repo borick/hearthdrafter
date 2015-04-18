@@ -13,6 +13,9 @@
   height: auto;
   width: 400px;
 }
+.ui-tabs-anchor {
+  padding: 5px !important;
+}
 #top_bar {
   width: 100%;
 }
@@ -121,6 +124,7 @@ form {
 #card_count {
   font-weight: bold;
   text-align: right;
+  font-size: 11pt;
 }
 .content {
   margin-top: 100px;
@@ -158,14 +162,13 @@ form {
   width: 241px;
 }
 .ipicked a:hover {
-  /*color: #0094D9;*/
+  color: black;
 }
 .ipicked a {
   position: absolute;
   margin-top: 203px;
   margin-left: 49px;
   border-style: solid;
-  /*border-color: #0094D9;*/
   border-width: 3px;
   border-radius: 8px;
   color: white;
@@ -193,7 +196,7 @@ form {
   display: none;
   position: absolute;
   height: 228px;
-  overflow: hidden;
+  overflow: auto;
   /*opacity: 0.8;*/
 }
 .card1, .card2, .card3 {
@@ -289,7 +292,7 @@ a:visited {
 .title_label {
     position: absolute;
     top: 30%;
-    left: 15%;
+    left: 210px;
     font-weight: bold;
     font-size:200%;
     text-shadow: 0px 0px 2px black;
@@ -302,12 +305,18 @@ a:visited {
 .druid_shadow:hover{
     box-shadow: 0px 0px 5px 5px #FF973E;
 }
+.druid_background{
+    background-color: #FF973E;
+}
 .mage{
     color: #0094D9;
     border-color: #0094D9;
 }
 .mage_shadow:hover{
     box-shadow: 0px 0px 5px 5px #0094D9;
+}
+.mage_background{
+    background-color: #0094D9;
 }
 .warlock{
     color: #6D5AAB;
@@ -316,12 +325,18 @@ a:visited {
 .warlock_shadow:hover{
     box-shadow: 0px 0px 5px 5px #6D5AAB;
 }
+.warlock_background{
+    background-color: #6D5AAB;
+}
 .hunter{
     color: #80AD42;
     border-color: #80AD42;
 }
 .hunter_shadow:hover{
     box-shadow: 0px 0px 5px 5px #80AD42;
+}
+.hunter_background{
+    background-color: #80AD42;
 }
 .warrior{
     color: #A67843;
@@ -330,12 +345,18 @@ a:visited {
 .warrior_shadow:hover{
     box-shadow: 0px 0px 5px 5px #A67843;
 }
+.warrior_background{
+    background-color: #A67843;
+}
 .priest{
     color: #FFFFFF;
     border-color: #FFFFFF;
 }
 .priest_shadow:hover{
     box-shadow: 0px 0px 5px 5px #FFFFFF;
+}
+.priest_background{
+    background-color: #FFFFFF;
 }
 .shaman{
     color: #0B48FF;
@@ -344,6 +365,9 @@ a:visited {
 .shaman_shadow:hover{
     box-shadow: 0px 0px 5px 5px #0B48FF;
 }
+.shaman_background{
+    background-color: #0B48FF;
+}
 .paladin{
     color: #EB66A0;
     border-color: #EB66A0;
@@ -351,10 +375,36 @@ a:visited {
 .paladin_shadow:hover{
     box-shadow: 0px 0px 5px 5px #EB66A0;
 }
+.paladin_background{
+    background-color: #EB66A0;
+}
 .rogue{
     color: #E3D741;
     border-color: #E3D741;
 }
 .rogue_shadow:hover{
     box-shadow: 0px 0px 5px 5px #E3D741;
+}
+.rogue_background{
+    background-color: #E3D741;
+}
+
+#cost {
+    font-size: 11pt;
+    background: url("/images/mana.png");
+    width: 29px;
+    height: 29px;
+    display: block;
+    text-align: center;
+    color: black;
+    line-height: 29px;
+}
+.ui-button-text {
+    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+}
+.ui-button {
+    border-style: solid !important;
+    border-width: 1px !important;
+    border-color: black !important;
+    margin-bottom: 0px;
 }

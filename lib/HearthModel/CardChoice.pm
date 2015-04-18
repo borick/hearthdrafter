@@ -389,7 +389,7 @@ sub _get_best_card {
             $best_card_score = $score;
         }
         if (defined($out_data)) {
-            $out_data->{'scores'}->{$card_name} = $score;
+            $out_data->{'scores'}->{$card_name} = $score*1.234;
         }
         #$out_data->{'math'}->{$card_name} = $math{$card_name};
     }

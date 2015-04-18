@@ -22,7 +22,7 @@
 </div>
 <div id="tabs">
   <ul>
-    <li><a href="#tabs-1">Chosen Cards!</a></li>
+    <li><a href="#tabs-1">Cards List</a></li>
     <!--<li><a href="#tabs-2">Summary</a></li>-->
   </ul>
   <div id="tabs-1">

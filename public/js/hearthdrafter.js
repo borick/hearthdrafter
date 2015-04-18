@@ -7,6 +7,7 @@ var img = "/images/cards_medium/";
 var card_back = '/images/card_selection_back.png';
 var rarity = 'none';
 var number_element;
+var old_index = 0;
 var selected_index = 0;
 var selected_card = 0;
 var name_to_id = [];
@@ -65,12 +66,14 @@ function rebindKeys() {
     $(".search").keydown(function(e) {
         switch(e.which) {
             case 38: // up
+                old_index = selected_index;
                 selected_index -= 1;
                 if (selected_index < 0)
                     selected_index = 0;
                 highlightElement(selected_index);
                 break;
             case 40: // down
+                old_index = selected_index;
                 selected_index += 1;
                 if (selected_index >= getCurrentListLength()-1)
                     selected_index = getCurrentListLength()-1;
@@ -81,6 +84,7 @@ function rebindKeys() {
                 break;
             default:
                 console.log('default: ' + selected_index);
+                old_index = selected_index;
                 selected_index = 0;
                 highlightElement(selected_index);
         }
@@ -145,6 +149,7 @@ function loadChosenCards(data) {
 function confirmCards() {
     mode = 'waiting_for_card';
     selected_card = 0;
+    old_index = selected_index;
     selected_index = 0;
     rarity = 'none';
     var url = "/draft/card_choice/"+selected[0]+'/'+selected[1]+'/'+selected[2]+'/'+arena_id;
@@ -157,6 +162,7 @@ function confirmCards() {
 
 //RESPOND TO CARD SELECTION
 function showClassCards(id) {
+    old_index = selected_index;
     selected_index = 0; //reset selection using keyboard to 0.
     selected_card = id;//selected card option, i.e. card pane.
     for(var i=0;i<3;i++) {
@@ -174,7 +180,16 @@ function showClassCards(id) {
     $(".search").focus();
     highlightElement(selected_index);
     //card selected...
-    $(".name").button().click( function( event ) {
+    var name_ele = $(".name");
+    var name_button = name_ele.button();
+    var name_to_hover = $('.list li');
+    name_to_hover.mousemove( function( event ) {
+        var element = $(this);
+        old_index = selected_index;
+        //selected_index = element.index();
+        //highlightElement(selected_index);
+    });
+    name_button.click( function( event ) {
         //card name selected
         event.preventDefault();
         event.stopPropagation();
@@ -217,13 +232,14 @@ function updateNumber (newNumber) {
 
 //highlight card names when using arrow keys to select.
 function highlightElement(index) {
-    for(var i = 0;i < $($("li div")).length; i++) {
-        if (i == index) {
-            $($("li div")[i]).css({"opacity":1.0});
-        } else {
-            $($("li div")[i]).css({"opacity":0.7});
-        }
+    var list_ele = $("#cards");
+    if (index > 4) {
+        list_ele.scrollTop((index-5)*35);
     }
+    console.log(list_ele);
+    console.log("index: " + index + ", old: " + old_index + ', scroll: ' + list_ele.scrollTop());
+    $("li div:eq("+old_index+")").removeClass("ui-state-hover");
+    $("li div:eq("+index+")").addClass("ui-state-hover");
 }
 
 //used by card arrow keys selection
@@ -514,7 +530,9 @@ function updateChosenCardsTab (data) {
 function updateUndoLink() {
     if (card_number > 0) {
         $("#undo_last_card").show();
+        $("#tabs").show();
     } else {
         $("#undo_last_card").hide();
+        $("#tabs").hide();
     }
 }
