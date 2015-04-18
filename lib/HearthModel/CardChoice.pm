@@ -281,8 +281,6 @@ sub get_advice {
         $scores_hist{$score->{'_source'}->{'card_name'}} = [];
         push($scores_hist{$score->{'_source'}->{'card_name'}}, ['original', $score->{'_source'}->{'score'}]);
     }
-    $best_card_before = _get_best_card(\%scores);
-    $message .= "$best_card_before has the most value. ";
     
     #adjust for "missing drops"
     for my $card (sort(@$cards)) {
@@ -317,28 +315,14 @@ sub get_advice {
         } else {
             $new_score = $original_score;
         }
-        
         $scores{$card} = $new_score;
         push($scores_hist{$card}, ['mana', $scores{$card}]);
         
-        $best_card_after = _get_best_card(\%scores);
-        
-        if ($best_card_before ne $best_card_after) {
-            $message .= "But $best_card_after fits the mana curve better. ";
-        }
         #adjust for diminishing returns on duplicates, default for all cards.
-        $best_card_before = _get_best_card(\%scores);
         my $count = $card_counts{$card} || 0;
         $scores{$card} = $scores{$card} - ($duplicate_constant * $count * $scores{$card});
-        $best_card_after = _get_best_card(\%scores);
-        
-        if ($best_card_before ne $best_card_after) {
-            $message .= "However, we already have $count of $best_card_before. It's better to have variety. ";
-        }
         push($scores_hist{$card}, ['dups', $scores{$card}]);
     }
-        
-    $best_card_before = _get_best_card(\%scores);
     
     #adjust for missing tags.
     print STDERR "[deck type: $deck_type]\n" if $debug =~ 'deck';
@@ -383,14 +367,10 @@ sub get_advice {
 #     }
     
     ($best_card_after,$best_card_score)  = _get_best_card(\%scores, $out_data);
-    if ($best_card_before ne $best_card_after) {
-        $message .= "But $best_card_after has the most the synergy with the deck. ";
-    }
-    $message .= "Pick \"$best_card_after\"! ";
-    $out_data->{message} = $message;
+    $out_data->{message} = '';
     #print STDERR 'Out data:' . Dumper($out_data);
     for my $card (@$cards) {
-    print STDERR "[$card] " . Dumper($scores_hist{$card}), "\n" if $debug =~ 'score';
+        print STDERR "[$card] " . Dumper($scores_hist{$card}), "\n" if $debug =~ 'score';
     }
     
     return $out_data;

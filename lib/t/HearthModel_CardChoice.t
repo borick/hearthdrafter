@@ -51,9 +51,7 @@ for my $class (@classes) {
         } else {
             $card = $card_3;
         }
-        $card_1 =~ s/[.]//g;
-        $card_2 =~ s/[.]//g;
-        $card_3 =~ s/[.]//g;
+        $card =~ s/[.]//g;
         my $results = $hd_model->card_choice->get_advice($card_1,$card_2,$card_3,$id);
         ok($results->{best_card} eq lc($card), "cards should match [$card =? $results->{best_card}]\n");
         #$hd_model->arena->confirm_card_choice($card,$id);
