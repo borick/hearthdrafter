@@ -56,7 +56,7 @@ sub get_cards {
     my $results = $self->es->search(
         index => 'hearthdrafter',
         type => 'card',
-        size => 531,
+        size => 9999, 
         body => {
             query => {
                 terms => {
@@ -70,6 +70,32 @@ sub get_cards {
     my @data = @{$results->{hits}->{hits}};
     @data = map { $_->{_source} } @data;
     return \@data;
+    
+}
+
+sub get_tags {
+    my ($self, $array) = @_;
+    my $results = $self->es->search(
+        index => 'hearthdrafter',
+        type => 'card_tag',
+        size => 9999, 
+        body => {
+            query => {
+                terms => {
+                    card_name => $array,
+                    minimum_should_match => 1,
+                }
+            }
+        },
+    );
+
+    my @data = @{$results->{hits}->{hits}};
+    my $data_hash = {};
+    for my $data (@data) {
+        #print Dumper($data);
+        $data_hash->{$data->{_source}->{card_name}} = $data->{_source}->{tags};
+    }
+    return $data_hash;
     
 }
     

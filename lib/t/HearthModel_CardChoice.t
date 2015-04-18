@@ -6,13 +6,20 @@ use warnings;
 use Test::More;
 use Data::Dumper;
 use File::Slurp;
+use Getopt::Long;
+my $debug;
+GetOptions ("debug=s"   => \$debug) or die('error');
 
 use_ok( 'HearthDrafter' );
 
 my $hd = HearthDrafter->new();
 my $hd_model = $hd->model();
+$HearthModel::CardChoice::debug = $debug;
 $hd_model->connect($hd);
-my @classes = ('rogue', 'shaman');
+my @classes = (
+               'rogue',
+               'shaman',
+              );
 for my $class (@classes) {
     my $arena = $hd_model->arena->begin_arena($class, 'test');
     my $id = $arena->{_id};
