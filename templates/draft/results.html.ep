@@ -1,4 +1,7 @@
 % layout 'default';
+% content_for header => begin
+  <title>HearthDrafter - Results</title>
+% end
 <script type="text/javascript">
     function removeCard() {
         $("#card_awards option:last-child").remove();

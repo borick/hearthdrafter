@@ -153,19 +153,19 @@ form {
   position: absolute;
   font-family: arial;
   color: white;
-  font-size:3.5vw;
+  font-size:18pt;
   text-align:center;
   width: 241px;
 }
 .ipicked a:hover {
-  color: #0094D9;
+  /*color: #0094D9;*/
 }
 .ipicked a {
   position: absolute;
   margin-top: 203px;
   margin-left: 49px;
   border-style: solid;
-  border-color: #0094D9;
+  /*border-color: #0094D9;*/
   border-width: 3px;
   border-radius: 8px;
   color: white;
@@ -175,7 +175,7 @@ form {
 }
 .card_name_label {
   text-shadow: 0px 0px 2px black;
-  color: #0094D9;
+  /*color: #0094D9;*/
   margin-left: 11px;
   font-family: arial;
   font-weight: bold;
@@ -184,7 +184,7 @@ form {
   display: table-cell;
   vertical-align: middle;
   text-align: center;
-  font-size: 2.2vw;
+  font-size: 14pt;
 }
 #cards {
   padding: 5px;
@@ -211,7 +211,7 @@ form {
   background-color: black;
 }
 .card1:hover, .card2:hover, .card3:hover {
-  box-shadow: 0px 0px 15px 10px rgba(6, 130, 133, .3);
+  /*box-shadow: 0px 0px 5px 5px rgba(6, 130, 133, 1);*/
 }
 #undo_last_card {
   margin-left: auto;
@@ -228,7 +228,7 @@ form {
 #card_img_0, #card_img_1, #card_img_2 {
   position: absolute;
   border-style: solid;
-  border-color: #0094D9;
+  /*border-color: #0094D9;*/
   border-width: 3px;
   border-radius: 8px;
 }
@@ -285,3 +285,76 @@ a:visited {
   text-decoration: none;
 }
 /******************/
+
+.title_label {
+    position: absolute;
+    top: 30%;
+    left: 15%;
+    font-weight: bold;
+    font-size:200%;
+    text-shadow: 0px 0px 2px black;
+}
+
+.druid {
+    color: #FF973E;
+    border-color: #FF973E;
+}
+.druid_shadow:hover{
+    box-shadow: 0px 0px 5px 5px #FF973E;
+}
+.mage{
+    color: #0094D9;
+    border-color: #0094D9;
+}
+.mage_shadow:hover{
+    box-shadow: 0px 0px 5px 5px #0094D9;
+}
+.warlock{
+    color: #6D5AAB;
+    border-color: #6D5AAB;
+}
+.warlock_shadow:hover{
+    box-shadow: 0px 0px 5px 5px #6D5AAB;
+}
+.hunter{
+    color: #80AD42;
+    border-color: #80AD42;
+}
+.hunter_shadow:hover{
+    box-shadow: 0px 0px 5px 5px #80AD42;
+}
+.warrior{
+    color: #A67843;
+    border-color: #A67843;
+}
+.warrior_shadow:hover{
+    box-shadow: 0px 0px 5px 5px #A67843;
+}
+.priest{
+    color: #FFFFFF;
+    border-color: #FFFFFF;
+}
+.priest_shadow:hover{
+    box-shadow: 0px 0px 5px 5px #FFFFFF;
+}
+.shaman{
+    color: #0B48FF;
+    border-color: #0B48FF;
+}
+.shaman_shadow:hover{
+    box-shadow: 0px 0px 5px 5px #0B48FF;
+}
+.paladin{
+    color: #EB66A0;
+    border-color: #EB66A0;
+}
+.paladin_shadow:hover{
+    box-shadow: 0px 0px 5px 5px #EB66A0;
+}
+.rogue{
+    color: #E3D741;
+    border-color: #E3D741;
+}
+.rogue_shadow:hover{
+    box-shadow: 0px 0px 5px 5px #E3D741;
+}

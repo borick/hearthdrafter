@@ -17,10 +17,12 @@
     <script src="/js/libs/odometer/odometer.js"></script>
     <script src="/js/libs/owl-carousel/owl.carousel.js"></script>
     <script src="/js/libs/list.js"></script>
+    <%= content 'header' %>
 </head>
 <body>
 <div class="header">
 <a href="/"><img src="/images/hearthdrafter_logo.png"/></a>
+    <%= content 'title_bar' %>
     %= include '/home/login'
 </div>
 <div class="wrapper">

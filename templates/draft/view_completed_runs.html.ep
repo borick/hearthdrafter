@@ -1,4 +1,8 @@
 % layout 'default';
+% content_for header => begin
+% $run_details->{class_name} =~ s/([^\s\w]*)(\S+)/$1\u\L$2/g;
+  <title>HearthDrafter - Viewing Completed Runs %> Run</title>
+% end
 
 <script src="/js/libs/jquery-1.11.2.min.js"></script>
 <script src="/js/libs/jquery-ui.min.js"></script>

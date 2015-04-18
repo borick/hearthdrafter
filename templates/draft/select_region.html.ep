@@ -1,4 +1,7 @@
 % layout 'default';
+% content_for header => begin
+  <title>HearthDrafter - Select Region</title>
+% end
 <div class="maincontent">
 <a href="/draft/arena_action/set_region_americas_<%== stash('arena_id') %>">Americas</a>
 <a href="/draft/arena_action/set_region_europe_<%== stash('arena_id') %>">Europe</a>

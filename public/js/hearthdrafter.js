@@ -42,6 +42,7 @@ function createInputButton (e, css, label, name, id, callback) {
     //var button = div.button();
     var button = $('<a href="#">'+label+'</a>').prependTo(div);
     button.click({id: id, name: name}, callback);
+    return button;
 }
 
 //bindings
@@ -352,7 +353,7 @@ function updateOdometer(id,value) {
     var odo = $(card_name);
     odo.show();
     odo.text(0);
-    odo.text(parseInt(value*10000));
+    odo.text(parseInt(value));
 }
 
 function removeOdo () {
@@ -398,11 +399,13 @@ function layoutCardChosen (text, id) {
     card_bg_element.css({'background-image': 'url("'+getCardFile(text)+'")'});
     card_bg_element.appendTo(card_option);
     card_bg_element.addClass('type_'+card_data[text]['type']); //special alignments per type in css.
+    card_bg_element.addClass(class_name);
     //add div for card name
     var card_name_label = $('<div class="card_name_label"/>');
     card_name_label.text(text);
     card_name_label.appendTo(card_option);
     card_name_label.addClass('capital');
+    card_name_label.addClass(class_name);
     
     //undo button
     var undoButton = createInputButton(card_option, {}, '<img src="/images/cancel.png"/>', "undo", id, function ( event ) {
@@ -489,6 +492,7 @@ function buildConfirmChoices(arena_id) {
         var ipicked = createInputButton($(tmp_card_name), {}, 'I Picked This Card', 'ipicked', j, function ( event ) {
             confirmCardChoice(event);
         });
+        ipicked.addClass(class_name);
     }
 }
 

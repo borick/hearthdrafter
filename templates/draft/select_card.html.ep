@@ -1,9 +1,16 @@
 % layout 'default';
+% content_for header => begin
+% $run_details->{class_name} =~ s/([^\s\w]*)(\S+)/$1\u\L$2/g;
+  <title>HearthDrafter - <%= $run_details->{class_name} %> Run</title>
+% end
+% content_for title_bar => begin
+<span class="title_label <%= lc($run_details->{class_name}) %>"><%= $run_details->{class_name} %> Run</span>
+% end
 <div id="top_bar">
     <div id="selection">
-        <div class="card1"></div>
-        <div class="card2"></div>
-        <div class="card3"></div>
+        <div class="card1 <%= lc($run_details->{class_name}) %>_shadow"></div>
+        <div class="card2 <%= lc($run_details->{class_name}) %>_shadow"></div>
+        <div class="card3 <%= lc($run_details->{class_name}) %>_shadow"></div>
         <style>clear: both;</style>
     </div>
     <div id="inner_search_panel">
@@ -73,6 +80,7 @@ updateManaCostChosenCards();
 //create a dict to map names to IDs since not sure how else to get this into list.js.
 var card_ids = {};
 var card_rarity = {};
+var class_name = "<%= lc($run_details->{class_name}) %>";
 for (i = 0; i < cards.length; i++) {
     card_ids[cards[i]['name']] = cards[i]['id'];
     card_rarity[cards[i]['name']] = cards[i]['rarity'];
