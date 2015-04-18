@@ -34,12 +34,12 @@ sub get_advice {
     my $debug = $HearthModel::CardChoice::debug;
     $debug = '' if !defined($debug);
     my $c = $self->c();
-    my $syn_const          = 20.00; #the power of synergies....
+    my $syn_const          = 275.00; #the power of synergies....
     my $mana_const_minions = 5.00; #percentage increase per "mana diff" point for minions in general.
     my $mana_const_spells  = 3.00; #spells in general.
     my $missing_drop_const = 500.00; #just drops. const
     my $duplicate_constant = 0.03; #percent amount decrease / 1
-    my $tag_needed_mult    = 0.10; #percent amt dmt increase / 1
+    my $tag_needed_mult    = 0.03; #percent amt dmt increase / 1
     my $control_vs_tempo_threshold = 0.15;
                          #0,1,2,3,4,5,6,7+
     my $max_cost       = 7; #for the last column
@@ -318,11 +318,11 @@ sub get_advice {
     print "[deck type: $deck_type]\n" if $debug =~ 'deck';
     for my $card (sort(@$cards)) {
         for my $tag (@{$tags_wanted->{$deck_type}}) {
-            #if (exists($card_data_tags->{$card}->{$tag}) && ($tags_data{$tag}) <= 2) {
+            if (exists($card_data_tags->{$card}->{$tag}) && ($tags_data{$tag}) <= 2) {
                 my $original_score = $scores{$card};
                 $scores{$card} = $scores{$card} + ($scores{$card} * ($tag_needed_mult*$complete));
-                push($scores_hist{$card}, ['tags', $scores{$card}]);
-            #}
+                push($scores_hist{$card}, [$tag, $scores{$card}]);
+            }
         }
     }
     
@@ -337,6 +337,7 @@ sub get_advice {
             my $count = $card_counts{$card_name_2};
             my $total_weight = $weight * $count;
             $cumul_weight += $total_weight;
+            print "synergy between $card_name and $card_name_2 with weight $weight\n" if $debug =~ 'synerg';
         }
         my $original_score = $scores{$card_name};
         my $synergy_modifier = ($cumul_weight);

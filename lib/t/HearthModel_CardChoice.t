@@ -7,8 +7,10 @@ use Test::More;
 use Data::Dumper;
 use File::Slurp;
 use Getopt::Long;
-my $debug;
-GetOptions ("debug=s" => \$debug) or die('error with params');
+my $debug = undef;
+my $class = 'unknown';
+GetOptions ("debug=s" => \$debug,
+            "class=s" => \$class,) or die('error with params');
 
 use_ok( 'HearthDrafter' );
 
@@ -16,10 +18,11 @@ my $hd = HearthDrafter->new();
 my $hd_model = $hd->model();
 $HearthModel::CardChoice::debug = $debug;
 $hd_model->connect($hd);
-my @classes = (
-               #'rogue',
-               'shaman',
-              );
+my @classes = ($class);
+if ($class eq 'unknown') {
+   @classes = ('rogue',
+               'shaman');
+}   
 for my $class (@classes) {
     my $arena = $hd_model->arena->begin_arena($class, 'test');
     my $id = $arena->{_id};
