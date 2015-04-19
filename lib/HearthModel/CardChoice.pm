@@ -435,14 +435,36 @@ sub _build_message {
                 $best_s = $refs{$card}->[1];
             }
         }
+        my $term = '';
+        if ($best_s > 9000) {
+            $term = ' an incredible';
+        } elsif ($best_s > 8000) {
+            $term = ' an amazing';
+        } elsif ($best_s > 7000) {
+            $term = ' a great';
+        } elsif ($best_s > 5000) {
+            $term = ' a very strong';
+        } elsif ($best_s > 5000) {
+            $term = ' a strong';
+        } elsif ($best_s > 4000) {
+            $term = ' an above average';
+        } elsif ($best_s > 3000) {
+            $term = ' an average';
+        } elsif ($best_s > 2000) {
+            $term = ' a below average';
+        } elsif ($best_s > 1000) {
+            $term = ' a weak';
+        } else {
+            $term = ' a poor';
+        }
         if ($key eq 'original') {
-            $message .= _capitalize($best_n) . ' has the highest tier score. ';
+            $message .= _capitalize($best_n) . ' has the highest tier score,' . ($best_s > 3000 ? ' and it\'s' : ' but it\'s') . $term . ' score. ';
             $last_card = $best_n;
             $last_score = $best_s;
         } elsif ($key eq 'missing_drops' && $best_s>$last_score) {
-            $message .= 'However, ' and $card_win_counter = 0 if $best_n ne $last_card;
-            $message .= '' and $card_win_counter += 1 if $best_n eq $last_card;
-            $message .= 'we could really use another ' . $card_data->{$best_n}->{cost} . " drop like " . _capitalize($best_n) . ". ";
+            $message .= 'However, we' and $card_win_counter = 0 if $best_n ne $last_card;
+            $message .= 'We' and $card_win_counter += 1 if $best_n eq $last_card;
+            $message .= ' could use at least one more ' . $card_data->{$best_n}->{cost} . " drop like " . _capitalize($best_n) . ". ";
             $last_card = $best_n;
             $last_score = $best_s;
         } elsif ($key eq 'mana' && $number > 10) {
@@ -471,7 +493,7 @@ sub _build_message {
         #print STDERR Dumper(\%old_refs);
         #print STDERR Dumper(\%refs);
     }
-    $message .= "Final choice: " . _capitalize($best_n) . "!";
+    $message .= "Final choice: " . _capitalize($best_n) . ".";
     print STDERR "Message: $message\n";
     return $message;
 }
