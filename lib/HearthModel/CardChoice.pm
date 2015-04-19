@@ -387,7 +387,7 @@ sub get_advice {
 }
 sub _capitalize {
     my $blah = shift;
-    $blah =~ s/\b(\w)(\w*)/uc($1).lc($2)/ge;
+    $blah =~ s/\b(\w)(\w*)/\U$1\L$2/g;
     return $blah;
 }
 sub _format_list {
