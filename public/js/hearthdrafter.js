@@ -434,11 +434,11 @@ function buildScoreUI (data) {
         tmp.appendTo(getCardElement(c));
         makeOdometer(c).hide().appendTo(tmp);
         if (selected[c] == data['best_card']) {
-            var best_ele = $('<span class="gold" id="best">Win</span>');
+            var best_ele = $('<span class="gold" id="best">Yes!</span>');
             best_ele.appendTo(getCardElement(c));
             tmp.addClass('best_score');
         } else {
-            var best_ele = $('<span class="bronze" id="best">Lose</span>');
+            var best_ele = $('<span class="bronze" id="best">No</span>');
             best_ele.appendTo(getCardElement(c));
         }
     }
