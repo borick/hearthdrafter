@@ -387,8 +387,13 @@ sub get_advice {
 }
 sub _capitalize {
     my $blah = shift;
-    $blah =~ s/\b(\w)(\w*)/\U$1\L$2/g;
-    return $blah;
+    my $result = '';
+    my @tokens = split(/ /,$blah);
+    for my $token (@tokens) {
+        $result .= ucfirst($token);
+        $result .= ' ' if $token ne $tokens[scalar(@tokens)-1];
+    }
+    return $result;
 }
 sub _format_list {
    return "" if !@_;
@@ -480,7 +485,7 @@ sub _build_message {
             $last_card = $best_n;
             $last_score = $best_s;
         } elsif ($key eq 'tags_done' && $best_s>$last_score) {
-            $message .= _capitalize($best_n) . " can " . _format_list($tags_done->{$best_n}) . " that we could really use! ";
+            $message .= _capitalize($best_n) . " gives us: " . _format_list(@{$tags_done->{$best_n}}) . " that we could really use! ";
             $last_card = $best_n;
             $last_score = $best_s;
         } elsif ($key eq 'synergy' && $best_s>$last_score) {
