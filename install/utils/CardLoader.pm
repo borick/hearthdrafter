@@ -89,7 +89,9 @@ sub load_cards {
                 }
                 
                 #print $card->{'id'},"\n";
+                #cards to tag...
                 #print '"',lc($card->{'name'}),'":"',$card->{'id'},"\",\n"; #The cards we need to get images for. and the names used for building the js.
+                #not sure...
                 #print '{"',$card->{'id'},'":"',lc($card->{'name'}),"\"},\n"; 
                 my %data = (
                     'name' => lc($card_name),
