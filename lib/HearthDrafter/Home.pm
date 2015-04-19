@@ -77,7 +77,7 @@ sub register_post {
         my %mail = 
           ( To      => $email,
             From    => 'admin@hearthdrafter.com',
-            Message => "Welcome to hearthdrafter.com $fname $lname! Your user name is $user_name. Good luck in the arena!";
+            Message => "Welcome to hearthdrafter.com $fname $lname! Your user name is $user_name. Good luck in the arena!",
             Subject => 'HearthDrafter Registration',
            );
         sendmail(%mail);
@@ -98,7 +98,7 @@ sub forgot_pw_post {
     my $email = $self->req->body_params->param('email');
     my $fname = $self->req->body_params->param('first_name');
     my $lname = $self->req->body_params->param('last_name');
-    $result = $self->model->user->forgotten_pw_check($user_name, $fname, $lname, $email);
+    my $result = $self->model->user->forgotten_pw_check($user_name, $fname, $lname, $email);
     if ($result->[0]) {
         $self->flash(success_message => $result->[1]);
     } else {
@@ -114,7 +114,7 @@ sub reset_pw_post {
     my $self = shift;
     my $user_name = $self->req->body_params->param('user_name');
     my $code = $self->req->body_params->param('code');
-    $result = $self->model->user->reset_pw($user_name, $self->req->body_params->param('pw'), $code);
+    my $result = $self->model->user->reset_pw($user_name, $self->req->body_params->param('pw'), $code);
     if ($result->[0]) {
         $self->flash(success_message => $result->[1]);
     } else {
