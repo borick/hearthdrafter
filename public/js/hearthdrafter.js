@@ -351,7 +351,7 @@ function undoCardChoice (id) {
         rarity='none';
     }
     removeElement('#best');
-    removeElement('.card'+id+ " .waiting");
+    removeElement('.waiting');
     initCardClick(id);
     removeOdo();
     removeSynergies();

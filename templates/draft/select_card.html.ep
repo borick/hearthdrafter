@@ -103,7 +103,7 @@ function sortTable(){
         if(!isNaN(sortnr)) store.push([sortnr, row]);
     }
     store.sort(function(x,y){
-        return y[0] - x[0];
+        return x[0] - y[0];
     });
     for(var i=0, len=store.length; i<len; i++){
         tbl.appendChild(store[i][1]);
