@@ -29,6 +29,55 @@ sub _print_scores {
     }
     print "\n";
 }
+
+
+my $syn_const          = 200.00; #the power of synergies....
+my $mana_const_minions = 5.00; #percentage increase per "mana diff" point for minions in general.
+my $mana_const_spells  = 3.00; #spells in general.
+my $missing_drop_const = 250.00; #just drops. const
+my $duplicate_constant = 0.05; #percent amount decrease / 1
+my $tag_needed_mult    = 0.10; #percent amt dmt increase / 1
+my $control_vs_tempo_threshold = 0.15;
+                        #0,1,2,3,4,5,6,7+
+my $max_cost       = 7; #for the last column
+
+#my @max_drops      = (2,3,8,5,5,4,3,2);
+
+# bunch of global stuff
+
+my $deck_type = "value";                           #0, 1, 2, 3, 4, 5, 6, 7 +              
+my $ideal_curves    = { value => {      minions => [0, 0, 5, 3, 5, 4, 3, 2],
+                                        spells =>  [0, 0, 4, 1, 1, 1, 1, 0],
+                                        drops =>   [0, 0, 4, 2, 3, 2, 1, 1],},
+                                        
+                        late_game => {  minions => [0, 0, 6, 6, 2, 5, 5, 1], 
+                                        spells =>  [0, 1, 2, 0, 1, 0, 0, 1],
+                                        drops =>   [0, 0, 4, 2, 3, 2, 1, 1],},
+                                        
+                        aggro => {      minions => [0, 1, 9, 6, 4, 4, 0, 1],
+                                        spells =>  [1, 2, 1, 0, 0, 0, 0, 1],
+                                        drops =>   [0, 0, 6, 3, 2, 1, 1, 1],},
+                                        
+                        control => {    minions => [0, 3, 2, 4, 4, 4, 3, 2], 
+                                        spells =>  [0, 4, 1, 1, 1, 0, 1, 0],
+                                        drops =>   [0, 0, 4, 2, 4, 2, 1, 1],},};
+                                        
+my $tags_wanted = { value => [ 'draw', 'aoe', 'removal', 'ping' ],
+                    late_game => [ 'survivability', 'aoe', 'removal', 'ping'],
+                    aggro => [ 'draw' ],
+                    control => [ 'draw', 'removal', 'ping', 'aoe' ], };
+                    
+my %all_tags_hash = ();
+my @all_tags = undef;
+for my $key (%$tags_wanted) {
+    for my $tag (@{$tags_wanted->{$key}}) {
+        $all_tags_hash{$tag} = 1;
+    }
+}
+@all_tags = keys(%all_tags_hash);
+
+# bunch of global stuff
+
 sub get_advice {
     my ($self, $card_1, $card_2, $card_3, $arena_id) = @_;        
     $card_1 =~ s/[.]//g;
@@ -37,40 +86,6 @@ sub get_advice {
     my $debug = $HearthModel::CardChoice::debug;
     $debug = '' if !defined($debug);
     my $c = $self->c();
-    my $syn_const          = 200.00; #the power of synergies....
-    my $mana_const_minions = 5.00; #percentage increase per "mana diff" point for minions in general.
-    my $mana_const_spells  = 3.00; #spells in general.
-    my $missing_drop_const = 250.00; #just drops. const
-    my $duplicate_constant = 0.05; #percent amount decrease / 1
-    my $tag_needed_mult    = 0.10; #percent amt dmt increase / 1
-    my $control_vs_tempo_threshold = 0.15;
-                         #0,1,2,3,4,5,6,7+
-    my $max_cost       = 7; #for the last column
-    
-    #my @max_drops      = (2,3,8,5,5,4,3,2);
-    
-    
-    my $deck_type = "value";                          #0, 1, 2, 3, 4, 5, 6, 7 +              
-    my $ideal_curves    = { value => {     minions => [0, 0, 5, 3, 5, 4, 3, 2],
-                                           spells =>  [0, 0, 4, 1, 1, 1, 1, 0],
-                                           drops =>   [0, 0, 4, 2, 3, 2, 1, 1], },
-                                           
-                            late_game => { minions => [0, 0, 6, 6, 2, 5, 5, 1], 
-                                           spells =>  [0, 1, 2, 0, 1, 0, 0, 1],
-                                           drops =>   [0, 0, 4, 2, 3, 2, 1, 1],},
-                                           
-                            aggro => {     minions => [0, 1, 9, 6, 4, 4, 0, 1],
-                                           spells =>  [1, 2, 1, 0, 0, 0, 0, 1],
-                                           drops =>   [0, 0, 6, 3, 2, 1, 1, 1],},
-                                           
-                            control => {   minions => [0, 3, 2, 4, 4, 4, 3, 2], 
-                                           spells =>  [0, 4, 1, 1, 1, 0, 1, 0],
-                                           drops =>   [0, 0, 4, 2, 4, 2, 1, 1],}};
-                                           
-    my $tags_wanted = { value => [ 'draw', 'aoe', 'removal', 'ping' ],
-                        late_game => [ 'survivability', 'aoe', 'removal', 'ping'],
-                        aggro => [ 'draw' ],
-                        control => [ 'draw', 'removal', 'ping', 'aoe' ], };
     my $source = $c->model->arena->continue_run($arena_id);
     my $next_index = $self->get_next_index($source);
     return undef if $next_index >= 30;
@@ -326,12 +341,15 @@ sub get_advice {
     
     #adjust for missing tags.
     print STDERR "[deck type: $deck_type]\n" if $debug =~ 'deck';
+    my %tags_done = ();
     for my $card (sort(@$cards)) {
         for my $tag (@{$tags_wanted->{$deck_type}}) {
             if (exists($card_data_tags->{$card}->{$tag}) && ($tags_data{$tag}) <= 2) {
                 my $original_score = $scores{$card};
                 $scores{$card} = $scores{$card} + ($scores{$card} * ($tag_needed_mult*$complete));
                 push($scores_hist{$card}, [$tag, $scores{$card}]);
+                $tags_done{$card} = [] if !exists($tags_done{$card});
+                push($tags_done{$card}, $tag);
             }
         }
         push($scores_hist{$card}, ['tags_done', $scores{$card}]);
@@ -359,29 +377,110 @@ sub get_advice {
         $i += 1;
     }
     
-#     #deck type...
-#     if ($deck_type eq 'aggro') {
-#     
-#     } else {
-#     
-#     }
-    
     ($best_card_after,$best_card_score)  = _get_best_card(\%scores, $out_data);
-    $out_data->{message} = '';
-    #print STDERR 'Out data:' . Dumper($out_data);
+    $out_data->{message} = _build_message(\%scores_hist, $card_data, $deck_type, \%tags_done, $number_of_cards);
+    
     for my $card (@$cards) {
         print STDERR "[$card] " . Dumper($scores_hist{$card}), "\n" if $debug =~ 'score';
     }
-    
     return $out_data;
+}
+sub _capitalize {
+    my $blah = shift;
+    $blah =~ s/\b(\w)(\w*)/uc($1).lc($2)/ge;
+    return $blah;
+}
+sub _format_list {
+   return "" if !@_;
+   my $last = pop(@_);
+   return $last if !@_;
+   return join(', ', @_) . " and " . $last;
+}
+
+sub _build_message {
+    my ($scores_hist, $card_data, $deck_type, $tags_done, $number) = @_;
+    my $message = '';
+    my @cards = keys(%$scores_hist);
+    #print STDERR Dumper($scores_hist);
+    
+    my @hist_keys = ('original', 'missing_drops', 'mana', 'dups', 'tags_done', 'synergy');
+    #print STDERR Dumper(\@cards);
+    my %counters = ();
+    my $last_card;
+    my $last_score;
+    my $card_win_counter = 0;
+    my $best_n = undef;
+    #print STDERR Dumper($tags_done);
+    
+    for my $key (@hist_keys) {
+        #print STDERR "Doing: $key\n";
+        my $best_s = -10000000;
+        my %refs = ();
+        my %old_refs = ();
+        
+        for my $card (@cards) {
+            $counters{$card}=0 if !exists($counters{$card});
+            while(1) {
+                $old_refs{$card} = $scores_hist->{$card}->[$counters{$card}-1] if $counters{$card} > 0;
+                $refs{$card} = $scores_hist->{$card}->[$counters{$card}];
+                $counters{$card}+=1;
+                #print STDERR Dumper($refs{$card});
+                last if ((defined($refs{$card}) && $refs{$card}->[0] eq $key)
+                        || $counters{$card} > scalar(@{$refs{$card}}));
+            }       
+        }
+        for my $card (@cards) {
+            if ($refs{$card}->[1] > $best_s) {
+                $best_n = $card;
+                $best_s = $refs{$card}->[1];
+            }
+        }
+        if ($key eq 'original') {
+            $message .= _capitalize($best_n) . ' has the highest tier score. ';
+            $last_card = $best_n;
+            $last_score = $best_s;
+        } elsif ($key eq 'missing_drops' && $best_s>$last_score) {
+            $message .= 'However, ' and $card_win_counter = 0 if $best_n ne $last_card;
+            $message .= '' and $card_win_counter += 1 if $best_n eq $last_card;
+            $message .= 'we could really use another ' . $card_data->{$best_n}->{cost} . " drop like " . _capitalize($best_n) . ". ";
+            $last_card = $best_n;
+            $last_score = $best_s;
+        } elsif ($key eq 'mana' && $number > 10) {
+            $card_win_counter = 0 if $best_n ne $last_card;
+            $card_win_counter += 1 if $best_n eq $last_card;
+            $message .= ($card_win_counter == 0 ? 'Nevertheless, ' : '' ) . _capitalize($best_n) . ($card_win_counter >= 2 ? ' also' : '' ) . " fits the mana-curve of our deck. ";
+            $last_card = $best_n;
+            $last_score = $best_s;
+        } elsif ($key eq 'dups' && $best_s>$last_score) {
+            $card_win_counter = 0 if $best_n ne $last_card;
+            $card_win_counter += 1 if $best_n eq $last_card;
+            $message .= ($card_win_counter == 0 ? 'On the other hand, ' : '' ) . _capitalize($best_n). " provides more variety to the deck. ";
+            $last_card = $best_n;
+            $last_score = $best_s;
+        } elsif ($key eq 'tags_done' && $best_s>$last_score) {
+            $message .= _capitalize($best_n) . " can " . _format_list($tags_done->{$best_n}) . " that we could really use! ";
+            $last_card = $best_n;
+            $last_score = $best_s;
+        } elsif ($key eq 'synergy' && $best_s>$last_score) {
+            $card_win_counter = 0 if $best_n ne $last_card;
+            $card_win_counter += 1 if $best_n eq $last_card;
+            $message .= _capitalize($best_n) . ' has synergy with the deck. ';
+            $last_card = $best_n;
+            $last_score = $best_s;
+        } 
+        #print STDERR Dumper(\%old_refs);
+        #print STDERR Dumper(\%refs);
+    }
+    $message .= "Final choice: " . _capitalize($best_n) . "!";
+    print STDERR "Message: $message\n";
+    return $message;
 }
 
 sub _get_best_card {
-    my $best_card_n = 'error';
-    my $best_card_score = -100000000;
-    
     my $scores = shift;
     my $out_data = shift;
+    my $best_card_n = 'error';
+    my $best_card_score = -100000000;
     for my $card_name (keys(%$scores)) {
         my $score = $scores->{$card_name};
         if ($score > $best_card_score) {
