@@ -153,15 +153,6 @@ form {
   right: 5%;
 }
 /** card display */
-#odo {
-  position: absolute;
-  font-family: times;
-  color: white;
-  font-size:18pt;
-  text-align:center;
-  width: 241px;
-  font-weight: bold;
-}
 .ipicked a:hover {
   color: black;
 }
@@ -245,7 +236,7 @@ form {
   margin-top: 11px;
 }
 .type_spell {
-  height: 72px;
+  height: 72px;text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
   width: 59px;
   background-repeat: no-repeat;
   background-position: -50px -74px;
@@ -422,6 +413,17 @@ a:visited {
     font-style: italic;
 }
 
+#odo {
+  position: absolute;
+  font-family: times;
+  color: #C7A668;
+  font-size:18pt;
+  text-align:center;
+  width: 241px;
+  font-weight: bold;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+}
+
 #best {
     border-radius: 25px;
     position: absolute;
@@ -440,13 +442,17 @@ a:visited {
 }
 
 .gold{
-  background: linear-gradient(45deg,  rgba(242,215,12,1) 0%,rgba(255,255,255,1) 56%,rgba(252,235,0,1) 96%);
+    background: linear-gradient(45deg,  rgba(242,215,12,1) 0%,rgba(255,255,255,1) 56%,rgba(252,235,0,1) 96%);
 }
 
 .silver{
-  background: linear-gradient(45deg,  rgba(160,160,160,1) 0%,rgba(232,232,232,1) 56%);
-  }
+    background: linear-gradient(45deg,  rgba(160,160,160,1) 0%,rgba(232,232,232,1) 56%);
+}
   
 .bronze{
-  background: linear-gradient(45deg,  rgba(223,182,103,1) 0%,rgba(249,243,232,1) 56%,rgba(231,192,116,1) 96%); 
-  }
+    background: linear-gradient(45deg,  rgba(223,182,103,1) 0%,rgba(249,243,232,1) 56%,rgba(231,192,116,1) 96%); 
+}
+
+.best_score {
+    color: #F0E442 !important;
+}
