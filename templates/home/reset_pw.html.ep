@@ -1,0 +1,19 @@
+% layout 'default';
+<form id='reset_pw' method='POST' accept-charset='UTF-8'>
+<fieldset >
+<legend>Reset Your Password</legend>
+
+<p>Password Reset</p>
+
+<label for='name' >User Name: </label>
+<input type='text' name='user_name' id='user_name' maxlength="50" value="<%=stash('user_name')%>" readonly/><br>
+
+<label for='code' >Validation Code:</label>
+<input type='text' name='code' id='code' value="<%=stash('code')%>" readonly>/><br>
+
+<label for='pw' >New Password:</label>
+<input type='text' name='pw' id='pw'>/><br>
+ 
+<input type='submit' name='Submit' value='Submit' />
+</fieldset>
+</form>

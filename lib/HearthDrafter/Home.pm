@@ -47,15 +47,6 @@ sub home {
                  runs_no_results => $self->model->arena->list_runs_no_results($self->user->{'user'}->{'name'}));
 }
 
-
-sub forgot_pw_post {
-    my $self = shift;
-    my $user_name = $self->req->body_params->param('user_name');
-    my $email = $self->req->body_params->param('email');
-    my $fname = $self->req->body_params->param('first_name');
-    my $lname = $self->req->body_params->param('last_name');
-}
-
 sub register {
     shift->render('home/register');
 }
@@ -95,6 +86,40 @@ sub register_post {
         $self->redirect_to('/');
     }
     
+}
+
+sub forgot_pw {
+    shift->render('home/forgot_pw');
+}
+
+sub forgot_pw_post {
+    my $self = shift;
+    my $user_name = $self->req->body_params->param('user_name');
+    my $email = $self->req->body_params->param('email');
+    my $fname = $self->req->body_params->param('first_name');
+    my $lname = $self->req->body_params->param('last_name');
+    $result = $self->model->user->forgotten_pw_check($user_name, $fname, $lname, $email);
+    if ($result->[0]) {
+        $self->flash(success_message => $result->[1]);
+    } else {
+        $self->flash(error_message => $result->[1]);
+    }
+}
+
+sub reset_pw {
+    shift->render('home/reset_pw');
+}
+
+sub reset_pw_post {
+    my $self = shift;
+    my $user_name = $self->req->body_params->param('user_name');
+    my $code = $self->req->body_params->param('code');
+    $result = $self->model->user->reset_pw($user_name, $self->req->body_params->param('pw'), $code);
+    if ($result->[0]) {
+        $self->flash(success_message => $result->[1]);
+    } else {
+        $self->flash(error_message => $result->[1]);
+    }
 }
 
 sub auth_check {

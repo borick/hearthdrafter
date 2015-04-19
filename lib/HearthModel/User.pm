@@ -34,9 +34,6 @@ sub register {
         );
     };
     die 'username already exists' if defined($existing);
-    
-    my $hash = $pbkdf2->generate($password);
-    print STDERR "Registering with hash: $hash\n";
     $self->es->index(
         index   => 'hearthdrafter',
         type    => 'user',
@@ -46,7 +43,7 @@ sub register {
             email => $email,
             first_name => $fname,
             last_name => $lname,
-            password => $hash,
+            password => $pbkdf2->generate($password),
         }
     );
     return 1;
@@ -72,7 +69,6 @@ sub load {
 
 sub check_password {
     my ($self, $user_name, $password) = @_;
-     
     my $doc;    
     eval {
         $doc = $self->es->get(
@@ -80,9 +76,7 @@ sub check_password {
             type => 'user',
             id => $user_name);
     };
-    
     return 0 if !$doc;
-
     my $hash = $doc->{_source}->{password};
     if ($pbkdf2->validate($hash, $password)) {
         return $user_name;
@@ -91,32 +85,26 @@ sub check_password {
     }
 }
 
-sub reset_user_pw {
-    my ($self, $user_name, $fname, $lname, $email) = @_;
-    my $valid_code = $du->create_str();
+sub reset_pw {
+    my ($self, $user_name, $pw, $code) = @_;
+    my $doc;    
+    eval {
+        $doc = $self->es->get(
+            index => 'hearthdrafter',
+            type => 'user',
+            id => $user_name);
+    };
+    return [0, 'user error'] if !$doc;
+    return [0, "code error"] if $doc->{_source}->{validation_code} ne $code;
+    delete($doc->{_source}->{validation_code});
+    $doc->{_source}->{password} = $pbkdf2->generate($pw);
     $self->es->index(
         index   => 'hearthdrafter',
         type    => 'user',
         id      => $user_name,
-        body    => {
-            user_name   => $user_name,
-            email => $email,
-            first_name => $fname,
-            last_name => $lname,
-            password => "locked", #should never validate to a valid hash.
-            validation_code => $valid_code,
-        }
+        body    => $doc->{_source},
     );
-
-    my %mail = ( To      => $email,
-            From    => 'admin@hearthdrafter.com',
-            Subject => "[HearthDrafter.com] $user_name Account Locked",
-            Message => "Someone initiated an account lock through HearthDrafter's 'Forgotten Password' feature. Please <a href='http://hearthdrafter.com/validate/$user_name/$valid_code'>click here</a> to reset your password!",
-            );
-
-    sendmail(%mail) or die $Mail::Sendmail::error;
-
-    print "OK. Log says:\n", $Mail::Sendmail::log;
+    return [1, 'Password updated.'];
 }
 
 sub forgotten_pw_check {
@@ -135,10 +123,58 @@ sub forgotten_pw_check {
     if ($user_name ne $hash->{user_name} || $fname ne $hash->{first_name} || $lname ne $hash->{last_name} || $email ne $hash->{email}) {
         return 0;
     } else {
-        return $self->reset_user_pw($user_name, $fname, $lname, $email);
+        my $valid_code = $du->create_str();
+        $self->es->index(
+            index   => 'hearthdrafter',
+            type    => 'user',
+            id      => $user_name,
+            body    => {
+                user_name   => $user_name,
+                email => $email,
+                first_name => $fname,
+                last_name => $lname,
+                password => "locked", #should never validate to a valid hash.
+                validation_code => $valid_code,
+            }
+        );
+        my %mail = ( To => $email,
+            From    => 'admin@hearthdrafter.com',
+            Subject => "[HearthDrafter.com] $user_name Account PW Reset",
+            Message => "Someone, hopefully you, initiated a request to reset your HearthDrafter account password. To change your hearthdrafter.com password, please click <a href='http://hearthdrafter.com/reset_pw/$user_name/$valid_code'>this link.</a>",
+            );
+
+        sendmail(%mail);
+        return $self->reset_pw($user_name, $fname, $lname, $email);
     }
     
 }
 
+sub settings {
+    my ($self, $email, $fname, $lname, $password) = @_;
+    
+    my $existing = undef;
+    print STDERR Dumper($self->user);    
+#     eval { 
+#         $existing = $self->es->get(
+#             index   => 'hearthdrafter',
+#             type    => 'user',
+#             id      => $user_name,
+#         );
+#     };
+#     die 'username already exists' if defined($existing);
+#     $self->es->index(
+#         index   => 'hearthdrafter',
+#         type    => 'user',
+#         id      => $user_name,
+#         body    => {
+#             user_name   => $user_name,
+#             email => $email,
+#             first_name => $fname,
+#             last_name => $lname,
+#             password => $pbkdf2->generate($password),
+#         }
+#     );
+    return 1;
+}
 
 1;

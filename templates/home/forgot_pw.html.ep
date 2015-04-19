@@ -1,9 +1,9 @@
 % layout 'default';
-<form id='register' method='POST' accept-charset='UTF-8'>
+<form id='forgot_pw' method='POST' accept-charset='UTF-8'>
 <fieldset >
-<legend>Register</legend>
+<legend>Forgotten Password</legend>
 
-<p>Ensure your name and e-mail address are correct, so you can recover your account if you forget your password!</p>
+<p>Please provide the details below. If your details match, a password-reset e-mail will be sent!</p>
 
 <label for='name' >User Name: </label>
 <input type='text' name='user_name' id='user_name' maxlength="50" /><br>
@@ -17,9 +17,6 @@
 <label for='username' >Last Name:</label>
 <input type='text' name='last_name' id='last_name' maxlength="50" /><br>
  
-<label for='password' >Password:</label>
-<input type='password' name='password' id='password' maxlength="50" /><br>
-
 <input type='submit' name='Submit' value='Submit' />
 </fieldset>
 </form>

@@ -51,8 +51,15 @@ sub startup {
     $r->get('/home')->to('home#home');
     $r->get('/register')->to('home#register');
     $r->post('/register')->to('home#register_post');
+    $r->get('/reset_pw/:user_name/:code')->to('home#reset_pw');
+    $r->post('/reset_pw_post')->to('home#reset_pw_post');
+    $r->get('/forget_pw')->to('home#forget_pw');
+    $r->post('/forget_pw')->to('home#forget_pw_post');
+    
     #drafting
     my $auth_bridge = $r->under('/draft')->to('home#auth_check');
+    $auth_bridge->get('/settings')->to('home#settings');
+    $auth_bridge->post('/settings')->to('home#settings_post');
     $auth_bridge->get('/select_class/')->to('draft#select_class');
     $auth_bridge->get('/arena_status/')->to('draft#arena_status');
     $auth_bridge->get('/arena_status/:arena_action')->to('draft#arena_action');
