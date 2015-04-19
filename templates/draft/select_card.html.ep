@@ -22,11 +22,10 @@
 </div>
 <div id="tabs">
   <ul>
-    <li><a href="#tabs-1">Cards List</a></li>
-    <!--<li><a href="#tabs-2">Summary</a></li>-->
+    <li><a href="#tabs-1">Cards List</a><div id="minimize">_</div></li>
   </ul>
   <div id="tabs-1">
-  <table border="0" width="100%" id="cards_chosen">
+  <table border="0" width="100%" id="cards_chosen" cellpadding="0" cellspacing="0">
      % for my $card (sort(keys($run_details->{card_counts}))) {
         <tr>
             <td id="card_name"><span class="capital"><%== $card %></span></td>
@@ -37,7 +36,6 @@
 </div>
 
 <script type="text/javascript">
-
 function preload(arrayOfImages) {
     $(arrayOfImages).each(function(){
         $('<img/>')[0].src = this;
@@ -56,13 +54,11 @@ var cards = [
 % }
 ];
 var card_data = [];
-//preload the images!
 var images = [card_back];
 for (i = 0; i < cards.length; i++) {
     images.push(img + cards[i]['id'] + '.png');
     card_data[cards[i]['name']] = cards[i];
 }
-preload(images);
 //console.log(card_data);
 function updateManaCostChosenCards() {
     //add the cost to the list of cards
@@ -74,7 +70,6 @@ function updateManaCostChosenCards() {
     }
     sortTable();
 }
-
 updateManaCostChosenCards();
 
 //create a dict to map names to IDs since not sure how else to get this into list.js.
@@ -115,6 +110,21 @@ function sortTable(){
     }
     store = null;
 }
+
+function unminimize_panel () {
+    $('#tabs').css({'height':'auto'});
+    $('#minimize').text('_');
+    $('#minimize').button().click(minimize_panel);
+}
+function minimize_panel () {
+    $('#tabs').css({'height':'40.5px'});
+    $('#minimize').off('click');
+    $('#minimize').text('+');
+    $('#minimize').button().click(function(event) {
+        unminimize_panel();
+    });
+}
+
 //do the card selection stuff inside hearthdrafter.js
 $(document).ready(function() {    
     //load the card reader :D
@@ -122,34 +132,32 @@ $(document).ready(function() {
         try {
             var ws = new WebSocket('<%= url_for('reader_socket')->to_abs . "/" . stash('arena_id')%>');
             ws.onopen = function () {
-                console.log('Connection opened');
+                console.log('Connection open.');
             };
             ws.onmessage = function(event) {
                 var data = event.data;
                 data = JSON.parse(data);
                 var cur_cards = data['current_cards'];
                 if (typeof cur_cards !== 'undefined') {
-                    console.log(data);
-                    console.log(cur_cards);
                     for(c=0;c<cur_cards.length;c++) {
                         layoutCardChosen(cur_cards[c], c);
                     }
                     loadChosenCards(data);
                 } else {
                     // this is a confirmation.
-                    console.log('got confirm');
                     confirmCardByName(data['card'], data['data']);
                 }
             };
             //ping to keep the server alive.
             setInterval(function(){ ws.send('!')}, 30000);
         } catch (err) {
-            console.log(err);
+            console.log('Oh no! an error occured: ' + err);
         }
     };
     connect();
     loadCardSelection();
     updateUndoLink();
-    
+    minimize_panel();
+    unminimize_panel();
 });
 </script>

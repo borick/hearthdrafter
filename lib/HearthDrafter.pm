@@ -25,7 +25,7 @@ my $load_user_sub = sub {
     return $user_data;
 };
 
-sub startup {    
+sub startup {
     my $self = shift;    
     $self->config(hypnotoad => {workers => 1, proxy => 1});
     $self->secrets(['to.prevent.the.warning...']);

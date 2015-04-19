@@ -11,7 +11,8 @@
   right: 0;
   bottom: 0;
   height: auto;
-  width: 400px;
+  width: 350px;
+  overflow: hidden;
 }
 .ui-tabs-anchor {
   padding: 5px !important;
@@ -120,6 +121,7 @@ form {
 }
 #card_name {
   width: 100%;
+  font-size: 11pt;
 }
 #card_count {
   font-weight: bold;
@@ -181,6 +183,9 @@ form {
   vertical-align: middle;
   text-align: center;
   font-size: 14pt;
+}
+td {
+  padding: 0px;
 }
 #cards {
   padding: 5px;
@@ -461,4 +466,12 @@ a:visited {
 
 .best_score {
     color: #F0E442 !important;
+}
+
+#minimize {
+  width: 18px;
+  height: 22px;
+  /*position: absolute;
+  margin-left: 98px;
+  margin-top: -4px;*/
 }
