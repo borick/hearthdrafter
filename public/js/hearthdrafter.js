@@ -52,7 +52,6 @@ $(document).keydown(function(e) {
         case 13: // enter
             for(z=0;z<3;z++) {
                 if(selected[z]==null) {
-                    console.log('calling...');
                     showClassCards(z);
                     return;
                 }
@@ -83,7 +82,6 @@ function rebindKeys() {
                 $("li div").get(selected_index).click();
                 break;
             default:
-                console.log('default: ' + selected_index);
                 old_index = selected_index;
                 selected_index = 0;
                 highlightElement(selected_index);
@@ -137,23 +135,14 @@ function loadCardSelection() {
     });
 }
 
-function loadChosenCards(data) {
-    //GOT DATA!!!!! (scores n stuff.)
-    console.log(data);
-    
-    removeConfirm();
-    buildConfirmChoices(arena_id);
-    buildScoreUI(data);
-}
+
 
 function confirmCards() {
     mode = 'waiting_for_card';
     selected_card = 0;
     old_index = selected_index;
     selected_index = 0;
-    rarity = 'none';
     var url = "/draft/card_choice/"+selected[0]+'/'+selected[1]+'/'+selected[2]+'/'+arena_id;
-    console.log('getting url: ' + url);                
     //get data
     $.get(url, function( data ) {
         loadChosenCards(data);
@@ -236,8 +225,6 @@ function highlightElement(index) {
     if (index > 4) {
         list_ele.scrollTop((index-5)*35);
     }
-    console.log(list_ele);
-    console.log("index: " + index + ", old: " + old_index + ', scroll: ' + list_ele.scrollTop());
     $("li div:eq("+old_index+")").removeClass("ui-state-hover");
     $("li div:eq("+index+")").addClass("ui-state-hover");
 }
@@ -301,10 +288,6 @@ function removeUndo () {
     removeElement("#undo");
 }
 
-function removeConfirm () {
-    removeElement("#confirm");
-}
-
 function removeElement(selector) {
     while($(selector).length) {
         for (var i = 0; i < $(selector).length; i++) {
@@ -327,29 +310,6 @@ function removeSynergies () {
     }
 }
 
-function buildScoreUI (data) {
-    for (c=0;c<3;c++) {
-        var tmp = $('<span id="odo"></span>');
-        tmp.appendTo(getCardElement(c));
-        makeOdometer(c).hide().appendTo(tmp);
-    }
-    var n = 0;
-    var m = -100;
-    var synergies;
-    var card_pane;
-    for(j = 0; j < selected.length; j++) {
-        console.log(selected[j]);
-        name_to_id[selected[j]] = j;
-        var score = data['scores'][selected[j]];
-        if (score > m) {
-            n = j;
-            m = score;
-        }
-        updateOdometer(j, score);
-    }
-                    
-}
-
 function makeOdometer(id) {
     id = id + 1;
     var new_ele = $('<div class="odometer card_'+id+'_meter">0</div>');
@@ -365,7 +325,6 @@ function makeOdometer(id) {
 7
 function updateOdometer(id,value) {
     var card_name = '.card_'+(id+1)+'_meter';
-    console.log('updating odo with ' + card_name);
     var odo = $(card_name);
     odo.show();
     odo.text(0);
@@ -384,7 +343,6 @@ function getCardElement (id) {
 }
 
 function undoCardChoice (id) {
-    removeConfirm();
     removeHighlight();
     removeConfirmChoices();
     var card_option = getCardElement(id);
@@ -392,9 +350,20 @@ function undoCardChoice (id) {
     if(selected[0]==null&&selected[1]==null&&selected[2]==null) {
         rarity='none';
     }
+    removeElement('#best');
+    removeElement('.card'+id+ " .waiting");
     initCardClick(id);
     removeOdo();
     removeSynergies();
+    if (selected[0] != null) {
+        addWaiting(0);
+    }
+    if (selected[1] != null) {
+        addWaiting(1);
+    }
+    if (selected[2] != null) {
+        addWaiting(2);
+    }
 }
 
 function getCardFile (text) {
@@ -402,12 +371,18 @@ function getCardFile (text) {
     return bg_img;
 }
 
+function addWaiting (id) {
+    var card_option = getCardElement(id);
+    var waiting = $('<div class="waiting"/>');
+    waiting.text('Waiting for all cards to be picked...');
+    waiting.appendTo(card_option);
+    waiting.addClass(class_name);
+}
+
 function layoutCardChosen (text, id) {
      
     var card_option = getCardElement(id);
     card_option.off('click');
-    
-    console.log('card ' + text + " selected");
     selected[id] = text;
     rarity = card_rarity[text];
     //add image of the card.
@@ -422,6 +397,7 @@ function layoutCardChosen (text, id) {
     card_name_label.appendTo(card_option);
     card_name_label.addClass('capital');
     card_name_label.addClass(class_name);
+    addWaiting(id);
     
     //undo button
     var undoButton = createInputButton(card_option, {}, '<img src="/images/cancel.png"/>', "undo", id, function ( event ) {
@@ -431,6 +407,54 @@ function layoutCardChosen (text, id) {
     });
     return card_option;
     
+}
+
+function loadChosenCards(data) {
+    //GOT DATA!!!!! (scores n stuff.)
+    $('.waiting').remove();
+    buildConfirmChoices(arena_id);
+    buildScoreUI(data);
+}
+
+function buildConfirmChoices(arena_id) {
+    //make "picked this card" buttons
+    for(j = 0; j < selected.length; j++) {
+        var tmp_index = j + 1;
+        var tmp_card_name = ".card"+tmp_index;
+        var ipicked = createInputButton($(tmp_card_name), {}, 'I Picked This Card', 'ipicked', j, function ( event ) {
+            confirmCardChoice(event);
+        });
+        ipicked.addClass(class_name);
+    }
+}
+
+function buildScoreUI (data) {
+    for (c=0;c<3;c++) {
+        var tmp = $('<span id="odo"></span>');
+        tmp.appendTo(getCardElement(c));
+        tmp.addClass(class_name);
+        makeOdometer(c).hide().appendTo(tmp);
+        if (selected[c] == data['best_card']) {
+            var best_ele = $('<span class="gold" id="best">Win</span>');
+            best_ele.appendTo(getCardElement(c));
+        } else {
+            var best_ele = $('<span class="bronze" id="best">Lose</span>');
+            best_ele.appendTo(getCardElement(c));
+        }
+    }
+    var n = 0;
+    var m = -100;
+    var synergies;
+    var card_pane;
+    for(j = 0; j < selected.length; j++) {
+        name_to_id[selected[j]] = j;
+        var score = data['scores'][selected[j]];
+        if (score > m) {
+            n = j;
+            m = score;
+        }
+        updateOdometer(j, score);
+    }
 }
 
 function confirmCardByName(name,data) {
@@ -444,7 +468,6 @@ function confirmCardByName(name,data) {
 
 function finishConfirm(data) {
     //GOT MORE DATA!!!
-    console.log(data);
     card_number += 1;
     if (card_number >= 30) {
         //TODO: finish arena visualization!
@@ -458,6 +481,7 @@ function finishConfirm(data) {
     updateNumber(card_number);
     initCardClicks();
     selected = [];
+    rarity = 'none';
     removeUndo();
     removeHighlight();
 }
@@ -465,13 +489,13 @@ function finishConfirm(data) {
 function undoLastCard() {
     if (window.confirm("Are you sure you want to undo the last card choice? There is no redo.")) {
         var url = '/draft/arena_action/undo_last_card_'+arena_id;
-        console.log('undo...');
         $.get(url, function( data ) {
             if (card_number == 0) {
                 return;
             }
             card_number -= 1;
             removeConfirmChoices();
+            removeElement(".waiting");
             updateNumber(card_number);
             initCardClicks();
             selected = [];
@@ -500,21 +524,7 @@ function confirmCardChoice (event) {
     confirmCard(event.data.id);
 }
 
-function buildConfirmChoices(arena_id) {
-    //make "picked this card" buttons
-    for(j = 0; j < selected.length; j++) {
-        var tmp_index = j + 1;
-        var tmp_card_name = ".card"+tmp_index;
-        var ipicked = createInputButton($(tmp_card_name), {}, 'I Picked This Card', 'ipicked', j, function ( event ) {
-            confirmCardChoice(event);
-        });
-        ipicked.addClass(class_name);
-    }
-}
-
 function updateChosenCardsTab (data) {
-    console.log('updating chosen cards with:');
-    console.log(data);
     var keys = Object.keys(data),
         i, len = keys.length;
     keys.sort();

@@ -94,7 +94,7 @@ input:focus {
 }
 /*always show scrollbars*/
 html,body {
-  font-family: "Palatino Linotype", Times, serif;
+  font-family: arial;
   margin: 0px;
   margin-left: auto;
   margin-right: auto;
@@ -155,11 +155,12 @@ form {
 /** card display */
 #odo {
   position: absolute;
-  font-family: arial;
+  font-family: times;
   color: white;
   font-size:18pt;
   text-align:center;
   width: 241px;
+  font-weight: bold;
 }
 .ipicked a:hover {
   color: black;
@@ -390,7 +391,7 @@ a:visited {
 }
 
 #cost {
-    font-size: 11pt;
+    font-size: 12pt;
     background: url("/images/mana.png");
     width: 29px;
     height: 29px;
@@ -398,7 +399,8 @@ a:visited {
     text-align: center;
     color: black;
     line-height: 29px;
-    margin-right:20px;
+    margin-right: 20px;
+    text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
 }
 .ui-button-text {
     text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
@@ -409,3 +411,42 @@ a:visited {
     border-color: black !important;
     margin-bottom: 0px;
 }
+
+.waiting {
+    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+    margin-top: 56px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    font-weight: bold;
+    font-style: italic;
+}
+
+#best {
+    border-radius: 25px;
+    position: absolute;
+    display: table-cell;
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    margin-left: 95px;
+    margin-top: 40px;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 14pt;
+    font-weight: bold;
+    color: white;
+    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+}
+
+.gold{
+  background: linear-gradient(45deg,  rgba(242,215,12,1) 0%,rgba(255,255,255,1) 56%,rgba(252,235,0,1) 96%);
+}
+
+.silver{
+  background: linear-gradient(45deg,  rgba(160,160,160,1) 0%,rgba(232,232,232,1) 56%);
+  }
+  
+.bronze{
+  background: linear-gradient(45deg,  rgba(223,182,103,1) 0%,rgba(249,243,232,1) 56%,rgba(231,192,116,1) 96%); 
+  }
