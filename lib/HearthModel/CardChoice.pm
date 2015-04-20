@@ -468,9 +468,16 @@ sub _build_message {
             $last_card = $best_n;
             $last_score = $best_s;
         } elsif ($key eq 'missing_drops' && $best_s>$last_score) {
+            $card_win_counter = 0 if $best_n ne $last_card;
+            $card_win_counter += 1 if $best_n eq $last_card;
             $message .= 'However, we' and $card_win_counter = 0 if $best_n ne $last_card;
             $message .= 'We' and $card_win_counter += 1 if $best_n eq $last_card;
-            $message .= ' could use at least one more ' . $card_data->{$best_n}->{cost} . ' drop';
+            $message .= ' could';
+            if ($card_win_counter > 0) {
+                $message .= ' also';
+                $card_win_counter = 0;
+            }
+            $message .= ' use another ' . $card_data->{$best_n}->{cost} . ' drop';
             $message .= " like " . _capitalize($best_n) if $best_n ne $last_card;
             $message .= ". ";
             $last_card = $best_n;
@@ -478,7 +485,7 @@ sub _build_message {
         } elsif ($key eq 'mana' && $number > 10) {
             $card_win_counter = 0 if $best_n ne $last_card;
             $card_win_counter += 1 if $best_n eq $last_card;
-            $message .= ($card_win_counter == 0 ? 'Nevertheless, ' : '' ) . _capitalize($best_n) . ($card_win_counter > 0 ? ' also' : '' ) . " fits the mana-curve of our deck. ";
+            $message .= ($card_win_counter == 0 ? 'Nevertheless, ' : '' ) . _capitalize($best_n) . ($card_win_counter > 1 ? ' also' : '' ) . " fits the mana-curve of our deck. ";
             $last_card = $best_n;
             $last_score = $best_s;
         } elsif ($key eq 'dups' && $best_s>$last_score) {
@@ -495,13 +502,13 @@ sub _build_message {
                 $tags_done->{$best_n}->[$c] = _capitalize($tag);
                 $c += 1;
             }
-            $message .= ($card_win_counter > 0 ? 'It also' : _capitalize($best_n) ) . " gives us: " . _format_list(@{$tags_done->{$best_n}}) . " . ";
+            $message .= ($card_win_counter > 1 ? 'It also' : _capitalize($best_n) ) . " gives us: " . _format_list(@{$tags_done->{$best_n}}) . " . ";
             $last_card = $best_n;
             $last_score = $best_s;
         } elsif ($key eq 'synergy' && $best_s>$last_score) {
             $card_win_counter = 0 if $best_n ne $last_card;
             $card_win_counter += 1 if $best_n eq $last_card;
-            $message .= ($card_win_counter > 0 ? 'It also' : _capitalize($best_n) ) . ' has good synergy. ';
+            $message .= ($card_win_counter > 1 ? 'It also' : _capitalize($best_n) ) . ' has good synergy. ';
             $last_card = $best_n;
             $last_score = $best_s;
         } 
