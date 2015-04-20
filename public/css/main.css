@@ -33,7 +33,7 @@
   overflow: none;
 }
 .confirm {
-  color: white;
+  color: #F6FDF5;
 }
 .capital {
   text-transform: capitalize;
@@ -144,7 +144,7 @@ form {
   width: 100%;
   position: fixed;
   top: 0;
-  color: white;
+  color: #F6FDF5;
   z-index: 10;
 }
 #login_status {
@@ -165,7 +165,7 @@ form {
   border-style: solid;
   border-width: 3px;
   border-radius: 8px;
-  color: white;
+  color: #F6FDF5;
   padding: 2px;
   font-family: arial;
   font-weight: bold;
@@ -173,16 +173,16 @@ form {
 }
 .card_name_label {
   text-shadow: 0px 0px 2px black;
-  /*color: #0094D9;*/
-  margin-left: 11px;
   font-family: arial;
   font-weight: bold;
   width: 165px;
   height: 98px;
   display: table-cell;
-  vertical-align: middle;
-  text-align: center;
-  font-size: 14pt;
+  font-size: 12pt;
+  
+  position: absolute;
+  margin-left: 9px;
+  margin-top: 12px;
 }
 td {
   padding: 0px;
@@ -413,7 +413,7 @@ a:visited {
 
 .waiting {
     text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
-    margin-top: 56px;
+    margin-top: 143px;
     margin-left: auto;
     margin-right: auto;
     text-align: center;
@@ -425,31 +425,34 @@ a:visited {
   position: absolute;
   font-family: times;
   color: #C7A668;
-  font-size:18pt;
+  font-size:23pt;
   text-align:center;
   width: 241px;
   font-weight: bold;
   text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+  
+  margin-left: -28px;
+  margin-top: 41px;
 }
 
 #best {
-    border-radius: 25px;
-    border-color: black;
-    border-style: solid;
-    border-width: 1px;
-    position: absolute;
-    display: table-cell;
-    width: 50px;
-    height: 50px;
-    line-height: 50px;
-    margin-left: 95px;
-    margin-top: 40px;
-    text-align: center;
-    vertical-align: middle;
-    font-size: 14pt;
-    font-weight: bold;
-    color: white;
-    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+  border-radius: 25px;
+  border-color: black;
+  border-style: solid;
+  border-width: 1px;
+  position: absolute;
+  display: table-cell;
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+  margin-left: 8px;
+  margin-top: 40px;
+  text-align: center;
+  vertical-align: middle;
+  font-size: 12pt;
+  font-weight: bold;
+  color: #F6FDF5;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
 }
 
 .gold{
@@ -482,7 +485,7 @@ a:visited {
   border-radius: 20px;
   background: rgba(0, 0, 0, 0.74902);
   font-weight: bold;
-  color: white !important;
+  color: #F6FDF5 !important;
   -webkit-animation:pop-in 0.5s;
   -moz-animation:pop-in 0.5s;
   -ms-animation:pop-in 0.5s;
@@ -502,3 +505,12 @@ a:visited {
 0% { opacity: 0; transform: scale(0.5); }
 100% { opacity: 1; transform: scale(1); }
 }
+
+
+.outer-syn {
+  margin-left: 78px;
+  margin-top: 121px;
+  color: #F6FDF5;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+}  
+  

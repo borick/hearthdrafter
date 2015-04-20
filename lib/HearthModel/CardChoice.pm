@@ -126,15 +126,16 @@ sub get_advice {
     my %tags_data = ();
     # build a "drop__" curve.
     my @drop_curve =    (0,0,0,0,0,0,0,0);
-    my $num_drops = 0;
+    my $num_drops = 0;#one,meh,soit doesn't illegal by zero?
     my $total_drop_cost = 0;
-    for my $card_name_key (keys(%$card_data_tags)) {
+    for my $card_name_key (keys(%card_counts)) {
+        my $count = $card_counts{$card_name_key};
         for my $card_tag (keys(%{$card_data_tags->{$card_name_key}})) {
             $tags_data{$card_tag} += 1;
             if ($card_tag =~ /drop_(\d+)/) {
-                $drop_curve[$1] += 1;
+                $drop_curve[$1] += $count;
                 $total_drop_cost += $card_data->{$card_name_key}->{cost};
-                $num_drops += 1;
+                $num_drops += $count;
             }
         }
     }
@@ -145,7 +146,7 @@ sub get_advice {
     print STDERR "Number of cards: $number_of_cards\n" if $debug;
     
     my %type_breakdown = ();
-    my $average_drop = $total_drop_cost / $num_drops;
+    my $average_drop = $num_drops == 0 ? 0 : $total_drop_cost / $num_drops;
     my $total_cost = 0;
     for my $card (@unique_cards) {
         my $card_info = $card_data->{$card};
@@ -269,8 +270,7 @@ sub get_advice {
             push($synergies{$card}, $synergy);
         }
     }
-    ### not  synergies, currently.
-    #$out_data->{synergy} = \%synergies;
+    $out_data->{synergy} = \%synergies;
     $out_data->{card_choices} = \@card_choices;
     $out_data->{card_counts} = \%card_counts;
     $out_data->{current_cards} = $cards; 
@@ -344,7 +344,7 @@ sub get_advice {
     my %tags_done = ();
     for my $card (sort(@$cards)) {
         for my $tag (@{$tags_wanted->{$deck_type}}) {
-            if (exists($card_data_tags->{$card}->{$tag}) && ($tags_data{$tag}) <= 2) {
+            if (exists($card_data_tags->{$card}->{$tag}) && (exists($tags_data{$tag}) && $tags_data{$tag}) <= 2) {
                 my $original_score = $scores{$card};
                 $scores{$card} = $scores{$card} + ($scores{$card} * ($tag_needed_mult*$complete));
                 push($scores_hist{$card}, [$tag, $scores{$card}]);
@@ -464,7 +464,7 @@ sub _build_message {
             $term = ' a poor';
         }
         if ($key eq 'original') {
-             $message .= _capitalize($best_n) . ' has the higest score,' . ($best_s > 3000 ? ' and it\'s' : ' but it\'s') . $term . ' score. ';
+             $message .= _capitalize($best_n) . " has the higest score," . ($best_s > 3000 ? ' and it\'s' : ' but it\'s') . $term . ' score. ';
             $last_card = $best_n;
             $last_score = $best_s;
         } elsif ($key eq 'missing_drops' && $best_s>$last_score) {
@@ -477,7 +477,7 @@ sub _build_message {
                 $message .= ' also';
                 $card_win_counter = 0;
             }
-            $message .= ' use another ' . $card_data->{$best_n}->{cost} . ' drop';
+            $message .= ' use another ' . $card_data->{$best_n}->{cost} . " drop";
             $message .= " like " . _capitalize($best_n) if $best_n ne $last_card;
             $message .= ". ";
             $last_card = $best_n;

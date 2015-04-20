@@ -207,13 +207,6 @@ function setMessageText(id,text) {
     return $('<p id="top_message_'+id+'">'+text+'</p>');
 }
 
-function createSynergiesDiv(id) {
-    var e = $('<div id="synergies'+id+'" class="scroll-img">');
-    var outer = $('<div id="outer-synergies'+id+'"><h3>Synergies</h3></div>');
-    e.appendTo(outer);
-    return outer;
-}
-
 //update the number at the end of each turn.
 function updateNumber (newNumber) {
     $('#card_number').text( (newNumber) + '/30');
@@ -352,7 +345,7 @@ function undoCardChoice (id) {
     }
     removeElement('#best');
     removeElement('.waiting');
-    removeElement('#message_panel');
+    $('#message_panel').hide();
     initCardClick(id);
     removeOdo();
     removeSynergies();
@@ -416,6 +409,7 @@ function loadChosenCards(data) {
     $('.waiting').remove();
     buildConfirmChoices(arena_id);
     buildScoreUI(data);
+    buildSynergyUI(data);
     $('#message_panel').text(data['message']);
     $('#message_panel').show();
     $('#message_panel').addClass(class_name);
@@ -488,6 +482,7 @@ function finishConfirm(data) {
     rarity = 'none';
     removeUndo();
     removeHighlight();
+    $('#message_panel').hide();
 }
 
 function undoLastCard() {
@@ -549,4 +544,37 @@ function updateUndoLink() {
         $("#undo_last_card").hide();
         $("#tabs").hide();
     }
+}
+
+function createSynergiesDiv(id) {
+    console.log('creating synergy:'+id);
+    var e = $('<div id="synergies'+id+'" class="scroll-img">');
+    var outer = $('<div class="outer-syn" id="outer-synergies'+id+'"><h3>Synergies</h3></div>');
+    e.appendTo(outer);
+    return outer;
+}
+
+function buildSynergyUI(data, id) {
+    for(myvar in data['synergy']) {
+        synergies = createSynergiesDiv(name_to_id[myvar]);
+        var syn_found = 0;
+        for (syn in data['synergy'][myvar]) {
+            var sync = data['synergy'][myvar][syn]['card_name'];
+            var reason = data['synergy'][myvar][syn]['reason'];
+            var tmp_div = $('<div class="item"></div>');
+            tmp_div.appendTo(synergies.find('[id^="synergies"]'));
+            var ce = makeCardElement(getCardFile(sync), name_to_id[myvar]);
+            ce.appendTo(tmp_div);
+            ce.prop('title', reason);
+            syn_found = 1;
+        }
+        if (!syn_found) {
+            $('<p><i>None found.</i>').appendTo(synergies);
+        }
+        card_pane = $('.card'+(name_to_id[myvar]+1));
+        synergies.appendTo(card_pane);
+        for(s=0;s<3;s++) {
+            $("#synergies"+s).owlCarousel({items:3});
+        };
+    }   
 }
