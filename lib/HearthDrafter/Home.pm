@@ -25,7 +25,7 @@ sub login_post {
     my $user_name = $self->req->body_params->param('user_name');
     my $password = $self->req->body_params->param('password');
     if ($self->authenticate($user_name, $password)) {
-        $self->redirect_to('http://hearthdrafter.com/home');
+        $self->redirect_to('/home');
     } else {        
         $self->flash(login_message => 'Login Failed');
         $self->redirect_to('/');

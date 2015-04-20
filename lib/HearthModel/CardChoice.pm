@@ -388,6 +388,7 @@ sub get_advice {
 sub _capitalize {
     my $blah = shift;
     my $result = '';
+    return 'AOE' if $blah eq 'aoe';
     my @tokens = split(/ /,$blah);
     for my $token (@tokens) {
         $result .= ucfirst($token);
@@ -463,35 +464,44 @@ sub _build_message {
             $term = ' a poor';
         }
         if ($key eq 'original') {
-            $message .= _capitalize($best_n) . ' has the highest tier score,' . ($best_s > 3000 ? ' and it\'s' : ' but it\'s') . $term . ' score. ';
+             $message .= _capitalize($best_n) . ' has the higest score,' . ($best_s > 3000 ? ' and it\'s' : ' but it\'s') . $term . ' score. ';
             $last_card = $best_n;
             $last_score = $best_s;
         } elsif ($key eq 'missing_drops' && $best_s>$last_score) {
             $message .= 'However, we' and $card_win_counter = 0 if $best_n ne $last_card;
             $message .= 'We' and $card_win_counter += 1 if $best_n eq $last_card;
-            $message .= ' could use at least one more ' . $card_data->{$best_n}->{cost} . " drop like " . _capitalize($best_n) . ". ";
+            $message .= ' could use at least one more ' . $card_data->{$best_n}->{cost} . ' drop';
+            $message .= " like " . _capitalize($best_n) if $best_n ne $last_card;
+            $message .= ". ";
             $last_card = $best_n;
             $last_score = $best_s;
         } elsif ($key eq 'mana' && $number > 10) {
             $card_win_counter = 0 if $best_n ne $last_card;
             $card_win_counter += 1 if $best_n eq $last_card;
-            $message .= ($card_win_counter == 0 ? 'Nevertheless, ' : '' ) . _capitalize($best_n) . ($card_win_counter >= 2 ? ' also' : '' ) . " fits the mana-curve of our deck. ";
+            $message .= ($card_win_counter == 0 ? 'Nevertheless, ' : '' ) . _capitalize($best_n) . ($card_win_counter > 0 ? ' also' : '' ) . " fits the mana-curve of our deck. ";
             $last_card = $best_n;
             $last_score = $best_s;
         } elsif ($key eq 'dups' && $best_s>$last_score) {
             $card_win_counter = 0 if $best_n ne $last_card;
             $card_win_counter += 1 if $best_n eq $last_card;
-            $message .= ($card_win_counter == 0 ? 'On the other hand, ' : '' ) . _capitalize($best_n). " provides more variety to the deck. ";
+            if ($best_n ne $last_card) {
+                $message .= ($card_win_counter == 0 ? 'On the other hand, ' . _capitalize($best_n) : 'It also' ) . " provides more variety. ";
+            }
             $last_card = $best_n;
             $last_score = $best_s;
         } elsif ($key eq 'tags_done' && $best_s>$last_score) {
-            $message .= _capitalize($best_n) . " gives us: " . _format_list(@{$tags_done->{$best_n}}) . " that we could really use! ";
+            my $c = 0;
+            for my $tag (@{$tags_done->{$best_n}}) {
+                $tags_done->{$best_n}->[$c] = _capitalize($tag);
+                $c += 1;
+            }
+            $message .= ($card_win_counter > 0 ? 'It also' : _capitalize($best_n) ) . " gives us: " . _format_list(@{$tags_done->{$best_n}}) . " . ";
             $last_card = $best_n;
             $last_score = $best_s;
         } elsif ($key eq 'synergy' && $best_s>$last_score) {
             $card_win_counter = 0 if $best_n ne $last_card;
             $card_win_counter += 1 if $best_n eq $last_card;
-            $message .= _capitalize($best_n) . ' has synergy with the deck. ';
+            $message .= ($card_win_counter > 0 ? 'It also' : _capitalize($best_n) ) . ' has good synergy. ';
             $last_card = $best_n;
             $last_score = $best_s;
         } 

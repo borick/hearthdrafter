@@ -13,6 +13,8 @@
         <div class="card3 <%= lc($run_details->{class_name}) %>_shadow"></div>
         <style>clear: both;</style>
     </div>
+    <div id="message_panel">
+    </div>
     <div id="inner_search_panel">
         <div id="cards">
         <input class="search" placeholder="search" />

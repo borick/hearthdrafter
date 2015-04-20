@@ -22,12 +22,13 @@ server {
 }
 
 server {
+  listen 443;
+  
   ssl on;
   ssl_certificate /etc/nginx/ssl-unified.crt;
   ssl_certificate_key /etc/nginx/ssl.key;
   ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
-
-  listen 443;
+  
   server_name www.hearthdrafter.com;
 
   location / {

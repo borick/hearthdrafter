@@ -453,15 +453,15 @@ a:visited {
 }
 
 .gold{
-    background: linear-gradient(45deg,  rgba(242,215,12,1) 0%,rgba(255,255,255,1) 56%,rgba(252,235,0,1) 96%);
+    background: linear-gradient(45deg,  rgba(242,215,12,1) 0%,  rgba(255,255,255,1) 56%,  rgba(252,235,0,1) 96%);
 }
 
 .silver{
-    background: linear-gradient(45deg,  rgba(160,160,160,1) 0%,rgba(232,232,232,1) 56%);
+    background: linear-gradient(45deg,  rgba(160,160,160,1) 0%,  rgba(232,232,232,1) 56%);
 }
   
 .bronze{
-    background: linear-gradient(45deg,  rgba(223,182,103,1) 0%,rgba(249,243,232,1) 56%,rgba(231,192,116,1) 96%); 
+    background: linear-gradient(45deg,  rgba(223,182,103,1) 0%,  rgba(249,243,232,1) 56%,  rgba(231,192,116,1) 96%); 
 }
 
 .best_score {
@@ -471,7 +471,35 @@ a:visited {
 #minimize {
   width: 18px;
   height: 22px;
-  /*position: absolute;
-  margin-left: 98px;
-  margin-top: -4px;*/
+}
+
+#message_panel {
+  display:none;
+  position: absolute;
+  width: 747px;
+  margin-top: 274px;
+  padding: 10px;
+  border-radius: 20px;
+  border-style: solid;
+  border-width: 1px;
+  background: rgba(0, 0, 0, 0.74902);
+  font-weight: bold;
+  color: white !important;
+  -webkit-animation:pop-in 0.5s;
+  -moz-animation:pop-in 0.5s;
+  -ms-animation:pop-in 0.5s;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+}
+
+@-webkit-keyframes pop-in {
+0% { opacity: 0; -webkit-transform: scale(0.5); }
+100% { opacity: 1; -webkit-transform: scale(1); }
+}
+@-moz-keyframes pop-in {
+0% { opacity: 0; -moz-transform: scale(0.5); }
+100% { opacity: 1; -moz-transform: scale(1); }
+}
+@keyframes pop-in {
+0% { opacity: 0; transform: scale(0.5); }
+100% { opacity: 1; transform: scale(1); }
 }

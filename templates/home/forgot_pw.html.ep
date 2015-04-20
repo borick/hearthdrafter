@@ -3,7 +3,7 @@
 <fieldset >
 <legend>Forgotten Password</legend>
 
-<p>Please provide the details below. If your details match, a password-reset e-mail will be sent!</p>
+<p>Please provide the details below. If your details match, a password-reset e-mail will be sent.</p>
 
 <label for='name' >User Name: </label>
 <input type='text' name='user_name' id='user_name' maxlength="50" /><br>

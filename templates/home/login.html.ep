@@ -4,7 +4,7 @@
 Logged in as: <%= $user->{user}->{name} %><br><br>
 <a href="/logout"><font color='white'>Log Out</a>
 % } else {
-<br><form id='register' method='POST' accept-charset='UTF-8' action='/login'>
+<br><form id='login' method='POST' accept-charset='UTF-8' action='/login'>
 <label for='name' >User Name: </label>
 <input type='text' name='user_name' id='user_name' maxlength="50" />
 <label for='password' >Password:</label>

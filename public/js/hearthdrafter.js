@@ -352,6 +352,7 @@ function undoCardChoice (id) {
     }
     removeElement('#best');
     removeElement('.waiting');
+    removeElement('#message_panel');
     initCardClick(id);
     removeOdo();
     removeSynergies();
@@ -411,9 +412,13 @@ function layoutCardChosen (text, id) {
 
 function loadChosenCards(data) {
     //GOT DATA!!!!! (scores n stuff.)
+    //console.log(data);
     $('.waiting').remove();
     buildConfirmChoices(arena_id);
     buildScoreUI(data);
+    $('#message_panel').text(data['message']);
+    $('#message_panel').show();
+    $('#message_panel').addClass(class_name);
 }
 
 function buildConfirmChoices(arena_id) {
@@ -444,7 +449,6 @@ function buildScoreUI (data) {
     }
     var n = 0;
     var m = -100;
-    var synergies;
     var card_pane;
     for(j = 0; j < selected.length; j++) {
         name_to_id[selected[j]] = j;
