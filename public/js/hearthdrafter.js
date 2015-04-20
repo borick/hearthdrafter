@@ -547,13 +547,14 @@ function updateUndoLink() {
 }
 
 function createSynergiesDiv(id) {
-    console.log('creating synergy:'+id);
     var e = $('<div id="synergies'+id+'" class="scroll-img">');
     var outer = $('<div class="outer-syn" id="outer-synergies'+id+'"><h3>Synergies</h3></div>');
     e.appendTo(outer);
     return outer;
 }
-
+function makeCardElement (img,id) {
+    return $('<img id="card_img_'+id+'"'+' src="'+img+'">');
+}
 function buildSynergyUI(data, id) {
     for(myvar in data['synergy']) {
         synergies = createSynergiesDiv(name_to_id[myvar]);
