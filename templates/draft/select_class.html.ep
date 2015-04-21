@@ -1,12 +1,6 @@
 % layout 'default';
 <div class="maincontent">
-<a href="/draft/arena_action/new_arena_druid">Druid</a>
-<a href="/draft/arena_action/new_arena_hunter">Hunter</a>
-<a href="/draft/arena_action/new_arena_mage">Mage</a>
-<a href="/draft/arena_action/new_arena_paladin">Paladin</a>
-<a href="/draft/arena_action/new_arena_priest">Priest</a>
-<a href="/draft/arena_action/new_arena_rogue">Rogue</a>
-<a href="/draft/arena_action/new_arena_shaman">Shaman</a>
-<a href="/draft/arena_action/new_arena_warlock">Warlock</a>
-<a href="/draft/arena_action/new_arena_warrior">Warrior</a>
+<a href="/draft/arena_action/new_arena_druid">Druid</a> <a href="/draft/arena_action/new_arena_hunter">Hunter</a> <a href="/draft/arena_action/new_arena_mage">Mage</a>
+<a href="/draft/arena_action/new_arena_paladin">Paladin</a> <a href="/draft/arena_action/new_arena_priest">Priest</a> <a href="/draft/arena_action/new_arena_rogue">Rogue</a>
+<a href="/draft/arena_action/new_arena_shaman">Shaman</a> <a href="/draft/arena_action/new_arena_warlock">Warlock</a> <a href="/draft/arena_action/new_arena_warrior">Warrior</a>
 </div>

@@ -11,8 +11,8 @@ $HearthDrafter::Reader::clients = {};
 sub _get_params {
     my ($c) = @_;
     die 'must be logged in' if !exists($c->user->{user});
-    my $username = $c->user->{user}->{name};
-    return ($c->user->{user}->{name}, _make_key($username));
+    my $username = $c->user->{user}->{user_name};
+    return ($c->user->{user}->{user_name}, _make_key($username));
 }
 
 sub _make_key {
