@@ -4,6 +4,7 @@ var selected = [null, null, null];
 var userList = null;
 var dat = {};
 var img = "/images/cards_medium/";
+var img_small = "/images/cards_small/";
 var card_back = '/images/card_selection_back.png';
 var rarity = 'none';
 var number_element;
@@ -552,9 +553,6 @@ function createSynergiesDiv(id) {
     e.appendTo(outer);
     return outer;
 }
-function makeCardElement (img,id) {
-    return $('<img id="card_img_'+id+'"'+' src="'+img+'">');
-}
 function buildSynergyUI(data, id) {
     for(myvar in data['synergy']) {
         synergies = createSynergiesDiv(name_to_id[myvar]);
@@ -563,8 +561,9 @@ function buildSynergyUI(data, id) {
             var sync = data['synergy'][myvar][syn]['card_name'];
             var reason = data['synergy'][myvar][syn]['reason'];
             var tmp_div = $('<div class="item"></div>');
-            tmp_div.appendTo(synergies.find('[id^="synergies"]'));
-            var ce = makeCardElement(getCardFile(sync), name_to_id[myvar]);
+            tmp_div.appendTo(synergies);//.find('[id^="synergies"]'));
+            var bg_img = img_small + card_ids[sync] + '.png';
+            var ce = $('<img id="card_img_'+name_to_id[myvar]+'"'+' src="'+bg_img+'">');
             ce.appendTo(tmp_div);
             ce.prop('title', reason);
             syn_found = 1;

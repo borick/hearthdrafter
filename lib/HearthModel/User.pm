@@ -64,11 +64,13 @@ sub load {
     my %user_data = ();
     delete $doc->{_source}->{password};
     $user_data{user} = $doc->{_source};
+    #print STDERR Dumper(\%user_data);
     return \%user_data;
 }
 
 sub check_password {
     my ($self, $user_name, $password) = @_;
+    print STDERR "check_password... $user_name, $password...\n";
     my $doc;    
     eval {
         $doc = $self->es->get(
@@ -79,8 +81,10 @@ sub check_password {
     return 0 if !$doc;
     my $hash = $doc->{_source}->{password};
     if ($pbkdf2->validate($hash, $password)) {
+        print STDERR "Validates...\n";
         return $user_name;
     } else {
+    print STDERR "Does not validate...\n";
         return 0;
     }
 }

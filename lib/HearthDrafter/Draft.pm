@@ -13,7 +13,7 @@ sub arena_action {
     print STDERR "Action: $action\n";
     if ($action =~ /new_arena_(\w+)/ ){
         my $class = $1;
-        my $results = $self->model->arena->begin_arena($class, $self->user->{'user'}->{'name'});
+        my $results = $self->model->arena->begin_arena($class, $self->user->{'user'}->{'user_name'});
         if (defined($results) && exists($results->{_id})) {
             return $self->redirect_to('/draft/select_region/'.$results->{_id});
         } else {
@@ -22,17 +22,17 @@ sub arena_action {
         }
     } elsif ($action =~ /abandon_arena_([a-zA-Z0-9_-]+)/ ){
         my $arena_id = $1;
-        $self->model->arena->abandon_run($arena_id, $self->user->{'user'}->{'name'});
+        $self->model->arena->abandon_run($arena_id, $self->user->{'user'}->{'user_name'});
         sleep 1;#TODO: figure out how to wait for data to be propagated.
         return $self->redirect_to('/home');
     } elsif ($action =~ /undo_last_card_([a-zA-Z0-9_-]+)/ ){
         my $arena_id = $1;
-        my $result = $self->model->arena->undo_last_card($arena_id, $self->user->{'user'}->{'name'});
+        my $result = $self->model->arena->undo_last_card($arena_id, $self->user->{'user'}->{'user_name'});
         return $self->render(json => $result);
     } elsif ($action =~ /set_region_([a-z]+)_([a-zA-Z0-9_-]+)/ ){
         my $region = $1;
         my $arena_id = $2;
-        my $result = $self->model->arena->set_region($arena_id, $self->user->{'user'}->{'name'}, $region);
+        my $result = $self->model->arena->set_region($arena_id, $self->user->{'user'}->{'user_name'}, $region);
         return $self->redirect_to('/draft/select_card/'.$arena_id);
     }
     warn "bad action $action";
@@ -101,7 +101,7 @@ sub results_post {
 
 sub view_completed_runs {
     my $self = shift;
-    my $result = $self->model->arena->list_runs_completed($self->user->{'user'}->{'name'},
+    my $result = $self->model->arena->list_runs_completed($self->user->{'user'}->{'user_name'},
                                                           $self->stash('from'),
                                                           $self->stash('size'));
     print STDERR Dumper($result);

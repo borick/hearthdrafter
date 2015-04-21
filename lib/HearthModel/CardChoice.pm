@@ -515,7 +515,7 @@ sub _build_message {
         #print STDERR Dumper(\%old_refs);
         #print STDERR Dumper(\%refs);
     }
-    $message .= "Final choice: " . _capitalize($best_n) . ".";
+    #$message .= "Pick " . _capitalize($best_n) . ".";
     print STDERR "Message: $message\n";
     return $message;
 }

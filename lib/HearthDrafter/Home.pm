@@ -43,8 +43,8 @@ sub home {
     if (!$self->is_user_authenticated()) {
         return $self->redirect_to('/');
     }
-    $self->stash(           runs => $self->model->arena->list_open_runs($self->user->{'user'}->{'name'}),
-                 runs_no_results => $self->model->arena->list_runs_no_results($self->user->{'user'}->{'name'}));
+    $self->stash(           runs => $self->model->arena->list_open_runs($self->user->{'user'}->{'user_name'}),
+                runs_no_results => $self->model->arena->list_runs_no_results($self->user->{'user'}->{'user_name'}));
 }
 
 sub register {
