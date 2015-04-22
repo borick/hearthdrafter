@@ -520,9 +520,21 @@ a:visited {
 
 
 .outer-syn {
-  margin-left: 78px;
-  margin-top: 121px;
+  margin-left: 9px;
+  margin-top: 94px;
   color: #F6FDF5;
   text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
 }  
-  
+
+.outer-syn h3 {
+  font-size: 9pt;
+}
+.item a {
+  color: white;
+  cursor: default;
+}
+
+.synergy_list {
+  height: 80px;
+  overflow-y: auto;
+}

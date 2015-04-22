@@ -300,6 +300,9 @@ sub get_advice {
     #adjust for "missing drops"
     for my $card (sort(@$cards)) {
         my $original_score = $scores{$card};
+        if (!exists($card_data->{$card}->{cost})) {
+            warn "$card cost not found!\n";
+        }
         my $cost = ($card_data->{$card}->{cost} < $max_cost) ? $card_data->{$card}->{cost} : $max_cost;
         my $diff = $drop_diff_min[$cost];
         my $is_drop = 0;

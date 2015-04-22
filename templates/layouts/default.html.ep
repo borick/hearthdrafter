@@ -6,16 +6,12 @@
     <link rel="stylesheet" type="text/css" media="screen" href="/css/results.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="/css/libs/jquery-ui.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="/js/libs/odometer/odometer-theme-minimal.css" />
-    <link rel="stylesheet" type="text/css" media="screen" href="/js/libs/owl-carousel/owl.carousel.css" />
-    <link rel="stylesheet" type="text/css" media="screen" href="/js/libs/owl-carousel/owl.theme.css" />
-    <link rel="stylesheet" type="text/css" media="screen" href="/js/libs/owl-carousel/owl.transitions.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="/js/libs/rangeslider.css" />
     <script src="/js/libs/jquery-1.11.2.min.js"></script>
     <script src="/js/libs/jquery-ui.min.js"></script>
     <script src="/js/libs/rangeslider.js"></script>
     <script src="/js/hearthdrafter.js"></script>
     <script src="/js/libs/odometer/odometer.js"></script>
-    <script src="/js/libs/owl-carousel/owl.carousel.js"></script>
     <script src="/js/libs/list.js"></script>
     <%= content 'header' %>
 </head>

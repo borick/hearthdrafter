@@ -548,7 +548,7 @@ function updateUndoLink() {
 }
 
 function createSynergiesDiv(id) {
-    var e = $('<div id="synergies'+id+'" class="scroll-img">');
+    var e = $('<div id="synergies'+id+'" class="synergy_list">');
     var outer = $('<div class="outer-syn" id="outer-synergies'+id+'"><h3>Synergies</h3></div>');
     e.appendTo(outer);
     return outer;
@@ -561,20 +561,17 @@ function buildSynergyUI(data, id) {
             var sync = data['synergy'][myvar][syn]['card_name'];
             var reason = data['synergy'][myvar][syn]['reason'];
             var tmp_div = $('<div class="item"></div>');
-            tmp_div.appendTo(synergies);//.find('[id^="synergies"]'));
-            var bg_img = img_small + card_ids[sync] + '.png';
-            var ce = $('<img id="card_img_'+name_to_id[myvar]+'"'+' src="'+bg_img+'">');
+            tmp_div.appendTo(synergies.find('[id^="synergies"]'));
+            var ce = $('<a href="#">'+sync+'</a>');
             ce.appendTo(tmp_div);
             ce.prop('title', reason);
+            ce.addClass('capital');
             syn_found = 1;
         }
         if (!syn_found) {
-            $('<p><i>None found.</i>').appendTo(synergies);
+            $('<p><i>None found.</i>').appendTo(synergies.find('[id^="synergies"]'));
         }
         card_pane = $('.card'+(name_to_id[myvar]+1));
         synergies.appendTo(card_pane);
-        for(s=0;s<3;s++) {
-            $("#synergies"+s).owlCarousel({items:3});
-        };
     }   
 }
