@@ -70,7 +70,6 @@ sub load {
 
 sub check_password {
     my ($self, $user_name, $password) = @_;
-    print STDERR "check_password... $user_name, $password...\n";
     my $doc;    
     eval {
         $doc = $self->es->get(

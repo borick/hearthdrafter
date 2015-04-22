@@ -538,3 +538,8 @@ a:visited {
   height: 80px;
   overflow-y: auto;
 }
+.synergy_list a {
+  color: black;
+  font-weight: bold;
+  text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
+}
