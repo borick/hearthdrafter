@@ -141,8 +141,11 @@ $(document).ready(function() {
                 data = JSON.parse(data);
                 var cur_cards = data['current_cards'];
                 if (typeof cur_cards !== 'undefined') {
+                    initCardClicks();
                     for(c=0;c<cur_cards.length;c++) {
+                        changeBg(c);
                         layoutCardChosen(cur_cards[c], c);
+                        //card_picked(c, cur_cards[c]);
                     }
                     loadChosenCards(data);
                 } else {

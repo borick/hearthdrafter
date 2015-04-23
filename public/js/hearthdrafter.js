@@ -104,7 +104,6 @@ function initCardClicks() {
         initCardClick(i);
     }
 }
-
 //invoked from select_card.html.ep
 function loadCardSelection() {
     card_selected = 0;
@@ -150,6 +149,12 @@ function confirmCards() {
     });
 }
 
+function changeBg (id) {
+    var card_option = getCardElement(id);
+    card_option.css({background: 'rgba(0,0,0,.75)'});
+    return card_option;
+}
+
 //RESPOND TO CARD SELECTION
 function showClassCards(id) {
     old_index = selected_index;
@@ -160,8 +165,7 @@ function showClassCards(id) {
             resetBG(i);
         }
     }
-    var card_option = getCardElement(id);
-    card_option.css({background: 'rgba(0,0,0,.75)'});
+    var card_option = changeBg(id);
     var card_names = $('#cards');
     card_names.css({"display": "block", "z-index":9999});
     card_names.addClass('capital');
@@ -169,40 +173,43 @@ function showClassCards(id) {
     rebuildList();
     $(".search").focus();
     highlightElement(selected_index);
-    //card selected...
     var name_ele = $(".name");
     var name_button = name_ele.button();
     var name_to_hover = $('.list li');
     name_to_hover.mousemove( function( event ) {
         var element = $(this);
+        name = element.text();
         old_index = selected_index;
         //selected_index = element.index();
         //highlightElement(selected_index);
     });
     name_button.click( function( event ) {
-        //card name selected
+        
         event.preventDefault();
         event.stopPropagation();
-        card_names.css({"display": "none"});
         var element = $(this);
-        layoutCardChosen(element.text(), id);
-        userList.clear();
-        $(".search").hide();
-        $('body').append(card_names);//move the list back out lest we destory it
-        var flag = 0;
-        for (z = 0; z < 3; z++) {
-            if (selected[z]==null) {
-                flag = z;
-                break;
-            }   
-        }        
-        if (flag == 0) {
-            //get the card choice data once all 3 are chosen.
-            confirmCards();
-        }
+        card_picked(id, element.text());
     });
 }
 
+function card_picked (id, name) {
+    $('#cards').css({"display": "none"});
+    layoutCardChosen(name, id);
+    userList.clear();
+    $(".search").hide();
+    $('body').append($('#cards'));//move the list back out lest we destory it
+    var flag = 0;
+    for (z = 0; z < 3; z++) {
+        if (selected[z]==null) {
+            flag = z;
+            break;
+        }   
+    }        
+    if (flag == 0) {
+        //get the card choice data once all 3 are chosen.
+        confirmCards();
+    }    
+}
 
 function setMessageText(id,text) {
     return $('<p id="top_message_'+id+'">'+text+'</p>');
@@ -373,9 +380,15 @@ function addWaiting (id) {
     waiting.appendTo(card_option);
     waiting.addClass(class_name);
 }
-
+/* when a card is picked. */
 function layoutCardChosen (text, id) {
-     
+    
+    console.log('laying out: ' + text);
+    if (typeof card_data[text] === 'undefined') {
+        alert('Class Mismatch! ' + class_name + ' does not have the card "' + text + '"');
+        document.location.href = '/home';
+    }
+    
     var card_option = getCardElement(id);
     card_option.off('click');
     selected[id] = text;
@@ -401,7 +414,6 @@ function layoutCardChosen (text, id) {
         event.stopPropagation();
     });
     return card_option;
-    
 }
 
 function loadChosenCards(data) {
@@ -434,6 +446,7 @@ function buildScoreUI (data) {
         tmp.appendTo(getCardElement(c));
         makeOdometer(c).hide().appendTo(tmp);
         if (selected[c] == data['best_card']) {
+            getCardElement(c).find('#best').remove();
             var best_ele = $('<span class="gold" id="best">Yes!</span>');
             best_ele.appendTo(getCardElement(c));
             tmp.addClass('best_score');
