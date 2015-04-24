@@ -265,33 +265,47 @@ td {
   height: 95%;
 }
 .maincontent {
-  background: #D9DBDD;
+  background-color: #B0B0B0; background-image: -webkit-gradient(linear, left top, left bottom, from(#57a4db), to(#28353F));
   border: 2px solid #28353f;
   border-radius: 12px;
   padding: 7px 7px 7px 7px;
+  width: 800px;
+  margin-left: auto;
+  margin-right: auto;
 }
-.maincontent a:hover {
-  background: #fff;
-  color: #000;
-}
+/* main page button */
 .maincontent a {
   /*-webkit-appearance:button;
   -moz-appearance:button;
   -o-appearance:button;
   -ms-appearance:button;    */
-
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+  background-color: #B0B0B0; background-image: -webkit-gradient(linear, left top, left bottom, from(#B0B0B0), to(#000000));
+  background-image: -webkit-linear-gradient(top, #B0B0B0, #000000);
+  background-image: -moz-linear-gradient(top, #B0B0B0, #000000);
+  background-image: -ms-linear-gradient(top, #B0B0B0, #000000);
+  background-image: -o-linear-gradient(top, #B0B0B0, #000000);
   padding: 10px 15px;
-  background: #000;
-  color: #FFF;
-    
+  color: #fff;
   display: inline-block;
-  width:100px;
+  width:auto;
   height:auto;
   text-align:center;
   font-size:13px;
-  padding:3px;
+  font-weight: bold;
+  padding: 7px;
   margin: 10px;
-  border-radius: 7px;
+  border-radius: 12px;
+  border-width: 2px;
+  border-style: solid;
+  border-color: black;
+}
+.maincontent a:hover {
+  background-color: #979797; background-image: -webkit-gradient(linear, left top, left bottom, from(#979797), to(#1a1a1a));
+  background-image: -webkit-linear-gradient(top, #979797, #1a1a1a);
+  background-image: -moz-linear-gradient(top, #979797, #1a1a1a);
+  background-image: -ms-linear-gradient(top, #979797, #1a1a1a);
+  background-image: -o-linear-gradient(top, #979797, #1a1a1a);
 }
 a:link {
   text-decoration: none;
@@ -308,97 +322,6 @@ a:visited {
     font-weight: bold;
     font-size:200%;
     text-shadow: 0px 0px 2px black;
-}
-
-.druid {
-    color: #FF973E;
-    border-color: #FF973E;
-}
-.druid_shadow:hover{
-    box-shadow: 0px 0px 5px 5px #FF973E;
-}
-.druid_background{
-    background-color: #FF973E;
-}
-.mage{
-    color: #0094D9;
-    border-color: #0094D9;
-}
-.mage_shadow:hover{
-    box-shadow: 0px 0px 5px 5px #0094D9;
-}
-.mage_background{
-    background-color: #0094D9;
-}
-.warlock{
-    color: #6D5AAB;
-    border-color: #6D5AAB;
-}
-.warlock_shadow:hover{
-    box-shadow: 0px 0px 5px 5px #6D5AAB;
-}
-.warlock_background{
-    background-color: #6D5AAB;
-}
-.hunter{
-    color: #80AD42;
-    border-color: #80AD42;
-}
-.hunter_shadow:hover{
-    box-shadow: 0px 0px 5px 5px #80AD42;
-}
-.hunter_background{
-    background-color: #80AD42;
-}
-.warrior{
-    color: #A67843;
-    border-color: #A67843;
-}
-.warrior_shadow:hover{
-    box-shadow: 0px 0px 5px 5px #A67843;
-}
-.warrior_background{
-    background-color: #A67843;
-}
-.priest{
-    color: #FFFFFF;
-    border-color: #FFFFFF;
-}
-.priest_shadow:hover{
-    box-shadow: 0px 0px 5px 5px #FFFFFF;
-}
-.priest_background{
-    background-color: #FFFFFF;
-}
-.shaman{
-    color: #0B48FF;
-    border-color: #0B48FF;
-}
-.shaman_shadow:hover{
-    box-shadow: 0px 0px 5px 5px #0B48FF;
-}
-.shaman_background{
-    background-color: #0B48FF;
-}
-.paladin{
-    color: #EB66A0;
-    border-color: #EB66A0;
-}
-.paladin_shadow:hover{
-    box-shadow: 0px 0px 5px 5px #EB66A0;
-}
-.paladin_background{
-    background-color: #EB66A0;
-}
-.rogue{
-    color: #E3D741;
-    border-color: #E3D741;
-}
-.rogue_shadow:hover{
-    box-shadow: 0px 0px 5px 5px #E3D741;
-}
-.rogue_background{
-    background-color: #E3D741;
 }
 
 #cost {
