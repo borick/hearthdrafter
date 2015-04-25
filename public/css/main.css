@@ -222,6 +222,7 @@ td {
   position: absolute;
   z-index: 10;
   margin-left: 219px;
+  margin-top: -3px;
 }
 #undo:hover {
   opacity:0.5;

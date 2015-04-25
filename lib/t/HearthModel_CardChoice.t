@@ -5,8 +5,9 @@ use warnings;
 no warnings 'once';
 
 use Test::More;
+use JSON;
 use Data::Dumper;
-use File::Slurp;
+use File::Slurp qw( :std ) ;
 use Getopt::Long;
 my $debug = undef;
 my $class = 'unknown';
@@ -21,10 +22,12 @@ $HearthModel::CardChoice::debug = $debug;
 $hd_model->connect($hd);
 my @classes = ($class);
 if ($class eq 'unknown') {
-   @classes = ('rogue',
-               'shaman',
-               'warlock',
-               'hunter');
+   @classes = (
+               #'rogue',
+               #'shaman',
+               #'warlock',
+               #'hunter'
+               );
 }   
 for my $class (@classes) {
     my $arena = $hd_model->arena->begin_arena($class, 'test');
@@ -59,7 +62,21 @@ for my $class (@classes) {
     }
     $hd_model->arena->abandon_run($id, 'test');
 }
-    
+
+my $card_data_file = '../install/utils/data/AllSets.json';
+my $card_data_text = read_file($card_data_file);
+my $cards = decode_json $card_data_text;
+my @names = ();
+for my $card (@{$cards->{'Blackrock Mountain'}}) {
+    if ($card->{id} =~ /^BRM_...$/) {
+        push(@names, lc($card->{name}));
+    }
+}
+my $data = $hd_model->card->get_data(\@names);
+for my $name (@names) {
+    ok(exists($data->{$name}->{cost}), "cost exists for $name - " . $data->{$name}->{id});
+}
+   
 done_testing();
 
 # use to get data.

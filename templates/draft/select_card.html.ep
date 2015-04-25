@@ -132,7 +132,7 @@ $(document).ready(function() {
     //load the card reader :D
     var connect = function() {
         try {
-            var ws = new WebSocket('<%= url_for('reader_socket')->to_abs . "/" . stash('arena_id')%>');
+            var ws = new WebSocket('<%= ($c->req->url->to_abs->host =~ /local/ ? 'ws://' : 'wss://').$c->req->url->to_abs->host.':'.$c->req->url->to_abs->port."/draft/reader_socket/" . stash('arena_id')%>');
             ws.onopen = function () {
                 console.log('Connection open.');
             };

@@ -8,7 +8,6 @@ use warnings;
 use JSON;
 use File::Slurp qw( :std ) ;
 use Data::Dumper;
-
 use Getopt::Long;
 
 #init

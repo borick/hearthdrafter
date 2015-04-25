@@ -66,11 +66,9 @@ sub get_cards {
             }
         },
     );
-
     my @data = @{$results->{hits}->{hits}};
     @data = map { $_->{_source} } @data;
     return \@data;
-    
 }
 
 sub get_tags {
