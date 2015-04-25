@@ -68,7 +68,12 @@ function updateManaCostChosenCards() {
     for (i = 0; i < rows.length; i++) {
         jrows = jQuery(rows[i]);
         text = jrows.find('[id=card_name]').text();
-        jrows.prepend($('<td id="cost">'+card_data[text]['cost']+'</td>'));
+        if (typeof(card_data[text]) !== 'undefined') {
+            jrows.prepend($('<td id="cost">'+card_data[text]['cost']+'</td>'));
+        } else {
+            //TODO: find the hax0r.
+            jrows.prepend($('<td id="cost">?</td>'));
+        }
     }
     sortTable();
 }

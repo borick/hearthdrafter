@@ -74,9 +74,8 @@ for my $card (@{$cards->{'Blackrock Mountain'}}) {
 }
 my $data = $hd_model->card->get_data(\@names);
 for my $name (@names) {
-    ok(exists($data->{$name}->{cost}), "cost exists for $name - " . $data->{$name}->{id});
+    ok(exists($data->{$name}->{cost}), "cost exists for $name - [" . $data->{$name}->{id} . ']');
 }
-   
 done_testing();
 
 # use to get data.

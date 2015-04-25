@@ -123,6 +123,9 @@ sub get_advice {
     my $card_data = $c->model->card->get_data(\@data_for);
     # {name => {tag => value, tag2 => value}}
     my $card_data_tags = $c->model->card->get_tags(\@data_for);
+    die "bad card specified" if !exists($card_data_tags->{$card_1}) || !exists($card_data_tags->{$card_2}) || !exists($card_data_tags->{$card_3});
+    
+    
     my %tags_data = ();
     # build a "drop__" curve.
     my @drop_curve =    (0,0,0,0,0,0,0,0);

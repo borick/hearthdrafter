@@ -64,9 +64,9 @@ sub confirm_card_choice {
         $c->render(text => 'Socket not defined.');
         return;
     }
-    my $result = $c->model->arena->confirm_card_choice($c->stash('card_name'),
-                                                       $arena_id);
-    my $out = { card => $c->stash('card_name'), data => $result };
+    my $result = $c->model->arena->confirm_card_choice_by_num($c->stash('index'),
+                                                              $arena_id);
+    my $out = { card => $c->stash('index'), data => $result };
     $socket->send({json => $out });
     $c->render(json => $out);
 }
