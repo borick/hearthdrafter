@@ -64,10 +64,12 @@ sub confirm_card_choice {
         $c->render(text => 'Socket not defined.');
         return;
     }
-    my $result = $c->model->arena->confirm_card_choice_by_num($c->stash('index'),
+    my $result_data = $c->model->arena->confirm_card_choice_by_num($c->stash('index'),
                                                               $arena_id);
-    print STDERR 'Confirm: ' . Dumper($result);
-    my $out = { card => $c->stash('index'), data => $result };
+    my $card = $result_data->[0];
+    my $result = $result_data->[1];
+    #print STDERR 'Confirm: ' . Dumper($result);
+    my $out = { card => $card, data => $result };
     $socket->send({json => $out });
     $c->render(json => $out);
 }

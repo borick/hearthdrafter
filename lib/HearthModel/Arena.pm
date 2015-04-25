@@ -71,6 +71,7 @@ sub confirm_card_choice_by_num {
     my ($self, $index, $arena_id) = @_;
     my $source = $self->continue_run($arena_id);
     my $next_index = $self->get_next_index($source);
+    my $card_chosen = 'none';
     die('none or bad index specified') if !defined($index) or ($index != 0 && $index != 1 && $index != 2);
     #TODO: add user validation
     if ($next_index >= 29) {
@@ -80,9 +81,10 @@ sub confirm_card_choice_by_num {
     if ($next_index <= 29) {
         my $tag = 'card_name';
         $tag .= '_' . ($index+1) if ($index == 1 || $index == 2);
-        $source->{card_options}->[$next_index]->{card_chosen} = $source->{card_options}->[$next_index]->{$tag};
-        print STDERR "Confirming choice card #" . ($next_index+1) .' '  .  $source->{card_options}->[$next_index]->{card_chosen} .  "\n";
-        print STDERR Dumper($source->{card_options}->[$next_index]);
+        $card_chosen = $source->{card_options}->[$next_index]->{$tag};
+        $source->{card_options}->[$next_index]->{card_chosen} = $card_chosen;
+        #print STDERR "Confirming choice card #" . ($next_index+1) .' '  .  $source->{card_options}->[$next_index]->{card_chosen} .  "\n";
+        #print STDERR Dumper($source->{card_options}->[$next_index]);
         $self->es->index(
             index => 'hearthdrafter',
             type => 'arena_run',
@@ -91,7 +93,7 @@ sub confirm_card_choice_by_num {
         );
     }
     $source = $self->continue_run($arena_id);
-    return $source->{card_counts};
+    return [$card_chosen, $source->{card_counts}];
 }
 
 
