@@ -17,6 +17,8 @@ my @ids = <$idf>;
 close $idf;
 
 my @sorted_ids = map { s/\s//g; $_ } @ids;
+print STDERR join(', ', @sorted_ids);
+
 my @unique = do { my %seen; grep { !$seen{$_}++ } @sorted_ids };
 @unique = sort {$a <=> $b} @unique;
 my @copy = @unique;
@@ -47,9 +49,6 @@ for my $x (1..9) {
         
         my $suffix = $val1.'-'.($val2).'-'.($val3);
         my $out_file_name = "$data_dir/ha_data_".$x."_"."$suffix".".txt";
-        if (-f $out_file_name) {
-            next;
-        }
         $text = get_data($x, $suffix, $out_file_name);
         #sleep 1;
     }

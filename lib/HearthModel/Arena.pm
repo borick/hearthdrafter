@@ -79,9 +79,9 @@ sub confirm_card_choice_by_num {
     } 
     if ($next_index <= 29) {
         my $tag = 'card_name';
-        $tag .= '_' . $index if ($index == 1 || $index == 2);
+        $tag .= '_' . ($index+1) if ($index == 1 || $index == 2);
         $source->{card_options}->[$next_index]->{card_chosen} = $source->{card_options}->[$next_index]->{$tag};
-        #print STDERR "Confirming choice card #" . ($next_index+1) . "\n";
+        print STDERR "Confirming choice card #" . ($next_index+1) .' '  .  $source->{card_options}->[$next_index]->{card_chosen} .  "\n";
         print STDERR Dumper($source->{card_options}->[$next_index]);
         $self->es->index(
             index => 'hearthdrafter',

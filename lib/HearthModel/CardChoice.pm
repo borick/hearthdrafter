@@ -123,7 +123,8 @@ sub get_advice {
     my $card_data = $c->model->card->get_data(\@data_for);
     # {name => {tag => value, tag2 => value}}
     my $card_data_tags = $c->model->card->get_tags(\@data_for);
-    die "bad card specified" if !exists($card_data_tags->{$card_1}) || !exists($card_data_tags->{$card_2}) || !exists($card_data_tags->{$card_3});
+    print STDERR Dumper($card_data_tags);
+    #die "bad card specified $card_1, $card_2, $card_3" if !exists($card_data_tags->{$card_1}) || !exists($card_data_tags->{$card_2}) || !exists($card_data_tags->{$card_3});
     
     
     my %tags_data = ();
@@ -153,6 +154,7 @@ sub get_advice {
     my $total_cost = 0;
     for my $card (@unique_cards) {
         my $card_info = $card_data->{$card};
+        next if !exists($card_info->{cost});
         $total_cost += $card_info->{cost};
         $type_breakdown{$card_info->{type}} += 1;
     }

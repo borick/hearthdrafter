@@ -125,8 +125,9 @@ sub load_cards {
 sub load_scores {
 
     # Load the card scores.
+    my $count_scores = 0;
     for my $file (@files) {
-    print "Processing $file...\n" if $debug >= 3;
+        print "Processing $file...\n" if $debug >= 3;
         if ($file =~ /ha_data_(\d)_.*.txt$/) {
             my $class_num = $1;
             my $class_name = $class_id_to_name{$class_num};
@@ -135,12 +136,14 @@ sub load_scores {
             for my $result (@{$data->{results}}) {
                 print Dumper($result) if $debug >= 4;
                 my $dat = $result->{card};
+                #next if $dat->{tierScore} == 0;
+                $count_scores += 1;
                 $dat->{name} = $dat->{name};
                 $score{$class_name}->{$dat->{name}} = int($dat->{score}*100);
             }
         }
     }
-    
+    print "Processed: $count_scores scores.\n";
     for my $class_name (sort(keys(%score))) {
         my $ref = $score{$class_name};
         for my $card_name (sort(keys(%$ref))) {            

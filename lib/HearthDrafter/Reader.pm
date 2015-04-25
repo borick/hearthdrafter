@@ -66,6 +66,7 @@ sub confirm_card_choice {
     }
     my $result = $c->model->arena->confirm_card_choice_by_num($c->stash('index'),
                                                               $arena_id);
+    print STDERR 'Confirm: ' . Dumper($result);
     my $out = { card => $c->stash('index'), data => $result };
     $socket->send({json => $out });
     $c->render(json => $out);
