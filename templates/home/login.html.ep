@@ -1,8 +1,8 @@
 <span id="login_status">
 % my $user = user;
 % if (defined($user)) {
-Logged in as: <%= $user->{user}->{name} %><br><br>
-<a href="/logout"><font color='white'>Log Out</a>
+<div id="logged_in_message">Logged in as: <%= $user->{user}->{user_name} %></div><br>
+<span id="logout_link"><a href="/logout"><font color='white'>Log Out</a></span>
 % } else {
 <br><form id='login' method='POST' accept-charset='UTF-8' action='/login'>
 <label for='name' >User Name: </label>

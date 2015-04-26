@@ -46,7 +46,10 @@ sub card_choice {
     my ($username, $key) = _get_params($c);
     my $socket = $HearthDrafter::Reader::clients->{$key}->[0];
     my $arena_id = $HearthDrafter::Reader::clients->{$key}->[1];
-    print STDERR $socket, $arena_id, "\n";
+    if (!defined($socket)) {
+        $c->render(text => 'NO CLIENT');
+        return;
+    }
     my $result = $c->model->card_choice->get_advice($c->stash('card1'),
                                                     $c->stash('card2'),
                                                     $c->stash('card3'),
@@ -61,7 +64,7 @@ sub confirm_card_choice {
     my $socket = $HearthDrafter::Reader::clients->{$key}->[0];
     my $arena_id = $HearthDrafter::Reader::clients->{$key}->[1];
     if (!defined($socket)) {
-        $c->render(text => 'Socket not defined.');
+        $c->render(text => 'NO CLIENT');
         return;
     }
     my $result_data = $c->model->arena->confirm_card_choice_by_num($c->stash('index'),

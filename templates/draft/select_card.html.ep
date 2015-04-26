@@ -2,6 +2,18 @@
 % content_for header => begin
 % $run_details->{class_name} =~ s/([^\s\w]*)(\S+)/$1\u\L$2/g;
   <title>HearthDrafter - <%= $run_details->{class_name} %> Run</title>
+  <script src="/js/libs/jquery-1.11.2.min.js"></script>
+  <script src="/js/libs/jquery-ui.min.js"></script>
+  <script src="/js/libs/rangeslider.js"></script>
+  <script src="/js/hearthdrafter.js"></script>
+  <script src="/js/hd.js"></script>
+  <script src="/js/libs/odometer/odometer.js"></script>
+  <script src="/js/libs/list.js"></script>
+  <link rel="stylesheet" type="text/css" media="screen" href="/css/results.css" />
+  <link rel="stylesheet" type="text/css" media="screen" href="/css/hearth.css" />
+  <link rel="stylesheet" type="text/css" media="screen" href="/css/libs/jquery-ui.css" />
+  <link rel="stylesheet" type="text/css" media="screen" href="/js/libs/odometer/odometer-theme-minimal.css" />
+  <link rel="stylesheet" type="text/css" media="screen" href="/js/libs/rangeslider.css" />
 % end
 % content_for title_bar => begin
 <span class="title_label <%= lc($run_details->{class_name}) %>"><%= $run_details->{class_name} %> Run</span>
@@ -24,7 +36,7 @@
 </div>
 <div id="tabs">
   <ul>
-    <li><a href="#tabs-1">Cards List</a><div id="minimize">_</div></li>
+    <li><a href="#tabs-1">Mana Counts</a></li>
   </ul>
   <div id="tabs-1">
   <table border="0" width="100%" id="cards_chosen" cellpadding="0" cellspacing="0">
@@ -38,12 +50,6 @@
 </div>
 
 <script type="text/javascript">
-function preload(arrayOfImages) {
-    $(arrayOfImages).each(function(){
-        $('<img/>')[0].src = this;
-    });
-}
-var card_number = <%= $card_number %>;
 var cards = [
 % # has to match the format defined in hearthdrafter.js
 % my $cards = stash 'cards';
@@ -55,37 +61,21 @@ var cards = [
       rarity: "<%== $card->{rarity} %>"},
 % }
 ];
-var card_data = [];
-var images = [card_back];
-for (i = 0; i < cards.length; i++) {
-    images.push(img + cards[i]['id'] + '.png');
-    card_data[cards[i]['name']] = cards[i];
-}
-//console.log(card_data);
-function updateManaCostChosenCards() {
-    //add the cost to the list of cards
-    rows = $('#tabs-1 table tr');
-    for (i = 0; i < rows.length; i++) {
-        jrows = jQuery(rows[i]);
-        text = jrows.find('[id=card_name]').text();
-        if (typeof(card_data[text]) !== 'undefined') {
-            jrows.prepend($('<td id="cost">'+card_data[text]['cost']+'</td>'));
-        } else {
-            //TODO: find the hax0r.
-            jrows.prepend($('<td id="cost">?</td>'));
-        }
-    }
-    sortTable();
-}
-updateManaCostChosenCards();
 
-//create a dict to map names to IDs since not sure how else to get this into list.js.
+var card_number = <%= $card_number %>;
 var card_ids = {};
 var card_rarity = {};
 var class_name = "<%= lc($run_details->{class_name}) %>";
 for (i = 0; i < cards.length; i++) {
     card_ids[cards[i]['name']] = cards[i]['id'];
     card_rarity[cards[i]['name']] = cards[i]['rarity'];
+}
+
+var card_data = [];
+var images = [card_back];
+for (i = 0; i < cards.length; i++) {
+    images.push(img + cards[i]['id'] + '.png');
+    card_data[cards[i]['name']] = cards[i];
 }
 
 //tab it up
@@ -99,37 +89,9 @@ $(function() {
     });
 });
 
-function sortTable(){
-    var tbl = document.getElementById("cards_chosen").tBodies[0];
-    if (tbl == null)
-        return;
-    var store = [];
-    for(var i=0, len=tbl.rows.length; i<len; i++){
-        var row = tbl.rows[i];
-        var sortnr = parseFloat(row.cells[0].textContent || row.cells[0].innerText);
-        if(!isNaN(sortnr)) store.push([sortnr, row]);
-    }
-    store.sort(function(x,y){
-        return x[0] - y[0];
-    });
-    for(var i=0, len=store.length; i<len; i++){
-        tbl.appendChild(store[i][1]);
-    }
-    store = null;
-}
-
-function unminimize_panel () {
-    $('#tabs').css({'height':'auto'});
-    $('#minimize').text('_');
-    $('#minimize').button().click(minimize_panel);
-}
-function minimize_panel () {
-    $('#tabs').css({'height':'40.5px'});
-    $('#minimize').off('click');
-    $('#minimize').text('+');
-    $('#minimize').button().click(function(event) {
-        unminimize_panel();
-    });
+function connectWebSocket () {
+    var ws = new WebSocket('<%= ($c->req->url->to_abs->host =~ /local/ ? 'ws://' : 'wss://').$c->req->url->to_abs->host.':'.$c->req->url->to_abs->port."/draft/reader_socket/" . stash('arena_id')%>');
+    return ws;
 }
 
 //do the card selection stuff inside hearthdrafter.js
@@ -137,7 +99,7 @@ $(document).ready(function() {
     //load the card reader :D
     var connect = function() {
         try {
-            var ws = new WebSocket('<%= ($c->req->url->to_abs->host =~ /local/ ? 'ws://' : 'wss://').$c->req->url->to_abs->host.':'.$c->req->url->to_abs->port."/draft/reader_socket/" . stash('arena_id')%>');
+            var ws = connectWebSocket();
             ws.onopen = function () {
                 console.log('Connection open.');
             };
@@ -159,7 +121,14 @@ $(document).ready(function() {
                 }
             };
             //ping to keep the server alive.
-            setInterval(function(){ ws.send('!')}, 30000);
+            setInterval(
+                function(){
+                    ws.send('!');
+                    if (ws.readyState == 3) {
+                        ws = connectWebSocket();
+                    }
+                }
+                , 20000);
         } catch (err) {
             console.log('Oh no! an error occured: ' + err);
         }
@@ -167,7 +136,6 @@ $(document).ready(function() {
     connect();
     loadCardSelection();
     updateUndoLink();
-    minimize_panel();
-    unminimize_panel();
+    updateManaCostChosenCards();
 });
 </script>

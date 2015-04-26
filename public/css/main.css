@@ -8,11 +8,11 @@
 }
 #tabs {
   position: absolute;
-  right: 0;
-  bottom: 0;
-  height: auto;
-  width: 350px;
-  overflow: hidden;
+  margin-top: 275px;
+  width: 761px;
+  overflow-y: hidden;
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
 }
 .ui-tabs-anchor {
   padding: 5px !important;
@@ -31,6 +31,7 @@
   margin-top: 100px;
   font-weight: bold;
   overflow: none;
+  /*text-shadow: -1px 0 #00D6F3, 0 1px #00D6F3, 1px 0 #00D6F3, 0 -1px #00D6F3;*/
 }
 .confirm {
   color: #F6FDF5;
@@ -95,7 +96,7 @@ input:focus {
 }
 /*always show scrollbars*/
 html,body {
-  font-family: arial;
+  font-family: Trebuchet MS;
   margin: 0px;
   margin-left: auto;
   margin-right: auto;
@@ -119,14 +120,19 @@ form {
   font-size: 125%;
   font-weight: bold;
 }
+/*in the mana display*/
 #card_name {
   width: 100%;
   font-size: 11pt;
+  padding-right: 20px;
 }
 #card_count {
   font-weight: bold;
   text-align: right;
   font-size: 11pt;
+}
+#cards_chosen {
+  width: 1px;
 }
 .content {
   margin-top: 100px;
@@ -147,6 +153,10 @@ form {
   color: #F6FDF5;
   z-index: 10;
 }
+
+/*login stuff */
+
+
 #login_status {
   text-align: right;
   position: absolute;
@@ -154,6 +164,20 @@ form {
   margin-top:-2em;
   right: 5%;
 }
+#logged_in_message {  
+  border-width: 2px;
+  border-style: solid;
+  border-radius: 14px;
+  padding: 5px;
+}
+#logout_link {
+  border-width: 2px;
+  border-style: solid;
+  border-radius: 14px;
+  width: auto;
+  padding: 5px;
+}
+
 /** card display */
 .ipicked a:hover {
   text-shadow: -1px 0 #444, 0 1px #444, 1px 0 #444, 0 -1px #444;
@@ -217,6 +241,17 @@ td {
   margin-right: 9px;
   font-weight: bold;
   font-size: 70%;
+}
+#undo_last_card a {
+  color: #00D6F3;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+}
+#undo_last_card a:hover {
+  color: white;
+  /*text-shadow: -1px 0 #00D6F3, 0 1px #00D6F3, 1px 0 #00D6F3, 0 -1px #00D6F3;*/
+}
+#undo_last_card a:active {
+  color: #28353F;
 }
 #undo {
   position: absolute;
@@ -465,4 +500,9 @@ a:visited {
   color: white;
   font-weight: bold;
   /*text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;*/
+}
+
+.center {
+  margin-left: auto;
+  margin-right: auto;
 }

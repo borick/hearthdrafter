@@ -3,17 +3,6 @@
 <head>
     <meta charset="utf-8">        
     <link rel="stylesheet" type="text/css" media="screen" href="/css/main.css" />
-    <link rel="stylesheet" type="text/css" media="screen" href="/css/results.css" />
-    <link rel="stylesheet" type="text/css" media="screen" href="/css/hearth.css" />
-    <link rel="stylesheet" type="text/css" media="screen" href="/css/libs/jquery-ui.css" />
-    <link rel="stylesheet" type="text/css" media="screen" href="/js/libs/odometer/odometer-theme-minimal.css" />
-    <link rel="stylesheet" type="text/css" media="screen" href="/js/libs/rangeslider.css" />
-    <script src="/js/libs/jquery-1.11.2.min.js"></script>
-    <script src="/js/libs/jquery-ui.min.js"></script>
-    <script src="/js/libs/rangeslider.js"></script>
-    <script src="/js/hearthdrafter.js"></script>
-    <script src="/js/libs/odometer/odometer.js"></script>
-    <script src="/js/libs/list.js"></script>
     <%= content 'header' %>
 </head>
 <body>

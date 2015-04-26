@@ -1188,25 +1188,13 @@ body .ui-tooltip {
 .ui-corner-top,
 .ui-corner-left,
 .ui-corner-tl {
-	border-top-left-radius: 6px;
+	border-top-left-radius: 16px;
 }
 .ui-corner-all,
 .ui-corner-top,
 .ui-corner-right,
 .ui-corner-tr {
-	border-top-right-radius: 6px;
-}
-.ui-corner-all,
-.ui-corner-bottom,
-.ui-corner-left,
-.ui-corner-bl {
-	border-bottom-left-radius: 6px;
-}
-.ui-corner-all,
-.ui-corner-bottom,
-.ui-corner-right,
-.ui-corner-br {
-	border-bottom-right-radius: 6px;
+	border-top-right-radius: 16px;
 }
 
 /* Overlays */
@@ -1221,5 +1209,6 @@ body .ui-tooltip {
 	background: #cccccc url("images/ui-bg_flat_30_cccccc_40x100.png") 50% 50% repeat-x;
 	opacity: .6;
 	filter: Alpha(Opacity=60); /* support: IE8 */
-	border-radius: 8px;
+	border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
 }
