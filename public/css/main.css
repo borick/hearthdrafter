@@ -8,7 +8,7 @@
 }
 #tabs {
   position: absolute;
-  margin-top: 275px;
+  margin-top: 203px;
   width: 761px;
   overflow-y: hidden;
   border-bottom-left-radius: 16px;
@@ -18,14 +18,16 @@
   padding: 5px !important;
 }
 #top_bar {
-  width: 100%;
+  /*width: 100%;*/
+  /*width: 850px;*/
+  width: auto;
 }
 #selection { 
   text-align: left;
   height:100%;
 }
 #card_number {
-  padding: 8px;
+  padding-top: 8px;
   padding-right:14px;
   color: #000;
   margin-top: 100px;
@@ -135,9 +137,9 @@ form {
   width: 1px;
 }
 .content {
-  margin-top: 100px;
+  /*margin-top: 100px;*/
   color: #000;
-  max-width: 1024px;
+  /*max-width: 1024px;*/
   width: 95%;
   height: 95%;
   margin-left: auto;
@@ -152,6 +154,9 @@ form {
   top: 0;
   color: #F6FDF5;
   z-index: 10;
+  border: 3px;
+  border-style: solid;
+  border-color: black;
 }
 
 /*login stuff */
@@ -163,17 +168,13 @@ form {
   top: 50%;
   margin-top:-2em;
   right: 5%;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
 }
-#logged_in_message {  
-  border-width: 2px;
-  border-style: solid;
-  border-radius: 14px;
+#logged_in_message {
+  top-margin: 3px;
   padding: 5px;
 }
 #logout_link {
-  border-width: 2px;
-  border-style: solid;
-  border-radius: 14px;
   width: auto;
   padding: 5px;
 }
@@ -237,7 +238,7 @@ td {
 }
 #undo_last_card {
   margin-left: auto;
-  margin-top: 149px;
+  /*margin-top: 149px;*/
   margin-right: 9px;
   font-weight: bold;
   font-size: 70%;
@@ -308,6 +309,7 @@ td {
   width: 800px;
   margin-left: auto;
   margin-right: auto;
+  margin-top: 100px;
 }
 /* main page button */
 .maincontent a {

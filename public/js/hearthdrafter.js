@@ -113,13 +113,11 @@ function loadCardSelection() {
     $(".search").hide();
     //card # element positioning
     number_element = createElement($("#top_bar"), 'card_number', {"font-size":"200%"});
-    number_element.css({"position":"absolute"});
-    number_element.css({'top':'0', 'right':'0'});
+    /*number_element.css({"position":"absolute"});
+    number_element.css({'top':'0', 'right':'0'});*/
     updateNumber(card_number);
     
     cancel_link = createElement($("#top_bar"), 'undo_last_card', {});
-    cancel_link.css({"position":"absolute"});
-    cancel_link.css({'top':'0', 'right':'0'});
     cancel_link.html('<a href="#" onclick="undoLastCard(); return false;">Undo last card</a>');
     
     //keep the search focused, where we type card names
