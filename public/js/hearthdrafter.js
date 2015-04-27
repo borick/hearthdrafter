@@ -112,7 +112,7 @@ function loadCardSelection() {
     //misc layout
     $(".search").hide();
     //card # element positioning
-    number_element = createElement($("#top_bar"), 'card_number', {"font-size":"200%"});
+    number_element = createElement($("#top_bar"), 'card_number', {});
     /*number_element.css({"position":"absolute"});
     number_element.css({'top':'0', 'right':'0'});*/
     updateNumber(card_number);

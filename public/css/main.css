@@ -8,7 +8,7 @@
 }
 #tabs {
   position: absolute;
-  margin-top: 203px;
+  margin-top: 186px;
   width: 761px;
   overflow-y: hidden;
   border-bottom-left-radius: 16px;
@@ -26,15 +26,7 @@
   text-align: left;
   height:100%;
 }
-#card_number {
-  padding-top: 8px;
-  padding-right:14px;
-  color: #000;
-  margin-top: 100px;
-  font-weight: bold;
-  overflow: none;
-  /*text-shadow: -1px 0 #00D6F3, 0 1px #00D6F3, 1px 0 #00D6F3, 0 -1px #00D6F3;*/
-}
+
 .confirm {
   color: #F6FDF5;
 }
@@ -98,11 +90,12 @@ input:focus {
 }
 /*always show scrollbars*/
 html,body {
-  font-family: Trebuchet MS;
+  font-family: friz;
   margin: 0px;
   margin-left: auto;
   margin-right: auto;
-  background: #fff;
+  
+  /*background: #fff;*/
 }
 form {
   display: inline;
@@ -124,20 +117,20 @@ form {
 }
 /*in the mana display*/
 #card_name {
-  width: 100%;
+  width: 230px;
   font-size: 11pt;
   padding-right: 20px;
 }
 #card_count {
   font-weight: bold;
   text-align: right;
-  font-size: 11pt;
+  font-size: 13pt;
 }
 #cards_chosen {
-  width: 1px;
+  width: 300px;
 }
 .content {
-  /*margin-top: 100px;*/
+  margin-top: 100px;
   color: #000;
   /*max-width: 1024px;*/
   width: 95%;
@@ -236,12 +229,21 @@ td {
   background-color: black;
   box-shadow: 0 7px 6px -6px #222;
 }
+#card_number {
+  padding-top: 8px;
+  padding-right:14px;
+  color: #000;
+  margin-top: 100px;
+  font-weight: bold;
+  overflow: none;
+  font-size: 40pt;
+  /*text-shadow: -1px 0 #00D6F3, 0 1px #00D6F3, 1px 0 #00D6F3, 0 -1px #00D6F3;*/
+}
 #undo_last_card {
   margin-left: auto;
   /*margin-top: 149px;*/
   margin-right: 9px;
   font-weight: bold;
-  font-size: 70%;
 }
 #undo_last_card a {
   color: #00D6F3;
@@ -252,7 +254,7 @@ td {
   /*text-shadow: -1px 0 #00D6F3, 0 1px #00D6F3, 1px 0 #00D6F3, 0 -1px #00D6F3;*/
 }
 #undo_last_card a:active {
-  color: #28353F;
+  color: red;
 }
 #undo {
   position: absolute;
@@ -309,7 +311,6 @@ td {
   width: 800px;
   margin-left: auto;
   margin-right: auto;
-  margin-top: 100px;
 }
 /* main page button */
 .maincontent a {
@@ -354,12 +355,12 @@ a:visited {
 /******************/
 
 .title_label {
-    position: absolute;
-    top: 30%;
-    left: 210px;
-    font-weight: bold;
-    font-size:200%;
-    text-shadow: 0px 0px 2px black;
+  position: absolute;
+  top: 25%;
+  left: 241px;
+  font-weight: bold;
+  font-size: 279%;
+  text-shadow: 0px 0px 2px black;
 }
 
 #cost {
@@ -375,23 +376,23 @@ a:visited {
     text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
 }
 .ui-button-text {
-    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
 }
 .ui-button {
-    border-style: solid !important;
-    border-width: 1px !important;
-    border-color: black !important;
-    margin-bottom: 0px;
+  border-style: solid !important;
+  border-width: 1px !important;
+  border-color: black !important;
+  margin-bottom: 0px;
 }
 
 .waiting {
-    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
-    margin-top: 143px;
-    margin-left: auto;
-    margin-right: auto;
-    text-align: center;
-    font-weight: bold;
-    font-style: italic;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+  margin-top: 143px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  font-weight: bold;
+  font-style: italic;
 }
 
 #odo {
@@ -429,19 +430,19 @@ a:visited {
 }
 
 .gold{
-    background: linear-gradient(45deg,  rgba(242,215,12,1) 0%,  rgba(255,255,255,1) 56%,  rgba(252,235,0,1) 96%);
+  background: linear-gradient(45deg,  rgba(242,215,12,1) 0%,  rgba(255,255,255,1) 56%,  rgba(252,235,0,1) 96%);
 }
 
 .silver{
-    background: linear-gradient(45deg,  rgba(160,160,160,1) 0%,  rgba(232,232,232,1) 56%);
+  background: linear-gradient(45deg,  rgba(160,160,160,1) 0%,  rgba(232,232,232,1) 56%);
 }
   
 .bronze{
-    background: linear-gradient(45deg,  rgba(223,182,103,1) 0%,  rgba(249,243,232,1) 56%,  rgba(231,192,116,1) 96%); 
+  background: linear-gradient(45deg,  rgba(223,182,103,1) 0%,  rgba(249,243,232,1) 56%,  rgba(231,192,116,1) 96%); 
 }
 
 .best_score {
-    color: #F0E442 !important;
+  color: #F0E442 !important;
 }
 
 #minimize {
@@ -507,4 +508,20 @@ a:visited {
 .center {
   margin-left: auto;
   margin-right: auto;
+}
+
+@font-face {
+  font-family: friz;
+  src: url('../font/frizqua.ttf');
+}
+
+#side {
+  width: 500px;
+  height: 560px;
+  position: absolute;
+  background-image: url('../images/goblin.png') !important;
+  margin-left: 809px;
+  opacity: 1;
+  margin-top: -130px;
+  z-index: -100;
 }
