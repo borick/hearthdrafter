@@ -1,4 +1,4 @@
-.druid {
+.druid, .druid a{
     color: #FF973E !important;
     border-color: #FF973E !important;
 }
@@ -8,7 +8,11 @@
 .druid_background{
     background-color: #FF973E !important;
 }
-.mage{
+.druid_bg{
+    background-image: url('../images/bgs/druid.jpg');
+    background-repeat: repeat; background-size: auto; background-position-y: 100px;
+}
+.mage, .mage a{
     color: #0094D9 !important;
     border-color: #0094D9 !important;
 }
@@ -18,7 +22,11 @@
 .mage_background{
     background-color: #0094D9 !important;
 }
-.warlock{
+.mage_bg{
+    background-image: url('../images/bgs/mage.jpg');
+    background-repeat: repeat; background-size: auto; background-position-y: 100px;
+}
+.warlock, .warlock a{
     color: #6D5AAB !important;
     border-color: #6D5AAB !important;
 }
@@ -28,7 +36,11 @@
 .warlock_background{
     background-color: #6D5AAB !important;
 }
-.hunter{
+.warlock_bg{
+    background-image: url('../images/bgs/warlock.jpg');
+    background-repeat: repeat; background-size: auto; background-position-y: 100px;
+}
+.hunter, .hunter a{
     color: #80AD42 !important;
     border-color: #80AD42 !important;
 }
@@ -38,7 +50,11 @@
 .hunter_background{
     background-color: #80AD42 !important;
 }
-.warrior{
+.hunter_bg{
+    background-image: url('../images/bgs/hunter.png');
+    background-repeat: repeat; background-size: auto; background-position-y: 100px;
+}
+.warrior, .warrior a{
     color: #A67843 !important;
     border-color: #A67843 !important;
 }
@@ -48,7 +64,11 @@
 .warrior_background{
     background-color: #A67843 !important;
 }
-.priest{
+.warrior_bg{
+    background-image: url('../images/bgs/warrior.jpg');
+    background-repeat: repeat; background-size: auto; background-position-y: 100px;
+}
+.priest, .priest a{
     color: #FFFFFF !important;
     border-color: #FFFFFF !important;
 }
@@ -58,7 +78,11 @@
 .priest_background{
     background-color: #FFFFFF !important;
 }
-.shaman{
+.priest_bg{
+    background-image: url('../images/bgs/priest.jpg');
+    background-repeat: repeat; background-size: auto; background-position-y: 100px;
+}
+.shaman, .shaman a{
     color: #0B48FF !important;
     border-color: #0B48FF !important;
 }
@@ -68,7 +92,11 @@
 .shaman_background{
     background-color: #0B48FF !important;
 }
-.paladin{
+.shaman_bg{
+    background-image: url('../images/bgs/shaman.jpg');
+    background-repeat: repeat; background-size: auto; background-position-y: 100px;
+}
+.paladin, .paladin a{
     color: #EB66A0 !important;
     border-color: #EB66A0 !important;
 }
@@ -78,7 +106,11 @@
 .paladin_background{
     background-color: #EB66A0 !important;
 }
-.rogue{
+.paladin_bg{
+    background-image: url('../images/bgs/paladin.jpg');
+    background-repeat: repeat; background-size: auto; background-position-y: 100px;
+}
+.rogue, .rogue a{
     color: #E3D741 !important;
     border-color: #E3D741 !important;
 }
@@ -87,4 +119,8 @@
 }
 .rogue_background{
     background-color: #E3D741 !important;
+}
+.rogue_bg{
+    background-image: url('../images/bgs/rogue.jpg');
+    background-repeat: repeat; background-size: auto; background-position-y: 100px;
 }

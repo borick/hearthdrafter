@@ -25,6 +25,8 @@
     </div>
     <div id="message_panel">
     </div>
+    <div id="message_panel_bg">
+    </div>
     <div id="inner_search_panel">
         <div id="cards">
         <input class="search" placeholder="search" />
@@ -96,6 +98,7 @@ function connectWebSocket () {
 //do the card selection stuff inside hearthdrafter.js
 $(document).ready(function() {    
     //load the card reader :D
+    $('body').addClass(class_name + '_bg');
     var connect = function() {
         try {
             var ws = connectWebSocket();

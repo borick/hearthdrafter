@@ -551,10 +551,8 @@ function updateChosenCardsTab (data) {
 function updateUndoLink() {
     if (card_number > 0) {
         $("#undo_last_card").show();
-        $("#tabs").show();
     } else {
         $("#undo_last_card").hide();
-        $("#tabs").hide();
     }
 }
 

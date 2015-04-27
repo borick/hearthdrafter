@@ -9,7 +9,7 @@
 </head>
 <body>
 <div class="header">
-<a href="/"><img src="/images/hearthdrafter_logo.png"/></a>
+<a href="/"><img height="98px" src="/images/hearthdrafter_logo.png"/></a>
     <%= content 'title_bar' %>
     %= include '/home/login'
 </div>
@@ -21,6 +21,8 @@
             <span class="success_message capital"><%= flash("success_message") %></span>
         </span>
     </div>
+</div>
+<div id="back">
 </div>
 </body>
 </html>
