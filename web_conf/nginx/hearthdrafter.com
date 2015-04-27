@@ -2,6 +2,8 @@ upstream hearthdrafter.com {
   server 127.0.0.1:8080;
 }
 
+etag off;
+
 server {
   listen         80;
   server_name    www.hearthdrafter.com;
@@ -18,19 +20,25 @@ server {
       access_log off;
       log_not_found off;
   }
-  return         301 https://$server_name$request_uri;
+  return     301 https://$server_name$request_uri;
+  add_header Strict-Transport-Security "max-age=63072000; includeSubdomains; preload";
+  add_header X-Frame-Options "DENY";
 }
 
 server {
-  listen 443;
-  
+  listen 443; 
   ssl on;
   ssl_certificate /etc/nginx/ssl-unified.crt;
   ssl_certificate_key /etc/nginx/ssl.key;
   ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
   
   server_name www.hearthdrafter.com;
-
+  
+  add_header Strict-Transport-Security "max-age=63072000; includeSubdomains; preload";
+  add_header X-Frame-Options "DENY";
+  add_header X-Frame-Options SAMEORIGIN;
+  add_header X-XSS-Protection: 1; mode=block;
+  
   location / {
     auth_basic "Restricted";
     auth_basic_user_file /etc/nginx/.htpasswd;
@@ -45,8 +53,11 @@ server {
   }
 
   location ~ ^/mail(.*) {
-      alias /usr/share/apache2/roundcubemail$1;
-      index index.php;
+    fastcgi_pass 127.0.0.1:9000;
+    fastcgi_index  index.php;
+    #fastcgi_param  SCRIPT_FILENAME /var/www/roundcubemail$fastcgi_script_name;
+    fastcgi_param  SCRIPT_FILENAME /var/www/roundcubemail$1.php;
+    include fastcgi_params;
   }
 
   location ~ ^/mail/(bin|SQL|README|INSTALL|LICENSE|CHANGELOG|UPGRADING)$ { deny all; }

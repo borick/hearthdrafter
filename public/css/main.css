@@ -9,11 +9,14 @@
 #tabs {
   position: absolute;
   width: 761px;
-  overflow-y: hidden;
   border-bottom-left-radius: 16px;
   border-bottom-right-radius: 16px;
-  bottom: 0px;
-  z-index: -100;
+  /*bottom: 50px;*/
+  margin-top: 292px;
+}
+.ui-tabs-panel {
+  overflow-y: scroll;
+  height: 220px;
 }
 .ui-tabs-anchor {
   padding: 5px !important;
@@ -92,11 +95,7 @@ input:focus {
 /*always show scrollbars*/
 html,body {
   font-family: friz;
-  margin: 0px;
-  margin-left: auto;
-  margin-right: auto;
-  
-  /*background: #fff;*/
+  margin: 0; padding: 0;
 }
 body {
   margin: 0;
@@ -553,4 +552,22 @@ a:visited {
   opacity: 1;
   margin-top: -130px;
   z-index: -100;
+}
+
+#footer {
+  margin-top: 623px;
+  font-weight: bold;
+  text-align: center;
+  left:50%;
+  width: 600px;
+  margin-left:-300px;
+  position: absolute;
+  /*bottom: 0px;*/
+  font-size: 9pt;
+  color: #fff;
+  text-shadow: 2px 2px #000;
+  display: block;
+  z-index: -300;
+  height: 50px;
+  v-align: bottom;
 }

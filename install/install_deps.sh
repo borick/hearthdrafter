@@ -51,3 +51,6 @@ echo Done
 
 echo Installing Memcached
 cpanm memcached
+
+
+sudo apt-get install php5-common php5-cli php5-fpm

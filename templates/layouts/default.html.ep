@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">        
+    <meta charset="utf-8">       
+    <link rel="shortcut icon" href="/favicon.ico?v=2" />
     <link rel="stylesheet" type="text/css" media="screen" href="/css/main.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="/css/results.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="/css/hearth.css" />
@@ -15,14 +16,15 @@
 </div>
 <div class="wrapper">
     <div class="content">
-        <span class="center">
-            <%= content %>
-            <span class="error_message capital"><%= flash("error_message") %></span>
-            <span class="success_message capital"><%= flash("success_message") %></span>
-        </span>
+        <%= content %>
+        <span class="error_message capital"><%= flash("error_message") %></span>
+        <span class="success_message capital"><%= flash("success_message") %></span>
     </div>
 </div>
-<div id="back">
+<div id="footer">
+Copyright HearthDrafter  © 2015<br>
+Hearthstone assets used on this site are copyrighted and/or trademarked material of Blizzard Entertainment, Inc.<br>
+This site is not affiliated with Blizzard Entertainment, Inc.
 </div>
 </body>
 </html>
