@@ -555,14 +555,14 @@ a:visited {
 }
 
 #footer {
-  margin-top: 623px;
+  /*margin-top: 623px;*/
   font-weight: bold;
   text-align: center;
   left:50%;
   width: 600px;
   margin-left:-300px;
   position: absolute;
-  /*bottom: 0px;*/
+  bottom: 0px;
   font-size: 9pt;
   color: #fff;
   text-shadow: 2px 2px #000;
