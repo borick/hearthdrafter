@@ -570,14 +570,13 @@ a:visited {
 
 #footer {
   /*margin-top: 623px;*/
-  font-weight: bold;
   text-align: center;
   left:50%;
-  width: 600px;
-  margin-left:-300px;
+  width: 800px;
+  margin-left:-400px;
   position: absolute;
   bottom: 0px;
-  font-size: 9pt;
+  font-size: 11pt;
   color: #fff;
   text-shadow: 2px 2px #000;
   display: block;

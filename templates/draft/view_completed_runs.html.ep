@@ -1,8 +1,12 @@
 % layout 'default';
 % content_for header => begin
-  <title>HearthDrafter - Viewing Completed Runs %> Run</title>
+  <title>HearthDrafter - Viewing Completed Runs</title>
 % end
 
-% my $var = stash('completed_runs');
+% if (my $runs = stash 'completed_runs') {
+%     for my $run (@$runs) {
+         <a href="/draft/view_completed_run/<%== $run->{_id} %>"><span class='capital'><%== $run->{class_name}%></span> Run Ended On <%== $run->{end_date} %></a>
+%     }
+% }
 
-<a href="/home">Back</a>
+<br><a href="/home">Back</a>

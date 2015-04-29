@@ -5,4 +5,4 @@
 
 % my $var = stash('run');
 
-<a href="/home">Back</a>
+<a href="/draft/view_completed_runs">Back</a>

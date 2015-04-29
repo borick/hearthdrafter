@@ -238,6 +238,7 @@ sub list_runs_completed {
         $result->{_source}->{_id} = $result->{_id};
         push(@$out, $result->{_source});
     }
+    #print STDERR 'Out: ' . Dumper($out);
     return $out;
 }
 
