@@ -37,6 +37,12 @@ select {
     height: 75px;
     width:200px;
 }
+#results {
+    display: block;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+}
+
 .results_heading {
     font-weight: bold;
     width: 100px;

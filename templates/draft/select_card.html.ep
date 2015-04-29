@@ -2,8 +2,6 @@
 % content_for header => begin
 % $run_details->{class_name} =~ s/([^\s\w]*)(\S+)/$1\u\L$2/g;
   <title>HearthDrafter - <%= $run_details->{class_name} %> Run</title>
-  <script src="/js/libs/jquery-1.11.2.min.js"></script>
-  <script src="/js/libs/jquery-ui.min.js"></script>
   <script src="/js/libs/rangeslider.js"></script>
   <script src="/js/hearthdrafter.js"></script>
   <script src="/js/hd.js"></script>

@@ -117,7 +117,7 @@ sub get_advice {
     my $card_data = $c->model->card->get_data(\@data_for);
     # {name => {tag => value, tag2 => value}}
     my $card_data_tags = $c->model->card->get_tags(\@data_for);
-    print STDERR Dumper($card_data_tags);
+    #print STDERR Dumper($card_data_tags);
     #die "bad card specified $card_1, $card_2, $card_3" if !exists($card_data_tags->{$card_1}) || !exists($card_data_tags->{$card_2}) || !exists($card_data_tags->{$card_3});
     
     
@@ -424,32 +424,19 @@ sub _build_message {
     #print STDERR Dumper(\@cards);
     my %counters = ();
     my $last_card;
-    my $last_score;
+    my $last_score = -1000;
     my $card_win_counter = 0;
     my $best_n = undef;
     #print STDERR Dumper($tags_done);
-    
+    my $key_counter = 0;
     for my $key (@hist_keys) {
         #print STDERR "Doing: $key\n";
         my $best_s = -10000000;
-        my %refs = ();
-        my %old_refs = ();
-        
+        #print STDERR Dumper($scores_hist);
         for my $card (@cards) {
-            $counters{$card}=0 if !exists($counters{$card});
-            while(1) {
-                $old_refs{$card} = $scores_hist->{$card}->[$counters{$card}-1] if $counters{$card} > 0;
-                $refs{$card} = $scores_hist->{$card}->[$counters{$card}];
-                $counters{$card}+=1;
-                #print STDERR Dumper($refs{$card});
-                last if ((defined($refs{$card}) && $refs{$card}->[0] eq $key)
-                        || $counters{$card} > scalar(@{$refs{$card}}));
-            }       
-        }
-        for my $card (@cards) {
-            if ($refs{$card}->[1] > $best_s) {
+            if ($scores_hist->{$card}->[$key_counter]->[1] > $best_s) {
+                $best_s = $scores_hist->{$card}->[$key_counter]->[1];
                 $best_n = $card;
-                $best_s = $refs{$card}->[1];
             }
         }
         my $term = '';
@@ -474,11 +461,14 @@ sub _build_message {
         } else {
             $term = ' a poor';
         }
+        print STDERR "Key: $key\n";
+        print STDERR "Last score: $last_score [$best_s]\n";
+        
         if ($key eq 'original') {
              $message .= _capitalize($best_n) . " has the best score," . ($best_s > 3000 ? ' and it\'s' : ' but it\'s') . $term . ' score. ';
             $last_card = $best_n;
             $last_score = $best_s;
-        } elsif ($key eq 'missing_drops' && $best_s>$last_score) {
+        } elsif ($key eq 'missing_drops' && $best_s!=$last_score) {
             $card_win_counter = 0 if $best_n ne $last_card;
             $card_win_counter += 1 if $best_n eq $last_card;
             $message .= 'However, we' and $card_win_counter = 0 if $best_n ne $last_card;
@@ -499,7 +489,7 @@ sub _build_message {
             $message .= ($card_win_counter == 0 ? 'Nevertheless, ' : '' ) . _capitalize($best_n) . ($card_win_counter > 0 ? ' also' : '' ) . " fits the mana-curve of our deck. ";
             $last_card = $best_n;
             $last_score = $best_s;
-        } elsif ($key eq 'dups' && $best_s>$last_score) {
+        } elsif ($key eq 'dups' && $best_s!=$last_score) {
             $card_win_counter = 0 if $best_n ne $last_card;
             $card_win_counter += 1 if $best_n eq $last_card;
             if ($best_n ne $last_card) {
@@ -507,7 +497,7 @@ sub _build_message {
             }
             $last_card = $best_n;
             $last_score = $best_s;
-        } elsif ($key eq 'tags_done' && $best_s>$last_score) {
+        } elsif ($key eq 'tags_done' && $best_s!=$last_score) {
             my $c = 0;
             for my $tag (@{$tags_done->{$best_n}}) {
                 $tags_done->{$best_n}->[$c] = _capitalize($tag);
@@ -516,7 +506,7 @@ sub _build_message {
             $message .= ($card_win_counter > 0 ? 'It also' : _capitalize($best_n) ) . " gives us: " . _format_list(@{$tags_done->{$best_n}}) . " . ";
             $last_card = $best_n;
             $last_score = $best_s;
-        } elsif ($key eq 'synergy' && $best_s>$last_score) {
+        } elsif ($key eq 'synergy' && $best_s!=$last_score) {
             $card_win_counter = 0 if $best_n ne $last_card;
             $card_win_counter += 1 if $best_n eq $last_card;
             $message .= ($card_win_counter > 0 ? 'It also' : _capitalize($best_n) ) . ' has good synergy. ';
@@ -525,8 +515,9 @@ sub _build_message {
         } 
         #print STDERR Dumper(\%old_refs);
         #print STDERR Dumper(\%refs);
+        $key_counter += 1;
     }
-    #$message .= "Pick " . _capitalize($best_n) . ".";
+    $message .= "Pick " . _capitalize($best_n) . ".";
     print STDERR "Message: $message\n";
     return $message;
 }

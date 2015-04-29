@@ -12,7 +12,7 @@
   border-bottom-left-radius: 16px;
   border-bottom-right-radius: 16px;
   /*bottom: 50px;*/
-  margin-top: 320px;
+  margin-top: 341px;
 }
 .ui-tabs-panel {
   overflow-y: scroll;
@@ -183,10 +183,14 @@ form {
   margin-top: 13px;
   padding: 5px;
 }
+#logout_link a {
+  color: white;
+}
 #logout_link {
   font-weight: bold;
   width: auto;
   padding: 5px;
+  color: white;
 }
 
 /** card display */
@@ -233,7 +237,7 @@ td {
 }
 .card1, .card2, .card3 {
   float: left;
-  margin-top: 54px;
+  margin-top: 69px;
   padding: 0;
   width:241px;
   height:244px;
@@ -250,6 +254,7 @@ td {
   margin-right: 0px;
 }
 #card_number {
+  margin-top: 263px;
   margin-left: 766px;
   position: absolute;
   padding-top: 8px;
@@ -261,7 +266,7 @@ td {
   text-shadow: -2px 0 white, 0 2px white, 2px 0 white, 0 -2px white;
 }
 #undo_last_card {
-  margin-top: 61px;
+  margin-top: 322px;
   position: absolute;
   margin-left: auto;
   /*margin-top: 149px;*/
@@ -270,7 +275,7 @@ td {
 }
 #undo_last_card a {
   color: #00D6F3;
-  margin-left: 766px;
+  margin-left: 774px;
   text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
 }
 #undo_last_card a:hover {
@@ -479,7 +484,7 @@ a:visited {
   width: 747px;
   margin-top: -6px;
   padding: 10px;
-  height: 20px;
+  height: 31px;
   border-radius: 20px;
   background: rgba(0, 0, 0, 0.1);
   font-weight: bold;

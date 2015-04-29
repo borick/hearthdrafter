@@ -23,10 +23,10 @@ $hd_model->connect($hd);
 my @classes = ($class);
 if ($class eq 'unknown') {
    @classes = (
-               #'rogue',
-               #'shaman',
-               #'warlock',
-               #'hunter'
+               'rogue',
+               'shaman',
+               'warlock',
+               'hunter'
                );
 }   
 for my $class (@classes) {
