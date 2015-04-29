@@ -1,0 +1,8 @@
+% layout 'default';
+% content_for header => begin
+  <title>HearthDrafter - Draft Summary Run</title>
+% end
+
+% my $var = stash('run');
+
+<a href="/home">Back</a>

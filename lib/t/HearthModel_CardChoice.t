@@ -77,7 +77,7 @@ for my $card (@{$cards->{'Blackrock Mountain'}}) {
                 query => {
                     ids => {
                         type => 'card_score_by_class',
-                        values => [ lc($card->{name}).'|'.(exists($card->{playerClass})?lc($card->{playerClass}):'warrior') ],
+                        values => [ lc($card->{name}).'|'.(exists($card->{playerClass})?lc($card->{playerClass}):'mage') ],
                     },
                 },
             },

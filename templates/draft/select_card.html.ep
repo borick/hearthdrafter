@@ -17,15 +17,15 @@
 <span class="title_label <%= lc($run_details->{class_name}) %>"><%= $run_details->{class_name} %> Run</span>
 % end
 <div id="top_bar">
+    <div id="message_panel">
+    </div>
+    <div id="message_panel_bg">
+    </div>
     <div id="selection">
         <div class="card1 <%= lc($run_details->{class_name}) %>_shadow"></div>
         <div class="card2 <%= lc($run_details->{class_name}) %>_shadow"></div>
         <div class="card3 <%= lc($run_details->{class_name}) %>_shadow"></div>
         <style>clear: both;</style>
-    </div>
-    <div id="message_panel">
-    </div>
-    <div id="message_panel_bg">
     </div>
     <div id="inner_search_panel">
         <div id="cards">

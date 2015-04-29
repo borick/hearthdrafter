@@ -100,12 +100,6 @@ sub get_advice {
     $card_options->[$next_index] = {card_name   => $card_1,
                                     card_name_2 => $card_2,
                                     card_name_3 => $card_3};
-    $self->es->index(
-        index => 'hearthdrafter',
-        type => 'arena_run', 
-        id => $arena_id,
-        body => $source,
-    );
     
     my $message_flag = "";
     my $message = "";
@@ -385,6 +379,15 @@ sub get_advice {
         $i += 1;
     }
     
+    $source->{deck_type} = $deck_type;
+    
+    $self->es->index(
+        index => 'hearthdrafter',
+        type => 'arena_run', 
+        id => $arena_id,
+        body => $source,
+    );
+    
     ($best_card_after,$best_card_score)  = _get_best_card(\%scores, $out_data);
     $out_data->{message} = _build_message(\%scores_hist, $card_data, $deck_type, \%tags_done, $number_of_cards);
     
@@ -472,7 +475,7 @@ sub _build_message {
             $term = ' a poor';
         }
         if ($key eq 'original') {
-             $message .= _capitalize($best_n) . " has the higest score," . ($best_s > 3000 ? ' and it\'s' : ' but it\'s') . $term . ' score. ';
+             $message .= _capitalize($best_n) . " has the best score," . ($best_s > 3000 ? ' and it\'s' : ' but it\'s') . $term . ' score. ';
             $last_card = $best_n;
             $last_score = $best_s;
         } elsif ($key eq 'missing_drops' && $best_s>$last_score) {
@@ -493,7 +496,7 @@ sub _build_message {
         } elsif ($key eq 'mana' && $number > 10) {
             $card_win_counter = 0 if $best_n ne $last_card;
             $card_win_counter += 1 if $best_n eq $last_card;
-            $message .= ($card_win_counter == 0 ? 'Nevertheless, ' : '' ) . _capitalize($best_n) . ($card_win_counter > 1 ? ' also' : '' ) . " fits the mana-curve of our deck. ";
+            $message .= ($card_win_counter == 0 ? 'Nevertheless, ' : '' ) . _capitalize($best_n) . ($card_win_counter > 0 ? ' also' : '' ) . " fits the mana-curve of our deck. ";
             $last_card = $best_n;
             $last_score = $best_s;
         } elsif ($key eq 'dups' && $best_s>$last_score) {
@@ -510,13 +513,13 @@ sub _build_message {
                 $tags_done->{$best_n}->[$c] = _capitalize($tag);
                 $c += 1;
             }
-            $message .= ($card_win_counter > 1 ? 'It also' : _capitalize($best_n) ) . " gives us: " . _format_list(@{$tags_done->{$best_n}}) . " . ";
+            $message .= ($card_win_counter > 0 ? 'It also' : _capitalize($best_n) ) . " gives us: " . _format_list(@{$tags_done->{$best_n}}) . " . ";
             $last_card = $best_n;
             $last_score = $best_s;
         } elsif ($key eq 'synergy' && $best_s>$last_score) {
             $card_win_counter = 0 if $best_n ne $last_card;
             $card_win_counter += 1 if $best_n eq $last_card;
-            $message .= ($card_win_counter > 1 ? 'It also' : _capitalize($best_n) ) . ' has good synergy. ';
+            $message .= ($card_win_counter > 0 ? 'It also' : _capitalize($best_n) ) . ' has good synergy. ';
             $last_card = $best_n;
             $last_score = $best_s;
         } 

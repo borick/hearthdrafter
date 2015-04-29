@@ -12,11 +12,11 @@
   border-bottom-left-radius: 16px;
   border-bottom-right-radius: 16px;
   /*bottom: 50px;*/
-  margin-top: 292px;
+  margin-top: 320px;
 }
 .ui-tabs-panel {
   overflow-y: scroll;
-  height: 220px;
+  height: 150px;
 }
 .ui-tabs-anchor {
   padding: 5px !important;
@@ -148,7 +148,7 @@ form {
   margin-top: 100px;
   color: #000;
   /*max-width: 1024px;*/
-  width: 95%;
+  width: 789px;
   height: 95%;
   margin-left: auto;
   margin-right: auto;
@@ -233,7 +233,7 @@ td {
 }
 .card1, .card2, .card3 {
   float: left;
-  margin: 0;
+  margin-top: 54px;
   padding: 0;
   width:241px;
   height:244px;
@@ -246,7 +246,12 @@ td {
   background-color: black;
   box-shadow: 0 7px 6px -6px #222;
 }
+.card3 {
+  margin-right: 0px;
+}
 #card_number {
+  margin-left: 766px;
+  position: absolute;
   padding-top: 8px;
   padding-right:14px;
   color: #000;
@@ -256,6 +261,8 @@ td {
   text-shadow: -2px 0 white, 0 2px white, 2px 0 white, 0 -2px white;
 }
 #undo_last_card {
+  margin-top: 61px;
+  position: absolute;
   margin-left: auto;
   /*margin-top: 149px;*/
   margin-right: 9px;
@@ -263,6 +270,7 @@ td {
 }
 #undo_last_card a {
   color: #00D6F3;
+  margin-left: 766px;
   text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
 }
 #undo_last_card a:hover {
@@ -324,7 +332,7 @@ td {
   border: 2px solid #28353f;
   border-radius: 12px;
   padding: 7px 7px 7px 7px;
-  width: 800px;
+  width: 810px;
   margin-left: auto;
   margin-right: auto;
 }
@@ -469,7 +477,7 @@ a:visited {
 #message_panel_bg {
   position: absolute;
   width: 747px;
-  margin-top: 274px;
+  margin-top: -6px;
   padding: 10px;
   height: 20px;
   border-radius: 20px;
@@ -479,10 +487,11 @@ a:visited {
   text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
 }
 #message_panel {
+  text-align:center;
   display:none;
   position: absolute;
   width: 747px;
-  margin-top: 274px;
+  margin-top: -6px;
   padding: 10px;
   border-radius: 20px;
   background: rgba(0, 0, 0, 0.74902);
@@ -568,6 +577,6 @@ a:visited {
   text-shadow: 2px 2px #000;
   display: block;
   z-index: -300;
-  height: 50px;
+  min-height: 50px;
   v-align: bottom;
 }

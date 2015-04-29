@@ -48,7 +48,6 @@ sub startup {
     #define all routes
     my $r = $self->routes;
     $r->get('/')->to('home#index');
-    $r->get('/login')->to('home#login');
     $r->post('/login')->to('home#login_post');
     $r->get('/logout')->to('home#logmeout');
     $r->get('/home')->to('home#home');

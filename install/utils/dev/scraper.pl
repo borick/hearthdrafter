@@ -17,9 +17,10 @@ my @ids = <$idf>;
 close $idf;
 
 my @sorted_ids = map { s/\s//g; $_ } @ids;
-print STDERR join(', ', @sorted_ids);
+print STDERR join(', ', @sorted_ids), "\n";
 
 my @unique = do { my %seen; grep { !$seen{$_}++ } @sorted_ids };
+pop(@unique);
 @unique = sort {$a <=> $b} @unique;
 my @copy = @unique;
 
