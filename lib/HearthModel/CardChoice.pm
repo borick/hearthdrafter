@@ -407,11 +407,34 @@ sub _capitalize {
     }
     return $result;
 }
-sub _format_list {
-   return "" if !@_;
-   my $last = pop(@_);
-   return $last if !@_;
-   return join(', ', @_) . " and " . $last;
+#from http://mkweb.bcgsc.ca/intranet/perlbook/cookbook/ch04_03.htm
+sub _commify_series {
+    (@_ == 0) ? ''                                      :
+    (@_ == 1) ? $_[0]                                   :
+    (@_ == 2) ? join(" and ", @_)                       :
+                join(", ", @_[0 .. ($#_-1)], "and $_[-1]");
+}
+
+sub _get_score_msg {
+    my ($best_n, $best_s) = @_;
+    my $term = '';
+    if ($best_s > 9000) {
+        $term = ' an incredible';
+    } elsif ($best_s > 8000) {
+        $term = ' an amazing';
+    } elsif ($best_s > 7000) {
+        $term = ' a great';
+    } elsif ($best_s > 5000) {
+        $term = ' a very strong';
+    } elsif ($best_s > 5000) {
+        $term = ' a strong';
+    } elsif ($best_s > 4000) {
+        $term = ' an above average';
+    } else {
+        $term = ' the best';
+    }
+    my $tmp_message = "has$term score";
+    return $tmp_message;
 }
 
 sub _build_message {
@@ -424,100 +447,75 @@ sub _build_message {
     #print STDERR Dumper(\@cards);
     my %counters = ();
     my $last_card;
-    my $last_score = -1000;
+    my $last_score = -100000;
     my $card_win_counter = 0;
     my $best_n = undef;
     #print STDERR Dumper($tags_done);
     my $key_counter = 0;
+    my $card_info = {};
+    
     for my $key (@hist_keys) {
         #print STDERR "Doing: $key\n";
-        my $best_s = -10000000;
+        my $best_s = -100000;
         #print STDERR Dumper($scores_hist);
+        
+        # Get the best card for this key
         for my $card (@cards) {
             if ($scores_hist->{$card}->[$key_counter]->[1] > $best_s) {
                 $best_s = $scores_hist->{$card}->[$key_counter]->[1];
                 $best_n = $card;
             }
         }
-        my $term = '';
-        if ($best_s > 9000) {
-            $term = ' an incredible';
-        } elsif ($best_s > 8000) {
-            $term = ' an amazing';
-        } elsif ($best_s > 7000) {
-            $term = ' a great';
-        } elsif ($best_s > 5000) {
-            $term = ' a very strong';
-        } elsif ($best_s > 5000) {
-            $term = ' a strong';
-        } elsif ($best_s > 4000) {
-            $term = ' an above average';
-        } elsif ($best_s > 3000) {
-            $term = ' an average';
-        } elsif ($best_s > 2000) {
-            $term = ' a below average';
-        } elsif ($best_s > 1000) {
-            $term = ' a weak';
-        } else {
-            $term = ' a poor';
-        }
-        print STDERR "Key: $key\n";
-        print STDERR "Last score: $last_score [$best_s]\n";
         
+        my $tmp_message = '';
         if ($key eq 'original') {
-             $message .= _capitalize($best_n) . " has the best score," . ($best_s > 3000 ? ' and it\'s' : ' but it\'s') . $term . ' score. ';
-            $last_card = $best_n;
-            $last_score = $best_s;
-        } elsif ($key eq 'missing_drops' && $best_s!=$last_score) {
-            $card_win_counter = 0 if $best_n ne $last_card;
-            $card_win_counter += 1 if $best_n eq $last_card;
-            $message .= 'However, we' and $card_win_counter = 0 if $best_n ne $last_card;
-            $message .= 'We' and $card_win_counter += 1 if $best_n eq $last_card;
-            $message .= ' could';
-            if ($card_win_counter > 0) {
-                $message .= ' also';
-                $card_win_counter = 0;
-            }
-            $message .= ' use another ' . $card_data->{$best_n}->{cost} . " drop";
-            $message .= " like " . _capitalize($best_n) if $best_n ne $last_card;
-            $message .= ". ";
-            $last_card = $best_n;
-            $last_score = $best_s;
-        } elsif ($key eq 'mana' && $number > 10) {
-            $card_win_counter = 0 if $best_n ne $last_card;
-            $card_win_counter += 1 if $best_n eq $last_card;
-            $message .= ($card_win_counter == 0 ? 'Nevertheless, ' : '' ) . _capitalize($best_n) . ($card_win_counter > 0 ? ' also' : '' ) . " fits the mana-curve of our deck. ";
-            $last_card = $best_n;
-            $last_score = $best_s;
-        } elsif ($key eq 'dups' && $best_s!=$last_score) {
-            $card_win_counter = 0 if $best_n ne $last_card;
-            $card_win_counter += 1 if $best_n eq $last_card;
-            if ($best_n ne $last_card) {
-                $message .= ($card_win_counter == 0 ? 'On the other hand, ' . _capitalize($best_n) : 'It also' ) . " provides more variety. ";
-            }
-            $last_card = $best_n;
-            $last_score = $best_s;
-        } elsif ($key eq 'tags_done' && $best_s!=$last_score) {
-            my $c = 0;
-            for my $tag (@{$tags_done->{$best_n}}) {
-                $tags_done->{$best_n}->[$c] = _capitalize($tag);
-                $c += 1;
-            }
-            $message .= ($card_win_counter > 0 ? 'It also' : _capitalize($best_n) ) . " gives us: " . _format_list(@{$tags_done->{$best_n}}) . " . ";
-            $last_card = $best_n;
-            $last_score = $best_s;
-        } elsif ($key eq 'synergy' && $best_s!=$last_score) {
-            $card_win_counter = 0 if $best_n ne $last_card;
-            $card_win_counter += 1 if $best_n eq $last_card;
-            $message .= ($card_win_counter > 0 ? 'It also' : _capitalize($best_n) ) . ' has good synergy. ';
-            $last_card = $best_n;
-            $last_score = $best_s;
-        } 
-        #print STDERR Dumper(\%old_refs);
-        #print STDERR Dumper(\%refs);
+        
+            $tmp_message = _get_score_msg($best_n, $best_s);
+            
+        } elsif ($key eq 'missing_drops') {
+        
+            $tmp_message = 'is a ' . $card_data->{$best_n}->{cost} . ' drop';
+            
+        } elsif ($key eq 'mana') {
+        
+            $tmp_message =  'fits the mana-curve of our deck';
+            
+        } elsif ($key eq 'dups') {
+        
+            $tmp_message = 'provides variety';
+            
+        } elsif ($key eq 'tags_done') {
+        
+            $tmp_message = 'gives us: ' . _commify_series(@{$tags_done->{$best_n}});
+            
+        } elsif ($key eq 'synergy') {
+        
+            $tmp_message = 'has good synergy'
+            
+        }
+        
+        $card_info->{$best_n} = [] if (!exists($card_info->{$best_n}));
+        push(@{$card_info->{$best_n}}, $tmp_message) if $best_s != $last_score;
         $key_counter += 1;
+        
+        $last_card = $best_n;
+        $last_score = $best_s;
+        
+
     }
-    $message .= "Pick " . _capitalize($best_n) . ".";
+    #print STDERR Dumper($card_info);
+    
+    if (keys(%$card_info) == 1 ) {
+        $message = _capitalize($best_n) . ' ' . _commify_series(@{$card_info->{$best_n}}) . '. Pick ' . _capitalize($best_n) . '.';
+    } else {
+        for my $key (keys(%$card_info)) {
+            if ($key ne $best_n) {
+                $message .= _capitalize($key) . ' ' . _commify_series(@{$card_info->{$key}})
+            }
+            $message .= '; ' if keys(%$card_info) == 3;
+        }
+        $message .= ', but ' . _capitalize($best_n) . ' ' . _commify_series(@{$card_info->{$best_n}}) . '. Pick ' . _capitalize($best_n) . '.';    
+    }
     print STDERR "Message: $message\n";
     return $message;
 }
