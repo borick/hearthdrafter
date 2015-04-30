@@ -10,7 +10,7 @@ use Data::Dumper;
 sub get_cards_by_class {
     my ($self, $class) = @_;
         
-    print STDERR "Searching for: $class\n";
+    #print STDERR "Searching for: $class\n";
     my $results = $self->es->search(
         index => 'hearthdrafter',
         type => 'card',
@@ -63,7 +63,7 @@ sub get_cards {
                     card_name => $array,
                     minimum_should_match => 1,
                 }
-            }
+             }
         },
     );
     my @data = @{$results->{hits}->{hits}};

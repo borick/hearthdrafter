@@ -337,7 +337,9 @@ sub get_advice {
         
         #adjust for diminishing returns on duplicates, default for all cards.
         my $count = $card_counts{$card} || 0;
+        #print STDERR "Score before [$card]: " . $scores{$card} . "\n"; 
         $scores{$card} = $scores{$card} - ($duplicate_constant * $count * $scores{$card});
+        #print STDERR "Score after [$card]: " . $scores{$card} . "\n";
         push($scores_hist{$card}, ['dups', $scores{$card}]);
     }
     
@@ -495,7 +497,10 @@ sub _build_message {
         }
         
         $card_info->{$best_n} = [] if (!exists($card_info->{$best_n}));
-        push(@{$card_info->{$best_n}}, $tmp_message) if $best_s != $last_score;
+        if ($best_s > $last_score) {
+            push(@{$card_info->{$best_n}}, $tmp_message);
+            #print STDERR "$best_s | $last_score | $tmp_message\n";
+        }
         $key_counter += 1;
         
         $last_card = $best_n;
@@ -506,7 +511,7 @@ sub _build_message {
     #print STDERR Dumper($card_info);
     
     if (keys(%$card_info) == 1 ) {
-        $message = _capitalize($best_n) . ' ' . _commify_series(@{$card_info->{$best_n}}) . '. Pick ' . _capitalize($best_n) . '.';
+        $message = _capitalize($best_n) . ' ' . _commify_series(@{$card_info->{$best_n}});
     } else {
         for my $key (keys(%$card_info)) {
             if ($key ne $best_n) {
@@ -514,8 +519,9 @@ sub _build_message {
             }
             $message .= '; ' if keys(%$card_info) == 3;
         }
-        $message .= ', but ' . _capitalize($best_n) . ' ' . _commify_series(@{$card_info->{$best_n}}) . '. Pick ' . _capitalize($best_n) . '.';    
+        $message .= ', but ' . _capitalize($best_n) . ' ' . _commify_series(@{$card_info->{$best_n}});
     }
+    $message .= '.';#Pick ' . _capitalize($best_n) . '.';
     print STDERR "Message: $message\n";
     return $message;
 }

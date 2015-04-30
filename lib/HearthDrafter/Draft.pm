@@ -104,6 +104,7 @@ sub view_completed_runs {
     my $result = $self->model->arena->list_runs_completed($self->user->{'user'}->{'user_name'},
                                                           $self->stash('from'),
                                                           $self->stash('size'));
+    print STDERR Dumper($result);
     $self->stash(completed_runs => $result);
     $self->render('draft/view_completed_runs');
 }

@@ -168,8 +168,6 @@ form {
 }
 
 /*login stuff */
-
-
 #login_status {
   font-size: 130%;
   text-align: right;
@@ -178,6 +176,9 @@ form {
   margin-top:-2.5em;
   right: 5%;
   text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+}
+#login_status a {
+  color: white;
 }
 #logged_in_message {
   margin-top: 13px;
@@ -254,7 +255,7 @@ td {
   margin-right: 0px;
 }
 #card_number {
-  margin-top: 263px;
+  margin-top: 283px;
   margin-left: 766px;
   position: absolute;
   padding-top: 8px;
@@ -266,7 +267,7 @@ td {
   text-shadow: -2px 0 white, 0 2px white, 2px 0 white, 0 -2px white;
 }
 #undo_last_card {
-  margin-top: 322px;
+  margin-top: 342px;
   position: absolute;
   margin-left: auto;
   /*margin-top: 149px;*/
