@@ -132,7 +132,7 @@ sub get_advice {
             $tags_data{$card_tag} += 1;
             if ($card_tag =~ /drop_(\d+)/) {
                 $drop_curve[$1] += $count;
-                $total_drop_cost += $card_data->{$card_name_key}->{cost};
+                $total_drop_cost += $card_data->{$card_name_key}->{cost} * $count;
                 $num_drops += $count;
             }
         }
@@ -165,6 +165,7 @@ sub get_advice {
             $deck_type = 'control';
         }
     }
+    #print STDERR "deck type: $deck_type, $average_drop, $num_drops, $total_drop_cost\n";
     my $average_cost = ($number_of_cards > 0) ? ($total_cost / $number_of_cards) : 0; 
     my @min_drops = @{$ideal_curves->{$deck_type}->{drops}};
     print STDERR "Average cost of cards: $average_cost\n" if $debug =~ 'average';
@@ -344,7 +345,7 @@ sub get_advice {
     }
     
     #adjust for missing tags.
-    print STDERR "[deck type: $deck_type]\n" if $debug =~ 'deck';
+    print STDERR "[deck type: $deck_type]\n";
     my %tags_done = ();
     for my $card (sort(@$cards)) {
         for my $tag (@{$tags_wanted->{$deck_type}}) {
@@ -391,7 +392,7 @@ sub get_advice {
     );
     
     ($best_card_after,$best_card_score)  = _get_best_card(\%scores, $out_data);
-    $out_data->{message} = _build_message(\%scores_hist, $card_data, $deck_type, \%tags_done, $number_of_cards);
+    $out_data->{message} = _build_message($best_card_after,\%scores_hist, $card_data, $deck_type, \%tags_done, $number_of_cards);
     
     for my $card (@$cards) {
         print STDERR "[$card] " . Dumper($scores_hist{$card}), "\n" if $debug =~ 'score';
@@ -421,107 +422,86 @@ sub _get_score_msg {
     my ($best_n, $best_s) = @_;
     my $term = '';
     if ($best_s > 9000) {
-        $term = ' an incredible';
+        $term = 'an incredible';
     } elsif ($best_s > 8000) {
-        $term = ' an amazing';
+        $term = 'an amazing';
     } elsif ($best_s > 7000) {
-        $term = ' a great';
+        $term = 'a great';
     } elsif ($best_s > 5000) {
-        $term = ' a very strong';
-    } elsif ($best_s > 5000) {
-        $term = ' a strong';
+        $term = 'a very strong';
     } elsif ($best_s > 4000) {
-        $term = ' an above average';
-    } else {
-        $term = ' the best';
-    }
-    my $tmp_message = "has$term score";
+        $term = 'a strong';
+    } elsif ($best_s > 3000) {
+        $term = 'an above average';
+    } elsif ($best_s > 2000) {
+        $term = 'an average';
+    } elsif ($best_s > 1000) {
+        $term = 'a weak';
+    } else { #elsif ($best_s > 0000) {
+        $term = 'poor';
+    } 
+    my $tmp_message = "has $term rating";
+    #print STDERR "_get_score_msg: $tmp_message\n";
     return $tmp_message;
 }
 
 sub _build_message {
-    my ($scores_hist, $card_data, $deck_type, $tags_done, $number) = @_;
+    my ($best_n,$scores_hist, $card_data, $deck_type, $tags_done, $number) = @_;
+    my $best_s = $best_n->[1];
+    $best_n = $best_n->[0];
     my $message = '';
+    print STDERR Dumper($scores_hist);
     my @cards = keys(%$scores_hist);
-    #print STDERR Dumper($scores_hist);
-    
-    my @hist_keys = ('original', 'missing_drops', 'mana', 'dups', 'tags_done', 'synergy');
-    #print STDERR Dumper(\@cards);
-    my %counters = ();
-    my $last_card;
-    my $last_score = -100000;
-    my $card_win_counter = 0;
-    my $best_n = undef;
-    #print STDERR Dumper($tags_done);
-    my $key_counter = 0;
     my $card_info = {};
-    
-    for my $key (@hist_keys) {
-        #print STDERR "Doing: $key\n";
-        my $best_s = -100000;
-        #print STDERR Dumper($scores_hist);
-        
-        # Get the best card for this key
-        for my $card (@cards) {
-            if ($scores_hist->{$card}->[$key_counter]->[1] > $best_s) {
-                $best_s = $scores_hist->{$card}->[$key_counter]->[1];
-                $best_n = $card;
+    my $score = 0;
+    my $scores = {};
+    for my $card (@cards) {
+        for my $ref (@{$scores_hist->{$card}}) {
+            my $new_score = $ref->[1];
+            my $key = $ref->[0];
+            if (!exists($scores->{$card}) || $new_score > $scores->{$card} && $key ne 'mana') {
+                print STDERR "Key: $new_score, $key, $card\n";
+                print STDERR "Old: $scores->{$card}, $card\n" if exists($scores->{$card});
+                $scores->{$card} = $new_score;
+                my $tmp_message = '';
+                if ($key eq 'missing_drops') {
+                    $tmp_message = 'is a ' . $card_data->{$card}->{cost} . ' drop';
+                } elsif ($key eq 'mana') {
+                    $tmp_message =  'fits the mana-curve of our deck';
+                } elsif ($key eq 'dups') {
+                    $tmp_message = 'provides variety';
+                } elsif ($key eq 'tags_done') {
+                    $tmp_message = 'gives us: ' . _commify_series(@{$tags_done->{$card}});
+                } elsif ($key eq 'synergy') {
+                    $tmp_message = 'has good synergy';
+                } elsif ($key eq 'original') {
+                    $tmp_message = _get_score_msg($best_n, $score);
+                }
+                $card_info->{$card}->{$tmp_message} = 1 if $tmp_message ne '';
             }
         }
-        
-        my $tmp_message = '';
-        if ($key eq 'original') {
-        
-            $tmp_message = _get_score_msg($best_n, $best_s);
-            
-        } elsif ($key eq 'missing_drops') {
-        
-            $tmp_message = 'is a ' . $card_data->{$best_n}->{cost} . ' drop';
-            
-        } elsif ($key eq 'mana') {
-        
-            $tmp_message =  'fits the mana-curve of our deck';
-            
-        } elsif ($key eq 'dups') {
-        
-            $tmp_message = 'provides variety';
-            
-        } elsif ($key eq 'tags_done') {
-        
-            $tmp_message = 'gives us: ' . _commify_series(@{$tags_done->{$best_n}});
-            
-        } elsif ($key eq 'synergy') {
-        
-            $tmp_message = 'has good synergy'
-            
-        }
-        
-        $card_info->{$best_n} = [] if (!exists($card_info->{$best_n}));
-        if ($best_s > $last_score) {
-            push(@{$card_info->{$best_n}}, $tmp_message);
-            #print STDERR "$best_s | $last_score | $tmp_message\n";
-        }
-        $key_counter += 1;
-        
-        $last_card = $best_n;
-        $last_score = $best_s;
-        
-
     }
-    #print STDERR Dumper($card_info);
-    
+    print STDERR Dumper($card_info);
     if (keys(%$card_info) == 1 ) {
-        $message = _capitalize($best_n) . ' ' . _commify_series(@{$card_info->{$best_n}});
-    } else {
+        $message = _capitalize($best_n) . ' ' . _commify_series(keys(%{$card_info->{$best_n}}));
+    } elsif (keys(%$card_info) == 2 ) {
         for my $key (keys(%$card_info)) {
             if ($key ne $best_n) {
-                $message .= _capitalize($key) . ' ' . _commify_series(@{$card_info->{$key}})
+                $message .= _capitalize($key) . ' ' . _commify_series(keys(%{$card_info->{$key}}));
             }
-            $message .= '; ' if keys(%$card_info) == 3;
         }
-        $message .= ', but ' . _capitalize($best_n) . ' ' . _commify_series(@{$card_info->{$best_n}});
+        $message .= ', but ' . _capitalize($best_n) . ' ' . _commify_series(keys(%{$card_info->{$best_n}}));
+    } elsif (keys(%$card_info) == 3 ) {
+        #if ($card_info{$cards[0]}
+        for my $key (keys(%$card_info)) {
+            if ($key ne $best_n) {
+                $message .= _capitalize($key) . ' ' . _commify_series(keys(%{$card_info->{$key}}));
+                $message .= ', ';
+            }
+        }
+        $message .= 'but ' . _capitalize($best_n) . ' ' . _commify_series(keys(%{$card_info->{$best_n}}));
     }
-    $message .= '.';#Pick ' . _capitalize($best_n) . '.';
+    $message .= '. Pick ' . _capitalize($best_n) . '.';
     print STDERR "Message: $message\n";
     return $message;
 }

@@ -577,9 +577,9 @@ a:visited {
   margin-left:-400px;
   position: absolute;
   bottom: 0px;
-  font-size: 11pt;
-  color: #fff;
-  text-shadow: 2px 2px #000;
+  font-size: 10pt;
+  color: black;
+  text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
   display: block;
   z-index: -300;
   min-height: 50px;
