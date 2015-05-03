@@ -408,7 +408,7 @@ sub _capitalize {
         $result .= ucfirst($token);
         $result .= ' ' if $token ne $tokens[scalar(@tokens)-1];
     }
-    return '<u>'.$result.'</u>';
+    return $result;
 }
 #from http://mkweb.bcgsc.ca/intranet/perlbook/cookbook/ch04_03.htm
 sub _commify_series {
