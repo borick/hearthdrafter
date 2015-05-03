@@ -20,8 +20,8 @@ arena_id = pathArray[3];
 
 /* Generic Functions */
 function createElement(e, name, css) {
-    div = $("<div/>");
-    div.attr({id: name});
+    var div = $("<div/>");
+    div.attr({'id': name});
     div.css(css);
     e.append(div);
     return div;
@@ -37,13 +37,13 @@ function createElement(e, name, css) {
  */
 function createInputButton (e, css, label, name, id, callback) {
     div = $("<div/>");
-    div.attr({id: name, class: name});
+    div.attr({'id': name, 'class': name});
     div.html();//label);
     div.css(css);
     e.prepend(div);
     //var button = div.button();
     var button = $('<a href="#">'+label+'</a>').prependTo(div);
-    button.click({id: id, name: name}, callback);
+    button.click({'id': id, 'name': name}, callback);
     return button;
 }
 
@@ -316,12 +316,12 @@ function makeOdometer(id) {
       el: new_ele.get(0),
       value: 0,
       format: '',
-      theme: 'minimal',
+      theme: 'minimal'
     });
     return new_ele;
     
 }
-7
+
 function updateOdometer(id,value) {
     var card_name = '.card_'+(id+1)+'_meter';
     var odo = $(card_name);
@@ -380,8 +380,6 @@ function addWaiting (id) {
 }
 /* when a card is picked. */
 function layoutCardChosen (text, id) {
-    
-    console.log('laying out: ' + text);
     if (typeof card_data[text] === 'undefined') {
         alert('Class Mismatch! ' + class_name + ' does not have the card "' + text + '"');
         document.location.href = '/home';
@@ -416,7 +414,6 @@ function layoutCardChosen (text, id) {
 
 function loadChosenCards(data) {
     //GOT DATA!!!!! (scores n stuff.)
-    //console.log(data);
     $('.waiting').remove();
     buildConfirmChoices(arena_id);
     buildScoreUI(data);
