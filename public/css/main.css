@@ -376,6 +376,11 @@ td {
   background-image: -ms-linear-gradient(top, #979797, #1a1a1a);
   background-image: -o-linear-gradient(top, #979797, #1a1a1a);
 }
+.maincontent table td {
+  color: white;
+  font-weight: bold;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+}
 a:link {
   text-decoration: none;
 }

@@ -1,8 +1,135 @@
 % layout 'default';
 % content_for header => begin
   <title>HearthDrafter - Draft Summary Run</title>
+  <script src="/js/hd.js"></script>
+  <link rel="stylesheet" type="text/css" media="screen" href="/css/libs/jquery-ui.css" />
+  <link rel="stylesheet" type="text/css" media="screen" href="/css/view_run.css" />
 % end
 
-% my $var = stash('run');
-
+% my $run_details = stash('run');
+<span class="buttons">
 <a href="/draft/view_completed_runs">Back</a>
+</span>
+<div id="view_run">
+    <div id="tabs">
+        <ul>
+            <li><a href="#tabs-3">Summary</a></li>
+            <li><a href="#tabs-2">Choices</a></li>
+            <li><a href="#tabs-1">Mana Counts</a></li>
+        </ul>
+        <div id="tabs-1">
+        <table border="0" width="100%" id="cards_chosen" cellpadding="0" cellspacing="0">
+            % for my $card (sort(keys($run_details->{card_counts}))) {
+                <tr>
+                    <td id="card_name"><span class="capital"><%== $card %></span></td>
+                    <td id="card_count"><%== $run_details->{card_counts}->{$card} %></td>
+                </tr>
+            % }
+        </table>
+        </div>
+        <div id="tabs-2">
+            <table border="2" width="100%" id="card_choices" cellpadding="10" cellspacing="0">
+                % my $counter = 0;
+                % for my $card_options (@{$run_details->{card_options}}) {
+                % $counter += 1;
+                
+                    <tr>
+                        <td class="card_choice"><b><%== $counter %></b></td>
+                        <td width=33%>
+                            <span class="capital card_choice <%== $card_options->{card_name} eq $card_options->{card_chosen} ? 'selected' : '' %>"><%== $card_options->{card_name} %></span>
+                        </td>
+                        <td width=34%>
+                            <span class="capital card_choice <%== $card_options->{card_name_2} eq $card_options->{card_chosen} ? 'selected' : '' %>" ><%== $card_options->{card_name_2} %></span>
+                        </td>
+                        <td width=33%>
+                            <span class="capital card_choice <%== $card_options->{card_name_3} eq $card_options->{card_chosen} ? 'selected' : '' %>"><%== $card_options->{card_name_3} %></span>
+                        </td>
+                    </tr>
+            
+                % }
+            </table>
+        </div>
+        <div id="tabs-3">
+% $run_details->{deck_type} =~ s/_/ /g;
+            <h2>Deck score: Coming Soon</h2>
+            <span class="capital"><h1><%== $run_details->{deck_type}; %></h1></span>
+            
+            % if ($run_details->{deck_type} eq 'late game') {
+            <p>
+            You have a late game deck. Your deck has enough value, such that if you can just make it till the end of the game, 
+            you will probably win.
+            </p>
+            <p>
+            Late-game decks need survivability in the form of taunts or heals. Use whatever spells you have to draw out the game!
+            </p>
+            <p>
+            Try and mulligan for any 2 or 3s you may possibly have, and even consider saving onto a value 4 if you already have a turn 2 play.
+            </p>
+            % } elsif ($run_details->{deck_type} eq 'aggro') {
+            <p>
+            You have an aggro deck. Aggro decks consist of many small creatures. You should have tons of stuff to play every turn.
+            Getting initial control of the game should not be a problem.  Save whatever damage bursts you have until you're sure you can get lethal.
+            </p>
+            <p>
+            Aggro decks need card draw, and lots of it.
+            </p>
+            <p>
+            Mana curve is one of your advantages. Mulligan aggressively to ensure you can play a card for each of the first three turns. Ideally you should end up with a 1,2,3, or 2,3,4.
+            </p>
+            % } elsif ($run_details->{deck_type} eq 'control') {
+            <p>
+            You have a control deck. Control decks are your typical mid to late range decks that rely on strong value cards. But in addition, control decks usually have lots of ways to deal with
+            the enemy.
+            </p>
+            <p>
+            Control decks need board clears (AOEs), creature removal, and strong value minions.
+            </p>
+            <p>
+            When it comes to mulligan, use your judgement. Hold onto strong 3s depending on your mana curve, but in general you should be aiming for optimal plays.
+            </p>
+            % } elsif ($run_details->{deck_type} eq 'value') {
+            <p>
+            You have your typical value deck. What I call a "value deck" just relies on strong board minions to secure the game.
+            </p>
+            <p>
+            Use your value minions and whatever spells you have to win.
+            </p>
+            <p>
+            When it comes to mulligan, use your judgement. Hold onto strong 3s depending on your mana curve, but in general you should be aiming for optimal plays.
+            </p>
+            % }
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+var img = "/images/cards_medium/";
+var cards = [
+% # has to match the format defined in hearthdrafter.js
+% my $cards = stash 'cards';
+% for my $card (@$cards) {
+     {name:"<%== $card->{name} %>",
+      id: "<%== $card->{id} %>",
+      type: "<%== $card->{type} %>",
+      cost: "<%== $card->{cost} %>",
+      rarity: "<%== $card->{rarity} %>"},
+% }
+];
+var card_data = [];
+var images = [];
+for (i = 0; i < cards.length; i++) {
+    images.push(img + cards[i]['id'] + '.png');
+    card_data[cards[i]['name']] = cards[i];
+}
+updateManaCostChosenCards();
+//tab it up
+$(function() {
+    var tabs = $( "#tabs" ).tabs();
+    tabs.find( ".ui-tabs-nav" ).sortable({
+        axis: "x",
+        stop: function() {
+        tabs.tabs( "refresh" );
+        }
+    });
+});
+</script>

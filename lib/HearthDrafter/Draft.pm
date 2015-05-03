@@ -111,7 +111,18 @@ sub view_completed_runs {
 
 sub view_completed_run {
     my $self = shift;
-    $self->render('draft/view_run');
+    my $run_details;
+    if (!eval { $run_details = $self->model->arena->continue_run($self->stash('arena_id')); }) {
+        $self->stash(message=>'No arena with that ID exists.');
+        return $self->redirect_to('/home');
+    } else {
+        if (!exists($run_details->{end_date})) {
+            return $self->redirect_to('/draft/select_card/'.$self->stash('arena_id'));
+        }
+        my $cards = $self->model->card->get_cards_by_class($run_details->{class_name});
+        $self->stash(run=>$run_details, cards=>$cards);
+        $self->render('draft/view_run');
+    }
 }
 
 1;
