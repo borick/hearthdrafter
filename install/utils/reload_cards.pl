@@ -17,4 +17,7 @@ CardLoader::run();
 CardScanner::init(debug => $debug, cards => \%CardLoader::all_cards);
 CardScanner::load_tags();
 CardScanner::load_synergies();
+my $cmd = './score_util.pl -a=import_scores < data/scores.csv';
+print "Reloading scores using command: $cmd\n";
+system($cmd);
 print "Done.\n";

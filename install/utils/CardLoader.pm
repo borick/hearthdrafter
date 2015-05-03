@@ -17,33 +17,12 @@ my $bulk = $e->bulk_helper(
     index   => 'hearthdrafter',
     type    => 'card'
 );
-my $bulk2 = $e->bulk_helper(
-    index   => 'hearthdrafter',
-    type    => 'card_score_by_class'
-);
 
-my $max_score = -1;
-my $score_total = 0;
-my $score_count = 0;
 my %class_maps = ();
 %CardLoader::all_cards  = ();
 my $card_data_file = 'data/AllSets.json';
-my $ha_data_folder = 'ha_tier_data';
-my @files = glob("$ha_data_folder/ha_data*.txt"); #json files
-my %score = ();
 my $counter = 0;
 my $debug = 0;
-my $class_name_to_id= { 'druid'    => 1,
-                        'hunter'   => 2,
-                        'mage'     => 3,
-                        'paladin'  => 4,
-                        'priest'   => 5,
-                        'rogue'    => 6,
-                        'shaman'   => 7,
-                        'warlock'  => 8,
-                        'warrior'  => 9,
-                        };
-my %class_id_to_name= reverse %{$class_name_to_id};
 
 sub init {
     my %data = @_;
@@ -51,7 +30,6 @@ sub init {
 }
 sub run {
     load_cards();
-    load_scores();    
 }
 
 sub load_cards {
@@ -121,55 +99,6 @@ sub load_cards {
     
     print "Indexed $counter new documents.\n" if $debug;
 }
-
-sub load_scores {
-
-    # Load the card scores.
-    my $count_scores = 0;
-    for my $file (@files) {
-        print "Processing $file...\n" if $debug >= 3;
-        if ($file =~ /ha_data_(\d)_.*.txt$/) {
-            my $class_num = $1;
-            my $class_name = $class_id_to_name{$class_num};
-            my $text = read_file($file);
-            my $data = decode_json $text;
-            for my $result (@{$data->{results}}) {
-                print Dumper($result) if $debug >= 4;
-                my $dat = $result->{card};
-                #next if $dat->{tierScore} == 0;
-                $count_scores += 1;
-                $dat->{name} = $dat->{name};
-                $score{$class_name}->{$dat->{name}} = int($dat->{score}*100);
-            }
-        }
-    }
-    print "Processed: $count_scores scores.\n";
-    for my $class_name (sort(keys(%score))) {
-        my $ref = $score{$class_name};
-        for my $card_name (sort(keys(%$ref))) {            
-            my $score = $ref->{$card_name};
-            $card_name =~ s/[.]//g; #period breaks shit like venture co. but do it after getting score.
-            $max_score = $score if ($score > $max_score);
-            $score_total += $score;
-            my $id = $card_name.'|'.$class_name;
-            my $result = $bulk2->index({
-                id => lc($id),
-                source  => {
-                    card_name => lc($card_name),
-                    class_name => $class_name,
-                    score => $score 
-                },
-            });
-            $counter += 1;
-            $score_count += 1;
-        }
-    }
-    
-    $bulk2->flush;
-    print "max score is: $max_score\n";
-    print "average score is: ".($score_total/$score_count)."\n";
-}
-
 
 1;
 
