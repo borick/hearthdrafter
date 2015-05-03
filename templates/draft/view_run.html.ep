@@ -28,7 +28,7 @@
         </table>
         </div>
         <div id="tabs-2">
-            <table border="2" width="100%" id="card_choices" cellpadding="10" cellspacing="0">
+            <table width="100%" id="card_choices" cellpadding="10" cellspacing="0">
                 % my $counter = 0;
                 % for my $card_options (@{$run_details->{card_options}}) {
                 % $counter += 1;

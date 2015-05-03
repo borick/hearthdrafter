@@ -20,16 +20,20 @@ my @sorted_ids = map { s/\s//g; $_ } @ids;
 print STDERR join(', ', @sorted_ids), "\n";
 
 my @unique = do { my %seen; grep { !$seen{$_}++ } @sorted_ids };
-pop(@unique);
+#pop(@unique);
 @unique = sort {$a <=> $b} @unique;
 my @copy = @unique;
 
 # get data and put it in a file
 sub get_data {
     my ($class, $suffix,$out_file_name) = @_;
+    print "Getting $out_file_name...";
     if (-f $out_file_name) {
+        print "Nope, already have it.\n";
         return;
-    }
+    } else {
+        print "Yup, need it.\n";
+    } 
     my $get_url = $url_prefix.$class.'/-/'.$suffix;
     print "Getting $get_url\n";
     $text = get($get_url);

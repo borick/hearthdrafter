@@ -113,8 +113,6 @@ function loadCardSelection() {
     $(".search").hide();
     //card # element positioning
     number_element = createElement($("#top_bar"), 'card_number', {});
-    /*number_element.css({"position":"absolute"});
-    number_element.css({'top':'0', 'right':'0'});*/
     updateNumber(card_number);
     
     cancel_link = createElement($("#top_bar"), 'undo_last_card', {});
@@ -414,6 +412,7 @@ function layoutCardChosen (text, id) {
 
 function loadChosenCards(data) {
     //GOT DATA!!!!! (scores n stuff.)
+    console.log(data);
     $('.waiting').remove();
     buildConfirmChoices(arena_id);
     buildScoreUI(data);

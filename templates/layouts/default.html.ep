@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8">       
     <link rel="icon" href="/favicon.ico" sizes="64x64" type="image/vnd.microsoft.icon">
+    <link rel="stylesheet" type="text/css" media="screen" href="/css/normalize.min.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="/css/main.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="/css/results.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="/css/hearth.css" />

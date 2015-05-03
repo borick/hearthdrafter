@@ -354,6 +354,7 @@ sub get_advice {
                 $scores{$card} = $scores{$card} + ($scores{$card} * ($tag_needed_mult*$complete));
                 push($scores_hist{$card}, [$tag, $scores{$card}]);
                 $tags_done{$card} = [] if !exists($tags_done{$card});
+                $tag = uc($tag) if $tag eq 'aoe';
                 push($tags_done{$card}, $tag);
             }
         }
@@ -390,6 +391,7 @@ sub get_advice {
         id => $arena_id,
         body => $source,
     );
+    print STDERR Dumper(\%scores);
     
     ($best_card_after,$best_card_score)  = _get_best_card(\%scores, $out_data);
     $out_data->{message} = _build_message($best_card_after,\%scores_hist, $card_data, $deck_type, \%tags_done, $number_of_cards);
@@ -402,7 +404,6 @@ sub get_advice {
 sub _capitalize {
     my $blah = shift;
     my $result = '';
-    $result = 'AOE' if $blah eq 'aoe';
     my @tokens = split(/ /,$blah);
     for my $token (@tokens) {
         $result .= ucfirst($token);
@@ -441,7 +442,7 @@ sub _get_score_msg {
         $term = 'poor';
     } 
     my $tmp_message = "has $term grade";
-    #print STDERR "_get_score_msg: $tmp_message\n";
+    print STDERR "_get_score_msg: $tmp_message, $best_n, $best_s\n";
     return $tmp_message;
 }
 
@@ -450,7 +451,7 @@ sub _build_message {
     my $best_s = $best_n->[1];
     $best_n = $best_n->[0];
     my $message = '';
-    #print STDERR Dumper($scores_hist);
+    print STDERR Dumper($scores_hist);
     my @cards = keys(%$scores_hist);
     my $card_info = {};
     my $scores = {};
@@ -465,31 +466,35 @@ sub _build_message {
                 if ($key eq 'missing_drops' && (!exists($scores->{$card}) || $new_score > $scores->{$card})) {
                 
                     $tmp_message = 'is a ' . $card_data->{$card}->{cost} . ' drop';
+                    $scores->{$card} = $new_score;
                     
                 } elsif ($key eq 'mana' && (!exists($scores->{$card}) || $new_score > $scores->{$card})) {
-                
                     #nothing
                     #$tmp_message =  'fits the mana-curve of our deck';
+                    $scores->{$card} = $new_score;
                     
                 } elsif ($key eq 'dups' && (!exists($scores->{$card}) || $new_score < $scores->{$card})) {
                 
                     #print STDERR "Yes, $new_score < $scores->{$card} for $card, $key\n";
                     $tmp_message = 'we dont want too many of';
+                    $scores->{$card} = $new_score;
                     
                 } elsif ($key eq 'tags_done' && (!exists($scores->{$card}) || $new_score > $scores->{$card})) {
                 
                     $tmp_message = 'gives us: ' . _commify_series(@{$tags_done->{$card}});
+                    $scores->{$card} = $new_score;
                     
                 } elsif ($key eq 'synergy' && (!exists($scores->{$card}) || $new_score > $scores->{$card})) {
                 
                     $tmp_message = 'has good synergy';
+                    $scores->{$card} = $new_score;
                     
                 } elsif ($key eq 'original' && (!exists($scores->{$card}) || $new_score > $scores->{$card})) {
                 
-                    $tmp_message = _get_score_msg($best_n, $new_score);
-                    
+                    $tmp_message = _get_score_msg($card, $new_score);
+                    $scores->{$card} = $new_score;
                 }
-                $scores->{$card} = $new_score;
+                
                 #print STDERR "Setting score for $card to $scores->{$card}.\n";
                 $card_info->{$card}->{$tmp_message} = 1 if $tmp_message ne '';
             }

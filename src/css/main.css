@@ -249,7 +249,7 @@ td {
   margin-right: 0px;
 }
 #card_number {
-  margin-top: 283px;
+  margin-top: 303px;
   margin-left: 766px;
   position: absolute;
   padding-top: 8px;
@@ -261,7 +261,7 @@ td {
   text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
 }
 #undo_last_card {
-  margin-top: 342px;
+  margin-top: 362px;
   position: absolute;
   margin-left: auto;
   margin-right: 9px;
@@ -384,10 +384,10 @@ a:visited {
 
 .title_label {
   position: absolute;
-  top: 25%;
+  top: 22%;
   left: 241px;
   font-weight: bold;
-  font-size: 279%;
+  font-size: 239%;
   text-shadow: 0px 0px 2px black;
 }
 
@@ -593,9 +593,10 @@ a:visited {
     font-weight: bold;
     color: #3FDCF0;
 }
-#card_choices {
-    border-color: white;
-    /*border-width: 2px;*/
-    border-style: solid;
+#card_choices table, #card_choices td, #card_choices th {
+    border: 5px solid black;
+}
+#card_choices table {
+    border-collapse: collapse;
     padding: 5px;
 }
