@@ -451,7 +451,7 @@ sub _build_message {
     my $best_s = $best_n->[1];
     $best_n = $best_n->[0];
     my $message = '';
-    #print STDERR Dumper($scores_hist);
+    print STDERR Dumper($scores_hist);
     my @cards = keys(%$scores_hist);
     my $card_info = {};
     my $scores = {};
@@ -468,14 +468,14 @@ sub _build_message {
                     $tmp_message = 'is a ' . $card_data->{$card}->{cost} . ' drop';
                     $scores->{$card} = $new_score;
                     
-                } elsif ($key eq 'mana' && (!exists($scores->{$card}) || $new_score > $scores->{$card})) {
+                } elsif ($key eq 'mana' && (!exists($scores->{$card}) || $new_score != $scores->{$card})) {
                     #nothing
                     #$tmp_message =  'fits the mana-curve of our deck';
                     $scores->{$card} = $new_score;
                     
-                } elsif ($key eq 'dups' && (!exists($scores->{$card}) || $new_score < $scores->{$card})) {
+                } elsif ($key eq 'dups' && (exists($scores->{$card}) && $new_score < $scores->{$card})) {
                 
-                    #print STDERR "Yes, $new_score < $scores->{$card} for $card, $key\n";
+                    print STDERR "Yes, $new_score < $scores->{$card} for $card, $key\n";
                     $tmp_message = 'we dont want too many of';
                     $scores->{$card} = $new_score;
                     

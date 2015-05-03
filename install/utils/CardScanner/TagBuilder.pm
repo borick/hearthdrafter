@@ -89,7 +89,7 @@ sub CardScanner::TagBuilder::create_custom_tags {
                 $tags{$name}->{'removal'} = 1.0;
             }
             ##more removals
-            if ($text =~ /deal .?(\d+) damage/) {
+            if ($text =~ /deal .?(\d+) damage (?!to your hero)/) {
                 my $dmg = $1;
                 $tags{$name}->{'removal'} = 1.0;
                 if ($dmg <= 3) {
