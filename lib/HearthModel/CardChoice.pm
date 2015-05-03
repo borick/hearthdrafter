@@ -345,7 +345,7 @@ sub get_advice {
     }
     
     #adjust for missing tags.
-    print STDERR "[deck type: $deck_type]\n";
+    #print STDERR "[deck type: $deck_type]\n";
     my %tags_done = ();
     for my $card (sort(@$cards)) {
         for my $tag (@{$tags_wanted->{$deck_type}}) {
@@ -391,7 +391,7 @@ sub get_advice {
         id => $arena_id,
         body => $source,
     );
-    print STDERR Dumper(\%scores);
+    #print STDERR Dumper(\%scores);
     
     ($best_card_after,$best_card_score)  = _get_best_card(\%scores, $out_data);
     $out_data->{message} = _build_message($best_card_after,\%scores_hist, $card_data, $deck_type, \%tags_done, $number_of_cards);
@@ -442,7 +442,7 @@ sub _get_score_msg {
         $term = 'poor';
     } 
     my $tmp_message = "has $term grade";
-    print STDERR "_get_score_msg: $tmp_message, $best_n, $best_s\n";
+    #print STDERR "_get_score_msg: $tmp_message, $best_n, $best_s\n";
     return $tmp_message;
 }
 
@@ -451,7 +451,7 @@ sub _build_message {
     my $best_s = $best_n->[1];
     $best_n = $best_n->[0];
     my $message = '';
-    print STDERR Dumper($scores_hist);
+    #print STDERR Dumper($scores_hist);
     my @cards = keys(%$scores_hist);
     my $card_info = {};
     my $scores = {};
@@ -523,7 +523,7 @@ sub _build_message {
         $message .= 'but ' . _capitalize($best_n) . ' ' . _commify_series(@final_set);
     }
     $message .= ". We recommend you pick " . _capitalize($best_n) . ".";
-    print STDERR "Message: $message\n";
+    #print STDERR "Message: $message\n";
     return $message;
 }
 
