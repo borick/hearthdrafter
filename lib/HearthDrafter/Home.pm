@@ -6,6 +6,8 @@ use warnings;
 use Mojo::Base 'Mojolicious::Controller';
 use Mail::Sendmail;
 
+my $c = Captcha::reCAPTCHA->new;
+
 sub index {
     my $self = shift;
     if ($self->is_user_authenticated()) {
@@ -48,7 +50,9 @@ sub home {
 }
 
 sub register {
-    shift->render('home/register');
+    my $self = shift;
+    $self->stash('captcha' => $c->get_html('6LfOPQYTAAAAAAZkmVtyWMAWWN-sKo_FaRRSusHM'));
+    $self->render('home/register');
 }
 
 sub register_post {
@@ -58,9 +62,10 @@ sub register_post {
     my $fname = $self->req->body_params->param('first_name');
     my $lname = $self->req->body_params->param('last_name');
     my $password = $self->req->body_params->param('password');
+    
     my $result = undef;
     eval {
-        $result = $self->model->user->register($user_name, $email, $fname, $lname, $password);
+        $result = $self->model->user->register($self, $user_name, $email, $fname, $lname, $password, $c);
     };
     if (!defined($result)) {
         my $msg = undef;

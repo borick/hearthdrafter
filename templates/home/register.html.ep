@@ -1,15 +1,22 @@
+
 % layout 'default';
+
+% content_for header => begin
+  <script src='https://www.google.com/recaptcha/api.js'></script>
+% end
+
 <form id='register' method='POST' accept-charset='UTF-8'>
 <fieldset >
 <legend>Register</legend>
-
-<p>Ensure your name and e-mail address are correct, so you can recover your account if you forget your password!</p>
 
 <label for='name' >User Name: </label>
 <input type='text' name='user_name' id='user_name' maxlength="50" /><br>
 
 <label for='email' >Email Address:</label>
 <input type='text' name='email' id='email' maxlength="50" /><br>
+
+<label for='email' >Confirm Email Address:</label>
+<input type='text' name='email_confirm' id='email' maxlength="50" /><br>
  
 <label for='username' >First Name:</label>
 <input type='text' name='first_name' id='first_name' maxlength="50" /><br>
@@ -20,6 +27,8 @@
 <label for='password' >Password:</label>
 <input type='password' name='password' id='password' maxlength="50" /><br>
 
-<input type='submit' name='Submit' value='Submit' />
+<center><input type='submit' name='Submit' value='Submit' /></center>
 </fieldset>
+
+<%== stash('captcha') %>
 </form>

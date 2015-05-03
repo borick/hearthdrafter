@@ -10,6 +10,8 @@ use Data::Dumper;
 use Data::UUID;
 my $du = Data::UUID->new();
 use Mail::Sendmail;
+use Captcha::reCAPTCHA;
+use Regexp::Profanity::US;
 
 my $pbkdf2 = Crypt::PBKDF2->new(
     hash_class => 'HMACSHA2',
@@ -22,9 +24,14 @@ my $pbkdf2 = Crypt::PBKDF2->new(
 
 # Write
 sub register {
-    my ($self, $user_name, $email, $fname, $lname, $password) = @_;
-    
-    die "bad bad characters in username '$user_name'" if ($user_name) !~ /^\w+$/;
+    my ($self, $mojo, $user_name, $email, $fname, $lname, $password, $c) = @_;
+    my $challenge = $mojo->req->body_params->param('recaptcha_challenge_field');
+    my $response = $mojo->req->body_params->param('recaptcha_response_field');
+    my $result = $c->check_answer('6LfOPQYTAAAAAAnNr5UHwU39XIPALsSQhqbgthNq', $mojo->tx->remote_address, $challenge, $response);
+    print STDERR Dumper($result);
+    die "Captcha fail." . $result->{error} if ( !$result->{is_valid} );
+    die "No profanity in user name." if $user_name =~ /test/ || $user_name =~ /hearthdraft/ || profane($user_name);
+    die "Bad characters in user name.'$user_name'" if ($user_name) !~ /^\w+$/;
     my $existing = undef;
     eval { 
         $existing = $self->es->get(
