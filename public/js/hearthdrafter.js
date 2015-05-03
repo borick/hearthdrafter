@@ -133,8 +133,6 @@ function loadCardSelection() {
     });
 }
 
-
-
 function confirmCards() {
     mode = 'waiting_for_card';
     selected_card = 0;
@@ -142,6 +140,8 @@ function confirmCards() {
     selected_index = 0;
     var url = "/draft/card_choice/"+selected[0]+'/'+selected[1]+'/'+selected[2]+'/'+arena_id;
     //get data
+    var _gaq = _gaq || [];
+    _gaq.push(['_trackPageview', url]);
     $.get(url, function( data ) {
         loadChosenCards(data);
     });
@@ -500,6 +500,8 @@ function finishConfirm(data) {
 function undoLastCard() {
     if (window.confirm("Are you sure you want to undo the last card choice? There is no redo.")) {
         var url = '/draft/arena_action/undo_last_card_'+arena_id;
+        var _gaq = _gaq || [];
+        _gaq.push(['_trackPageview', url]);
         $.get(url, function( data ) {
             if (card_number == 0) {
                 return;
@@ -521,6 +523,8 @@ function undoLastCard() {
 function confirmCard(selindex,auto) {
     if (!auto) {
         var url = "/draft/confirm_card_choice/"+selected[selindex]+'/'+arena_id;
+        var _gaq = _gaq || [];
+        _gaq.push(['_trackPageview', url]);
         $.get(url, function( data ) {
             finishConfirm(data);
             updateUndoLink();

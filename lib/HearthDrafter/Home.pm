@@ -59,13 +59,14 @@ sub register_post {
     my $self = shift;
     my $user_name = $self->req->body_params->param('user_name');
     my $email = $self->req->body_params->param('email');
+    my $email_confirm = $self->req->body_params->param('email_confirm');
     my $fname = $self->req->body_params->param('first_name');
     my $lname = $self->req->body_params->param('last_name');
     my $password = $self->req->body_params->param('password');
     
     my $result = undef;
     eval {
-        $result = $self->model->user->register($self, $user_name, $email, $fname, $lname, $password, $c);
+        $result = $self->model->user->register($self, $user_name, $email, $email_confirm, $fname, $lname, $password, $c);
     };
     if (!defined($result)) {
         my $msg = undef;

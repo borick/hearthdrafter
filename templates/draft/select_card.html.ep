@@ -46,8 +46,6 @@
      % }
   </table></div>
 </div>
-<div id="side">
-</div>
 <script type="text/javascript">
 var cards = [
 % # has to match the format defined in hearthdrafter.js

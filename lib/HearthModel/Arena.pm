@@ -73,16 +73,20 @@ sub confirm_card_choice_by_num {
     my $next_index = $self->get_next_index($source);
     my $card_chosen = 'none';
     die('none or bad index specified') if !defined($index) or ($index != 0 && $index != 1 && $index != 2);
+    
     #TODO: add user validation
     if ($next_index >= 29) {
         my $t = localtime;
         $source->{end_date} = $t->strftime();
     } 
     if ($next_index <= 29) {
+        
         my $tag = 'card_name';
         $tag .= '_' . ($index+1) if ($index == 1 || $index == 2);
         $card_chosen = $source->{card_options}->[$next_index]->{$tag};
+        die('not confirming, no cards chosen yet') if exists($source->{card_options}->[$next_index]->{card_name}) || $card_chosen eq "";
         $source->{card_options}->[$next_index]->{card_chosen} = $card_chosen;
+        return 
         #print STDERR "Confirming choice card #" . ($next_index+1) .' '  .  $source->{card_options}->[$next_index]->{card_chosen} .  "\n";
         #print STDERR Dumper($source->{card_options}->[$next_index]);
         $self->es->index(
