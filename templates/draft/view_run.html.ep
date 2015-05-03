@@ -1,7 +1,7 @@
 % layout 'default';
 % content_for header => begin
   <title>HearthDrafter - Draft Summary Run</title>
-  <script src="/js/hd.js"></script>
+  <script src="/js/hd.min.js"></script>
   <link rel="stylesheet" type="text/css" media="screen" href="/css/libs/jquery-ui.css" />
   <link rel="stylesheet" type="text/css" media="screen" href="/css/view_run.css" />
 % end

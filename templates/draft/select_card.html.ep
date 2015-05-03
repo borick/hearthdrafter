@@ -10,6 +10,7 @@
   <link rel="stylesheet" type="text/css" media="screen" href="/css/libs/jquery-ui.css" />
   <link rel="stylesheet" type="text/css" media="screen" href="/js/libs/odometer/odometer-theme-minimal.css" />
   <link rel="stylesheet" type="text/css" media="screen" href="/js/libs/rangeslider.css" />
+  
 % end
 % content_for title_bar => begin
 <span class="title_label <%= lc($run_details->{class_name}) %>"><%= $run_details->{class_name} %> Run</span>
@@ -35,6 +36,7 @@
 <div id="tabs">
   <ul>
     <li><a href="#tabs-1">Mana Counts</a></li>
+    <li><a href="#tabs-2">Choices</a></li>
   </ul>
   <div id="tabs-1">
   <table border="0" width="100%" id="cards_chosen" cellpadding="0" cellspacing="0">
@@ -44,7 +46,30 @@
             <td id="card_count"><%== $run_details->{card_counts}->{$card} %></td>
         </tr>
      % }
-  </table></div>
+  </table>
+  </div>
+    <div id="tabs-2">
+        <table border="2" width="100%" id="card_choices" cellpadding="10" cellspacing="0">
+            % my $counter = 0;
+            % for my $card_options (@{$run_details->{card_options}}) {
+            % $counter += 1;
+            
+                <tr>
+                    <td class="card_choice"><b><%== $counter %></b></td>
+                    <td width=33%>
+                        <span class="capital card_choice <%== $card_options->{card_name} eq $card_options->{card_chosen} ? 'selected' : '' %>"><%== $card_options->{card_name} %></span>
+                    </td>
+                    <td width=34%>
+                        <span class="capital card_choice <%== $card_options->{card_name_2} eq $card_options->{card_chosen} ? 'selected' : '' %>" ><%== $card_options->{card_name_2} %></span>
+                    </td>
+                    <td width=33%>
+                        <span class="capital card_choice <%== $card_options->{card_name_3} eq $card_options->{card_chosen} ? 'selected' : '' %>"><%== $card_options->{card_name_3} %></span>
+                    </td>
+                </tr>
+        
+            % }
+        </table>
+    </div>
 </div>
 <script type="text/javascript">
 var cards = [

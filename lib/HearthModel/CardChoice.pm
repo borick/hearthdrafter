@@ -402,13 +402,13 @@ sub get_advice {
 sub _capitalize {
     my $blah = shift;
     my $result = '';
-    return 'AOE' if $blah eq 'aoe';
+    $result = 'AOE' if $blah eq 'aoe';
     my @tokens = split(/ /,$blah);
     for my $token (@tokens) {
         $result .= ucfirst($token);
         $result .= ' ' if $token ne $tokens[scalar(@tokens)-1];
     }
-    return $result;
+    return '<u>'.$result.'</u>';
 }
 #from http://mkweb.bcgsc.ca/intranet/perlbook/cookbook/ch04_03.htm
 sub _commify_series {
@@ -440,7 +440,7 @@ sub _get_score_msg {
     } else { #elsif ($best_s > 0000) {
         $term = 'poor';
     } 
-    my $tmp_message = "has $term rating";
+    my $tmp_message = "has $term grade";
     #print STDERR "_get_score_msg: $tmp_message\n";
     return $tmp_message;
 }
@@ -450,38 +450,52 @@ sub _build_message {
     my $best_s = $best_n->[1];
     $best_n = $best_n->[0];
     my $message = '';
-    print STDERR Dumper($scores_hist);
+    #print STDERR Dumper($scores_hist);
     my @cards = keys(%$scores_hist);
     my $card_info = {};
-    my $score = 0;
     my $scores = {};
     for my $card (@cards) {
         for my $ref (@{$scores_hist->{$card}}) {
             my $new_score = $ref->[1];
             my $key = $ref->[0];
-            if (!exists($scores->{$card}) || $new_score > $scores->{$card} && $key ne 'mana') {
-                print STDERR "Key: $new_score, $key, $card\n";
-                print STDERR "Old: $scores->{$card}, $card\n" if exists($scores->{$card});
-                $scores->{$card} = $new_score;
+            if (!exists($scores->{$card}) || $new_score != $scores->{$card}) {
+                #print STDERR "Key: $new_score, $key, $card\n";
+                #print STDERR "Old: $scores->{$card}, $card\n" if exists($scores->{$card});
                 my $tmp_message = '';
-                if ($key eq 'missing_drops') {
+                if ($key eq 'missing_drops' && (!exists($scores->{$card}) || $new_score > $scores->{$card})) {
+                
                     $tmp_message = 'is a ' . $card_data->{$card}->{cost} . ' drop';
-                } elsif ($key eq 'mana') {
-                    $tmp_message =  'fits the mana-curve of our deck';
-                } elsif ($key eq 'dups') {
-                    $tmp_message = 'provides variety';
-                } elsif ($key eq 'tags_done') {
+                    
+                } elsif ($key eq 'mana' && (!exists($scores->{$card}) || $new_score > $scores->{$card})) {
+                
+                    #nothing
+                    #$tmp_message =  'fits the mana-curve of our deck';
+                    
+                } elsif ($key eq 'dups' && (!exists($scores->{$card}) || $new_score < $scores->{$card})) {
+                
+                    #print STDERR "Yes, $new_score < $scores->{$card} for $card, $key\n";
+                    $tmp_message = 'we dont want too many of';
+                    
+                } elsif ($key eq 'tags_done' && (!exists($scores->{$card}) || $new_score > $scores->{$card})) {
+                
                     $tmp_message = 'gives us: ' . _commify_series(@{$tags_done->{$card}});
-                } elsif ($key eq 'synergy') {
+                    
+                } elsif ($key eq 'synergy' && (!exists($scores->{$card}) || $new_score > $scores->{$card})) {
+                
                     $tmp_message = 'has good synergy';
-                } elsif ($key eq 'original') {
-                    $tmp_message = _get_score_msg($best_n, $score);
+                    
+                } elsif ($key eq 'original' && (!exists($scores->{$card}) || $new_score > $scores->{$card})) {
+                
+                    $tmp_message = _get_score_msg($best_n, $new_score);
+                    
                 }
+                $scores->{$card} = $new_score;
+                #print STDERR "Setting score for $card to $scores->{$card}.\n";
                 $card_info->{$card}->{$tmp_message} = 1 if $tmp_message ne '';
             }
         }
     }
-    print STDERR Dumper($card_info);
+    #print STDERR Dumper($card_info);
     if (keys(%$card_info) == 1 ) {
         $message = _capitalize($best_n) . ' ' . _commify_series(keys(%{$card_info->{$best_n}}));
     } elsif (keys(%$card_info) == 2 ) {
@@ -499,9 +513,11 @@ sub _build_message {
                 $message .= ', ';
             }
         }
-        $message .= 'but ' . _capitalize($best_n) . ' ' . _commify_series(keys(%{$card_info->{$best_n}}));
+        my @final_set = keys(%{$card_info->{$best_n}});
+        #push(@final_set, 'is our final pick!');
+        $message .= 'but ' . _capitalize($best_n) . ' ' . _commify_series(@final_set);
     }
-    $message .= '. Pick ' . _capitalize($best_n) . '.';
+    $message .= ". We recommend you pick " . _capitalize($best_n) . ".";
     print STDERR "Message: $message\n";
     return $message;
 }
