@@ -13,6 +13,10 @@ use Mail::Sendmail;
 use Captcha::reCAPTCHA;
 use Regexp::Profanity::US;
 
+use constant URL => 'https://www.hearthdrafter.com';
+use constant VALIDATION_TIMEOUT_SECONDS => 60*60*24*2; #2 days expiry on validation code.
+use constant MAX_USERS => 1000;
+ 
 my $pbkdf2 = Crypt::PBKDF2->new(
     hash_class => 'HMACSHA2',
     hash_args => {
@@ -41,6 +45,21 @@ sub register {
         );
     };
     die 'username already exists' if defined($existing);
+
+    my $results = $self->es->search(
+        index => 'hearthdrafter',
+        type => 'user',
+        size => MAX_USERS+100,
+        body  => {
+            query => {
+                match => { user_name => $user_name }
+            }
+        }
+    );
+    print STDERR Dumper($results);
+    
+    #make it.
+    my $valid_code = $du->create_str();
     $self->es->index(
         index   => 'hearthdrafter',
         type    => 'user',
@@ -51,8 +70,21 @@ sub register {
             first_name => $fname,
             last_name => $lname,
             password => $pbkdf2->generate($password),
+            validation_code => $valid_code,
+            validation_code_time => time,
         }
     );
+    my $valid_path = "/validate_user/$user_name/$valid_code";
+    my $message = "Welcome to HearthDrafter.com! To validate your account, please click on ";
+    $message .=   "<a href='".URL."$valid_path'>this link</a> or copy";
+    $message .=   " and paste " . URL . "$valid_path into your browser.";
+    my %mail = ( To => $email,
+        From    => 'admin@hearthdrafter.com',
+        Subject => "Welcome to HearthDrafter, $fname!",
+        Message => $message,
+        );
+    print STDERR "Sending e-mail to: $email!\n";
+    sendmail(%mail);
     return 1;
 }
 
@@ -106,7 +138,10 @@ sub reset_pw {
     };
     return [0, 'user error'] if !$doc;
     return [0, "code error"] if $doc->{_source}->{validation_code} ne $code;
+    return [0, "code timing error"] if time - $doc->{_source}->{validation_code_time} > VALIDATION_TIMEOUT_SECONDS;
+    
     delete($doc->{_source}->{validation_code});
+    delete($doc->{_source}->{validation_code_time});
     $doc->{_source}->{password} = $pbkdf2->generate($pw);
     $self->es->index(
         index   => 'hearthdrafter',
@@ -116,6 +151,29 @@ sub reset_pw {
     );
     return [1, 'Password updated.'];
 }
+
+sub validate_user {
+    my ($self, $user_name, $code) = @_;
+    my $doc;    
+    eval {
+        $doc = $self->es->get(
+            index => 'hearthdrafter',
+            type => 'user',
+            id => $user_name);
+    };
+    return [0, 'user error'] if !$doc;
+    return [0, "code error"] if $doc->{_source}->{validation_code} ne $code;
+    delete($doc->{_source}->{validation_code});
+    delete($doc->{_source}->{validation_code_time});
+    $self->es->index(
+        index   => 'hearthdrafter',
+        type    => 'user',
+        id      => $user_name,
+        body    => $doc->{_source},
+    );
+    return [1, 'Password updated.'];
+}
+
 
 sub forgotten_pw_check {
     my ($self, $user_name, $fname, $lname, $email) = @_;
@@ -145,6 +203,7 @@ sub forgotten_pw_check {
                 last_name => $lname,
                 password => "locked", #should never validate to a valid hash.
                 validation_code => $valid_code,
+                validation_code_time => time,
             }
         );
         my %mail = ( To => $email,
@@ -152,7 +211,7 @@ sub forgotten_pw_check {
             Subject => "[HearthDrafter.com] $user_name Account PW Reset",
             Message => "Someone, hopefully you, initiated a request to reset your HearthDrafter account password. To change your hearthdrafter.com password, please click <a href='http://hearthdrafter.com/reset_pw/$user_name/$valid_code'>this link.</a>",
             );
-
+        print STDERR "Sending e-mail to: $email!\n";
         sendmail(%mail);
         return $self->reset_pw($user_name, $fname, $lname, $email);
     }
@@ -163,7 +222,7 @@ sub settings {
     my ($self, $email, $fname, $lname, $password) = @_;
     
     my $existing = undef;
-    print STDERR Dumper($self->user);    
+    print STDERR Dumper($self->user);
 #     eval { 
 #         $existing = $self->es->get(
 #             index   => 'hearthdrafter',

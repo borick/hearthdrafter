@@ -55,6 +55,7 @@ sub startup {
     $r->post('/register')->to('home#register_post');
     $r->get('/reset_pw/:user_name/:code')->to('home#reset_pw');
     $r->post('/reset_pw_post')->to('home#reset_pw_post');
+    $r->get('/validate_user/:user_name/:code')->to('home#validate_user');
     $r->get('/forget_pw')->to('home#forget_pw');
     $r->post('/forget_pw')->to('home#forget_pw_post');
     
