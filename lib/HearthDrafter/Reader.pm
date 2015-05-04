@@ -68,7 +68,11 @@ sub confirm_card_choice {
         return;
     }
     my $result_data = $c->model->arena->confirm_card_choice_by_num($c->stash('index'),
-                                                              $arena_id);
+                                                                   $arena_id);
+    if (!defined($result_data)) {
+        $c->render(text => 'ERROR');
+        return;
+    }
     my $card = $result_data->[0];
     my $result = $result_data->[1];
     #print STDERR 'Confirm: ' . Dumper($result);
