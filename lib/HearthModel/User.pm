@@ -34,7 +34,7 @@ sub register {
     my $response = $mojo->req->body_params->param('recaptcha_response_field');
     my $result = $c->check_answer('6LfOPQYTAAAAAAnNr5UHwU39XIPALsSQhqbgthNq', $mojo->tx->remote_address, $challenge, $response);
     die "Profanity in user name" if profane($user_name);
-    die "Captcha fail: " . $result->{error} if ( !$result->{is_valid} ) && ($mojo->tx->url->to_abs->host !~ /local/);
+    die "Captcha fail: " . $result->{error} if ( !$result->{is_valid} ) && ($mojo->url->to_abs->host !~ /local/);
     die "E-mails dont match" if $email ne $email_confirm;
     die "Bad characters in user name'$user_name'" if ($user_name) !~ /^\w+$/;
     die "E-mail invalid" if !valid($email);
@@ -77,7 +77,7 @@ sub register {
         }
     );
     my $valid_path = "/validate_user/$user_name/$valid_code";
-    my $message = "Welcome to HearthDrafter.com $fname $lname!\n\nTo validate your account "$user_name", please navigate to " . URL . "$valid_path in your browser. Thank you for your patience.";
+    my $message = "Welcome to HearthDrafter.com $fname $lname!\n\nTo validate your account \"$user_name\", please navigate to " . URL . "$valid_path in your browser. Thank you for your patience.";
     my %mail = ( To => $email,
         From    => 'admin@hearthdrafter.com',
         Subject => "Welcome to HearthDrafter, $fname!",
