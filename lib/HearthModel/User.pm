@@ -12,7 +12,8 @@ my $du = Data::UUID->new();
 use Mail::Sendmail;
 use Captcha::reCAPTCHA;
 use Regexp::Profanity::US;
-
+use RFC::RFC822::Address qw /valid/;
+ 
 use constant URL => 'https://www.hearthdrafter.com';
 use constant VALIDATION_TIMEOUT_SECONDS => 60*60*24*2; #2 days expiry on validation code.
 use constant MAX_USERS => 1000;
@@ -33,6 +34,7 @@ sub register {
     my $response = $mojo->req->body_params->param('recaptcha_response_field');
     my $result = $c->check_answer('6LfOPQYTAAAAAAnNr5UHwU39XIPALsSQhqbgthNq', $mojo->tx->remote_address, $challenge, $response);
     die "E-mails dont match" if $email ne $email_confirm;
+    die "E-mail invalid" if !valid($email);
     die "Captcha fail" . $result->{error} if ( !$result->{is_valid} );
     die "Profanity in user name" if $user_name =~ /test/ || $user_name =~ /hearthdraft/ || profane($user_name);
     die "Bad characters in user name'$user_name'" if ($user_name) !~ /^\w+$/;
@@ -49,10 +51,10 @@ sub register {
     my $results = $self->es->search(
         index => 'hearthdrafter',
         type => 'user',
-        size => MAX_USERS+100,
+        search_type => 'count',
         body  => {
             query => {
-                match => { user_name => $user_name }
+                match_all {},
             }
         }
     );

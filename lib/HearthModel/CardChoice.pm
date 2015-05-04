@@ -387,7 +387,7 @@ sub get_advice {
     
     $self->es->index(
         index => 'hearthdrafter',
-        type => 'arena_run', 
+        type => 'arena_run',
         id => $arena_id,
         body => $source,
     );
