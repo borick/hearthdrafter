@@ -16,7 +16,7 @@ use RFC::RFC822::Address qw /valid/;
  
 use constant URL => 'https://www.hearthdrafter.com';
 use constant VALIDATION_TIMEOUT_SECONDS => 60*60*24*14; #14 days expiry on validation code.
-use constant MAX_USERS => 1000;
+use constant MAX_USERS => 500;
  
 my $pbkdf2 = Crypt::PBKDF2->new(
     hash_class => 'HMACSHA2',
