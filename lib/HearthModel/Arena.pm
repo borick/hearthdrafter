@@ -275,7 +275,7 @@ sub undo_last_card {
         id => $arena_id,
     );
     die 'not your arena' if $user ne $doc->{_source}->{user_name};
-    shift(@{$doc->{_source}->{card_options}});
+    pop(@{$doc->{_source}->{card_options}});
     $self->es->index(
         index => 'hearthdrafter',
         type => 'arena_run',
