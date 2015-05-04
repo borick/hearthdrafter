@@ -109,8 +109,8 @@ sub forgot_pw_post {
 
 sub validate_user {
     my $self = shift;
-    my $user_name = $self->req->body_params->param('user_name');
-    my $code = $self->req->body_params->param('code');
+    my $user_name = $self->stash('user_name');
+    my $code = $self->stash('code');
     my $result = $self->model->user->validate_user($user_name, $code);
     if ($result->[0]) {
         $self->flash(success_message => $result->[1]);
