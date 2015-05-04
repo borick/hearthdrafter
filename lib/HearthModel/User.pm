@@ -77,7 +77,7 @@ sub register {
         }
     );
     my $valid_path = "/validate_user/$user_name/$valid_code";
-    my $message = "Welcome to HearthDrafter.com! To validate your account, please navigate to $valid_path in your browser.";
+    my $message = "Welcome to HearthDrafter.com $fname $lname!\n\nTo validate your account "$user_name", please navigate to " . URL . "$valid_path in your browser. Thank you for your patience.";
     my %mail = ( To => $email,
         From    => 'admin@hearthdrafter.com',
         Subject => "Welcome to HearthDrafter, $fname!",
@@ -209,7 +209,7 @@ sub forgotten_pw_check {
         my %mail = ( To => $email,
             From    => 'admin@hearthdrafter.com',
             Subject => "[HearthDrafter.com] $user_name Account PW Reset",
-            Message => "Someone, hopefully you, initiated a request to reset your HearthDrafter account password. To change your hearthdrafter.com password, please go to: https://www.hearthdrafter.com/reset_pw/$user_name/$valid_code",
+            Message => "Someone, hopefully you, initiated a request to reset your HearthDrafter account password for account: $user_name. To change your hearthdrafter.com password, please go to: https://www.hearthdrafter.com/reset_pw/$user_name/$valid_code",
             );
         print STDERR "Sending e-mail to: $email!\n";
         sendmail(%mail);
