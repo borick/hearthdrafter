@@ -1,5 +1,4 @@
 % layout 'default';
-
 <div class="maincontent">
 
 <a href="/draft/select_class">Start New Draft</a><br>
@@ -8,7 +7,6 @@
 % for my $run (@$runs) {
 
 <span class="<%= $run->{class_name} %>"><a href="/draft/select_card/<%= $run->{_id} %>/">Continue <span class='capital'><%= $run->{class_name} %> <%= exists($run->{region})?'('.$run->{region}.')':'' %></span> Run </a></span>
-<!-- <%= dumper($run) %> -->
 or <a href="/draft/arena_action/abandon_arena_<%= $run->{_id} %>/">Abandon This Run.</a> <br>
 
 % }
@@ -20,5 +18,7 @@ or <a href="/draft/arena_action/abandon_arena_<%= $run->{_id} %>/">Abandon This 
 % }
 
 <a href="/draft/view_completed_runs">View Completed Runs</a><br>
+
+<a href="/draft/download">Download Reader</a><br>
 
 </div>

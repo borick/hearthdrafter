@@ -21,7 +21,7 @@
   height: 150px;
 }
 #tabs-1 {
-  background: rgba(0,0,0,0.75) !important;
+  /*background: rgba(0,0,0,0.75) !important;*/
 }
 .ui-tabs-anchor {
   padding: 5px !important;
@@ -603,4 +603,18 @@ a:visited {
 #card_choices table {
     border-collapse: collapse;
     padding: 5px;
+}
+
+
+
+/** home **/
+#main_page #tabs {
+    margin-top: 0px;
+    height: 80%;
+}
+#main_page .ui-tabs-panel {
+    height: inherit;
+}
+#main_page p {
+    margin: 10px;
 }

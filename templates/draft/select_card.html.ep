@@ -7,7 +7,6 @@
   <script src="/js/hd.min.js"></script>
   <script src="/js/libs/odometer/odometer.js"></script>
   <script src="/js/libs/list.js"></script>
-  <link rel="stylesheet" type="text/css" media="screen" href="/css/libs/jquery-ui.css" />
   <link rel="stylesheet" type="text/css" media="screen" href="/js/libs/odometer/odometer-theme-minimal.css" />
   <link rel="stylesheet" type="text/css" media="screen" href="/js/libs/rangeslider.css" />
   

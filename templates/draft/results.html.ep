@@ -1,6 +1,7 @@
 % layout 'default';
 % content_for header => begin
   <title>HearthDrafter - Results</title>
+  <script src="/js/libs/rangeslider.js"></script>
 % end
 <script type="text/javascript">
     function removeCard() {

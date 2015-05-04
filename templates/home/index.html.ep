@@ -1,1 +1,46 @@
 % layout 'default';
+% content_for header => begin
+  <title>HearthDrafter.com</title>
+% end
+
+<span id="main_page">
+<div id="tabs">
+  <ul>
+    <li><a href="#tabs-1">Welcome</a></li>
+    <li><a href="#tabs-2">About</a></li>
+  </ul>
+  <div id="tabs-1">
+  <table border="0" width="100%" cellpadding="0" cellspacing="0">
+    <h1>Welcome To This Early Alpha Preview!</h1>
+    <p>Welcome to HearthDrafter.com.</p>
+    <p>HearthDrafter is a brand new site which aims to improve upon the hearthstone-arena drafting experience.<p>
+    <p>Are you sick of entering cards manually in other arena sites? HearthDrafter comes with a Reader app (only supports Windows for now.) It can read the Arena choices from the window without you having to type them out.</p>
+    <p>And HearthDrafter has a very strong Drafting Algorithm!</p>
+    <br><center>
+    <img src="/images/main_1.png"/>
+  </table>
+  </div>
+  <div id="tabs-2">
+  <table border="0" width="100%" cellpadding="0" cellspacing="0">
+    <h1>About</h1>
+    <p>Developed by a professional developer in his free time, since the beginning of 2015.</p>
+    <p>This site is very security minded! All communications are encrypted, and your password is stored using non-reversible encryption.
+    <p>Please e-mail me at admin@hearthdrafter.com with your feed-back and/or questions!</p>
+    <p>This is a very early alpha release. Expect more features and bug fixes incoming!</p>
+  </table>
+  </div>
+</div>
+</span>
+
+<script type="text/javascript">
+//tab it up
+$(document).ready(function() {
+    var tabs = $( "#tabs" ).tabs();
+    tabs.find( ".ui-tabs-nav" ).sortable({
+        axis: "x",
+        stop: function() {
+        tabs.tabs( "refresh" );
+        }
+    });
+});
+</script>
