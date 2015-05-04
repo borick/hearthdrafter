@@ -605,9 +605,10 @@ a:visited {
     padding: 5px;
 }
 
-
-
 /** home **/
+#main_page img {
+    border: 5px solid black;
+}
 #main_page #tabs {
     margin-top: 0px;
     height: 80%;
