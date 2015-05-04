@@ -575,13 +575,16 @@ a:visited {
 }
 
 #register label {
-  width: 150px;
+  width: 240px;
   display: inline-block;
 }
 #register {
   display: inline-block;
   background: rgba(0, 0, 0, 0.75);
   color: white;
+}
+#register input {
+  width: 200px;
 }
 
 /* card choices */

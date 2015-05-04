@@ -33,8 +33,8 @@ sub register {
     my $challenge = $mojo->req->body_params->param('recaptcha_challenge_field');
     my $response = $mojo->req->body_params->param('recaptcha_response_field');
     my $result = $c->check_answer('6LfOPQYTAAAAAAnNr5UHwU39XIPALsSQhqbgthNq', $mojo->tx->remote_address, $challenge, $response);
-    die "Profanity or bad user name" if $user_name =~ /test/ || $user_name =~ /hearthdraft/ || profane($user_name);
-    die "Captcha fail" . $result->{error} if ( !$result->{is_valid} );
+    die "Profanity in user name" if profane($user_name);
+    die "Captcha fail: " . $result->{error} if ( !$result->{is_valid} ) && ($mojo->tx->url->to_abs->host !~ /local/);
     die "E-mails dont match" if $email ne $email_confirm;
     die "Bad characters in user name'$user_name'" if ($user_name) !~ /^\w+$/;
     die "E-mail invalid" if !valid($email);
@@ -55,12 +55,11 @@ sub register {
         search_type => 'count',
         body  => {
             query => {
-                match_all {},
+                match_all => {},
             }
         }
     );
-    print STDERR Dumper($results);
-    
+    die 'Sorry, this site has reached the maximum number of users.' if ($results->{hits}->{total} > MAX_USERS);
     #make it.
     my $valid_code = $du->create_str();
     $self->es->index(
