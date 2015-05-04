@@ -87,7 +87,8 @@ sub register_post {
 }
 
 sub forgot_pw {
-    shift->render('home/forgot_pw');
+    my ($self) = @_;
+    $self->render('home/forgot_pw');
     $self->redirect_to('/');
 }
 
