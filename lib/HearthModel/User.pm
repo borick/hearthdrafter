@@ -33,11 +33,12 @@ sub register {
     my $challenge = $mojo->req->body_params->param('recaptcha_challenge_field');
     my $response = $mojo->req->body_params->param('recaptcha_response_field');
     my $result = $c->check_answer('6LfOPQYTAAAAAAnNr5UHwU39XIPALsSQhqbgthNq', $mojo->tx->remote_address, $challenge, $response);
-    die "E-mails dont match" if $email ne $email_confirm;
-    die "E-mail invalid" if !valid($email);
+    die "Profanity or bad user name" if $user_name =~ /test/ || $user_name =~ /hearthdraft/ || profane($user_name);
     die "Captcha fail" . $result->{error} if ( !$result->{is_valid} );
-    die "Profanity in user name" if $user_name =~ /test/ || $user_name =~ /hearthdraft/ || profane($user_name);
+    die "E-mails dont match" if $email ne $email_confirm;
     die "Bad characters in user name'$user_name'" if ($user_name) !~ /^\w+$/;
+    die "E-mail invalid" if !valid($email);
+    
     my $existing = undef;
     eval { 
         $existing = $self->es->get(
