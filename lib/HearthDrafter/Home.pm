@@ -80,14 +80,6 @@ sub register_post {
         $self->redirect_to('/register');
     } else {
         print STDERR "User Creation Success!\n";
-        my %mail = 
-          ( To      => $email,
-            From    => 'admin@hearthdrafter.com',
-            Message => "Welcome to hearthdrafter.com $fname $lname! Your user name is $user_name. Good luck in the arena!",
-            Subject => 'HearthDrafter Registration',
-           );
-        sendmail(%mail);
-        
         $self->flash(success_message => 'User created!');
         $self->redirect_to('/');
     }
@@ -96,6 +88,7 @@ sub register_post {
 
 sub forgot_pw {
     shift->render('home/forgot_pw');
+    $self->redirect_to('/');
 }
 
 sub forgot_pw_post {
@@ -110,6 +103,7 @@ sub forgot_pw_post {
     } else {
         $self->flash(error_message => $result->[1]);
     }
+    $self->redirect_to('/');
 }
 
 sub validate_user {
@@ -122,6 +116,7 @@ sub validate_user {
     } else {
         $self->flash(error_message => $result->[1]);
     }
+    $self->redirect_to('/');
 }
 
 
