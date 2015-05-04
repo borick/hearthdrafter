@@ -49,7 +49,7 @@ sub startup {
     my $r = $self->routes;
     $r->get('/')->to('home#index');
     $r->post('/login')->to('home#login_post');
-    $r->get('/logout')-check_password>to('home#logmeout');
+    $r->get('/logout')->to('home#logmeout');
     $r->get('/home')->to('home#home');
     $r->get('/register')->to('home#register');
     $r->post('/register')->to('home#register_post');
