@@ -15,7 +15,7 @@ use Regexp::Profanity::US;
 use RFC::RFC822::Address qw /valid/;
  
 use constant URL => 'https://www.hearthdrafter.com';
-use constant VALIDATION_TIMEOUT_SECONDS => 60*60*24*2; #2 days expiry on validation code.
+use constant VALIDATION_TIMEOUT_SECONDS => 60*60*24*14; #14 days expiry on validation code.
 use constant MAX_USERS => 1000;
  
 my $pbkdf2 = Crypt::PBKDF2->new(
@@ -48,7 +48,7 @@ sub register {
             id      => $user_name,
         );
     };
-    die 'username already exists' if defined($existing);
+    die 'That user-name is taken. Please choose another.' if defined($existing);
 
     my $results = $self->es->search(
         index => 'hearthdrafter',
@@ -60,7 +60,7 @@ sub register {
             }
         }
     );
-    die 'Sorry, this site has reached the maximum number of users.' if ($results->{hits}->{total} > MAX_USERS);
+    die 'Sorry, this site has reached the maximum number of users. Please try again tomorrow or go complain on reddit. Thanks.' if ($results->{hits}->{total} > MAX_USERS);
     #make it.
     my $valid_code = $du->create_str();
     $self->es->index(
@@ -118,6 +118,7 @@ sub check_password {
             id => $user_name);
     };
     return 0 if !$doc;
+    return 0 if (exists($doc->{_source}->{validation_code}));
     my $hash = $doc->{_source}->{password};
     if ($pbkdf2->validate($hash, $password)) {
         print STDERR "Validates...\n";
