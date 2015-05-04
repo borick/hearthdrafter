@@ -451,7 +451,7 @@ sub _build_message {
     my $best_s = $best_n->[1];
     $best_n = $best_n->[0];
     my $message = '';
-    print STDERR Dumper($scores_hist);
+    #print STDERR Dumper($scores_hist);
     my @cards = keys(%$scores_hist);
     my $card_info = {};
     my $scores = {};
