@@ -80,7 +80,7 @@ sub register_post {
         $self->redirect_to('/register');
     } else {
         print STDERR "User Creation Success!\n";
-        $self->flash(success_message => 'User created!');
+        $self->flash(success_message => 'User created. Please check your e-mail account for the validation link.');
         $self->redirect_to('/');
     }
     
