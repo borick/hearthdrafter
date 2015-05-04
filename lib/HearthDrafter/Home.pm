@@ -51,7 +51,7 @@ sub home {
 
 sub register {
     my $self = shift;
-    $self->stash('captcha' => $c->get_html('6LfOPQYTAAAAAAZkmVtyWMAWWN-sKo_FaRRSusHM', undef, true));
+    $self->stash('captcha' => $c->get_html('6LfOPQYTAAAAAAZkmVtyWMAWWN-sKo_FaRRSusHM', undef, 1));
     $self->render('home/register');
 }
 
