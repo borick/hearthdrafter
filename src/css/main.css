@@ -1,12 +1,16 @@
 .error_message { 
   font-weight: bold;
   color: red;
-  text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
-  font-size: 110%;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+  font-size: 115%;
+  margin-top:-100px;
 }
 .success_message {
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
   font-weight: bold;
   color: green;
+  margin-top:-100px;
+  font-size: 115%;
 }
 #tabs {
   position: absolute;
@@ -621,4 +625,9 @@ a:visited {
 }
 #main_page p {
     margin: 10px;
+}
+#resend {
+    display: block;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
 }

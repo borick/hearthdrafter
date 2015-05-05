@@ -51,6 +51,8 @@ sub startup {
     $r->post('/login')->to('home#login_post');
     $r->get('/logout')->to('home#logmeout');
     $r->get('/home')->to('home#home');
+    $r->get('/resend')->to('home#resend');
+    $r->post('/resend')->to('home#resend_post');
     $r->get('/register')->to('home#register');
     $r->post('/register')->to('home#register_post');
     $r->get('/reset_pw/:user_name/:code')->to('home#reset_pw');

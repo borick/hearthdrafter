@@ -30,6 +30,7 @@ sub login_post {
         $self->redirect_to('/home');
     } else {        
         $self->flash(login_message => 'Login Failed');
+        
         $self->redirect_to('/');
     }
 }
@@ -76,20 +77,36 @@ sub register_post {
             $msg = 'User creation failed.';
         }
         print STDERR "User Creation Failed...\n";
-        $self->flash(error_message => $msg);
-        $self->redirect_to('/register');
+        $self->stash(error_message => $msg);
+        $self->render('home/index');
     } else {
         print STDERR "User Creation Success!\n";
-        $self->flash(success_message => 'User created. Please check your e-mail account for the validation link.');
-        $self->redirect_to('/');
+        $self->stash(success_message => 'User created. Please check your e-mail account for the validation link.');
+        $self->render('home/index');
     }
     
+}
+
+sub resend {
+    my ($self) = @_;
+    $self->render('home/resend');
+}
+
+sub resend_post {
+    my ($self) = @_;
+    my $user_name = $self->req->body_params->param('user_name');
+    my $result = $self->model->user->resend_validation_code($user_name);
+    if ($result->[0]) {
+        $self->stash(success_message => $result->[1]);
+    } else {
+        $self->stash(error_message => $result->[1]);
+    }
+    $self->redirect_to('/');
 }
 
 sub forgot_pw {
     my ($self) = @_;
     $self->render('home/forgot_pw');
-    $self->redirect_to('/');
 }
 
 sub forgot_pw_post {
@@ -100,9 +117,9 @@ sub forgot_pw_post {
     my $lname = $self->req->body_params->param('last_name');
     my $result = $self->model->user->forgotten_pw_check($user_name, $fname, $lname, $email);
     if ($result->[0]) {
-        $self->flash(success_message => $result->[1]);
+        $self->stash(success_message => $result->[1]);
     } else {
-        $self->flash(error_message => $result->[1]);
+        $self->stash(error_message => $result->[1]);
     }
     $self->redirect_to('/');
 }
@@ -113,9 +130,9 @@ sub validate_user {
     my $code = $self->stash('code');
     my $result = $self->model->user->validate_user($user_name, $code);
     if ($result->[0]) {
-        $self->flash(success_message => $result->[1]);
+        $self->stash(success_message => $result->[1]);
     } else {
-        $self->flash(error_message => $result->[1]);
+        $self->stash(error_message => $result->[1]);
     }
     $self->redirect_to('/');
 }
@@ -131,9 +148,9 @@ sub reset_pw_post {
     my $code = $self->req->body_params->param('code');
     my $result = $self->model->user->reset_pw($user_name, $self->req->body_params->param('pw'), $code);
     if ($result->[0]) {
-        $self->flash(success_message => $result->[1]);
+        $self->stash(success_message => $result->[1]);
     } else {
-        $self->flash(error_message => $result->[1]);
+        $self->stash(error_message => $result->[1]);
     }
 }
 

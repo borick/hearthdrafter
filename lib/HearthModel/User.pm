@@ -89,6 +89,42 @@ sub register {
     return 1;
 }
 
+sub resend_validation_code {
+    my ($self, $user_name) = @_;
+    
+    my $existing = undef;
+    eval {
+        $existing = $self->es->get(
+            index   => 'hearthdrafter',
+            type    => 'user',
+            id      => $user_name,
+        );
+    };
+    if (!defined($existing)) {
+        return [0, "That user doesn't exist yet!"];
+    }
+    my $source = $existing->{_source};
+    
+    if (exists($source->{validation_code})) {
+        my $email = $source->{email};
+        my $fname = $source->{first_name};
+        my $lname = $source->{last_name};
+        my $valid_code = $source->{validation_code};
+        my $valid_path = "/validate_user/$user_name/$valid_code";
+        my $message = "Welcome to HearthDrafter.com $fname $lname!\n\nTo validate your account \"$user_name\", please navigate to " . URL . "$valid_path in your browser. Thank you for your patience.";
+        my %mail = ( To => $email,
+            From    => 'admin@hearthdrafter.com',
+            Subject => "Welcome to HearthDrafter, $fname!",
+            Message => $message,
+        );
+        print STDERR "Sending e-mail to: $email!\n";
+        sendmail(%mail);
+        return [1, "Validation code resent to e-mail address on file."];
+    } else {
+        return [0, "You're already validated, silly!"];
+    }
+}
+
 # Read
 sub load {
     my ($self, $user_name) = @_;

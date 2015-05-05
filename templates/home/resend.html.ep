@@ -1,0 +1,11 @@
+% layout 'default';
+<form id='resend' method='POST' accept-charset='UTF-8'>
+<fieldset >
+<legend>Resend Validation E-mail</legend>
+
+<label for='name' >User Name: </label>
+<input type='text' name='user_name' id='user_name' maxlength="50" /><br>
+ 
+<input type='submit' name='Submit' value='Submit' />
+</fieldset>
+</form>
