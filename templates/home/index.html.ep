@@ -12,12 +12,14 @@
   <div id="tabs-1">
   <table border="0" width="100%" cellpadding="0" cellspacing="0">
     <h1>Welcome To This Early Alpha Preview!</h1>
-    <p>Welcome to HearthDrafter.com.</p>
     <p>HearthDrafter is a brand new site which aims to improve upon the hearthstone-arena drafting experience.<p>
     <p>Are you sick of entering cards manually in other arena sites? HearthDrafter comes with a Reader app (only supports Windows for now.) It can read the Arena choices from the window without you having to type them out.</p>
-    <p>And HearthDrafter has a very strong Drafting Algorithm!</p>
+    <p>Although this is alpha, HearthDrafter still has a strong Drafting Algorithm that differentiates itself from competitors.</p>
+ <h3>About the Reader</h3>
+    <p>
+    The reader does not select any cards for you automatically. You still get to, and have to make the final choice. The app just reads the hearthstone screen to detect the cards, and detects which cards are picked. The app is just a tiny icon that sits in your task-bar - all information is displayed on the HearthDrafter website, the card choices just appear!</p>
     <br><br><center>
-    <img src="/images/main_1.png"/>
+    <img src="/images/main_1.png"/></center>
   </table>
   </div>
   <div id="tabs-2">

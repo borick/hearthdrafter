@@ -10,7 +10,7 @@
 
 <p>The reader currently only supports Windows. It requires .Net framework. It's in early-release Alpha status.</p>
 <p>You will need to provide your credentials to the reader. You can save your password, Windows Managed Data Protection is used to save and store your password securely.</p>
-<p><a href="/files/HearthDrafterReader.exe">Click here</a> to download the reader application!</p>
+<p><a href="/files/HearthDrafterReader.zip">Click here</a> to download the reader application in Zipped format.</p>
 
 
 <h1>Tips for Usage</h1>
@@ -19,9 +19,9 @@
     </li>
     <li>The reader will not detect cards when the mouse is hovering over them. Just move your mouse off them for a second! Or you can try having hearthstone window lose focus, then regain focus.
     </li>
-    <li>The reader only works when you are logged into both the reader AND the hearthdrafter.com web-site.
+    <li>The reader only works when you are logged into both the reader AND the hearthdrafter.com web-site. <b>When not picking cards in Arena, please close down the reader to reduce load on your PC and our servers!</b>
     </li>
-    <li>Make sure you have a modern web-browser as this technology relies on HTML5 Websockets!
+    <li>Make sure you have a modern web-browser as this technology relies on HTML5 Websockets.
     </li>
 </ul>
 </div>
