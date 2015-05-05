@@ -121,7 +121,7 @@ sub forgot_pw_post {
     } else {
         $self->stash(error_message => $result->[1]);
     }
-    $self->redirect_to('/');
+    $self->render('home/index');
 }
 
 sub validate_user {
@@ -134,7 +134,7 @@ sub validate_user {
     } else {
         $self->stash(error_message => $result->[1]);
     }
-    $self->redirect_to('/');
+    $self->render('home/index');
 }
 
 
