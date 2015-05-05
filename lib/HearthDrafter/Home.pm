@@ -101,7 +101,7 @@ sub resend_post {
     } else {
         $self->stash(error_message => $result->[1]);
     }
-    $self->redirect_to('/');
+    $self->render('home/index');
 }
 
 sub forgot_pw {
