@@ -631,3 +631,6 @@ a:visited {
     background: rgba(0, 0, 0, 0.8);
     color: white;
 }
+.range_slider {
+    width: 150px;
+}

@@ -2,6 +2,7 @@
 % content_for header => begin
   <title>HearthDrafter - Results</title>
   <script src="/js/libs/rangeslider.js"></script>
+  <link rel="stylesheet" type="text/css" media="screen" href="/js/libs/rangeslider.css" />
 % end
 <script type="text/javascript">
     function removeCard() {
@@ -30,31 +31,31 @@
 <div id="slider">
     <h3># of Wins:</h3>
     <br>
-    <input type="range" min="0" max="12" step="1" value="0" name="wins" data-rangeslider>
+    <input class="range_slider" type="range" min="0" max="12" step="1" value="0" name="wins" data-rangeslider>
     <output></output>
 </div>
 <div id="slider">
     <h3># of Losses:</h3>
     <br>
-    <input type="range" min="0" max="3" step="1" value="3" name="losses" data-rangeslider>
+    <input class="range_slider" type="range" min="0" max="3" step="1" value="3" name="losses" data-rangeslider>
     <output></output>
 </div>
 <div id="slider">
     <h3>Gold Received:</h3>
     <br>
-    <input type="range" min="0" max="610" step="5" value="0" name="gold" data-rangeslider>
+    <input class="range_slider" type="range" min="0" max="610" step="5" value="0" name="gold" data-rangeslider>
     <output></output>
 </div>
 <div id="slider">
     <h3>Dust Received:</h3>
     <br>
-    <input type="range" min="0" max="100" step="5" value="0" name="dust" data-rangeslider>
+    <input class="range_slider" type="range" min="0" max="100" step="5" value="0" name="dust" data-rangeslider>
     <output></output>
 </div>
 <div id="slider">
     <h3>Packs Received:</h3>
     <br>
-    <input type="range" min="1" max="2" step="1" value="1" name="packs" data-rangeslider>
+    <input class="range_slider" type="range" min="1" max="2" step="1" value="1" name="packs" data-rangeslider>
     <output></output>
 </div>
 <script type="text/javascript">
