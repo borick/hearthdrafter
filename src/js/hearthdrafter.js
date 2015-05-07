@@ -479,7 +479,7 @@ function finishConfirm(data) {
         //TODO: finish arena visualization!
         $('[class^="card"]').hide();
         //redirect to results input
-        document.location.href = '/draft/results/'+arena_id;
+        document.location.href = '/draft/view_completed_run/'+arena_id;
         return;
     }
     updateChosenCardsTab(data);
