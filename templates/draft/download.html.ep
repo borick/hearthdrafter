@@ -15,13 +15,14 @@
 
 <h1>Tips for Usage</h1>
 <ul>
+    <li> <b>Important Message: When not picking cards in Arena, please close down the reader! There's an issue where the reader continues to read cards, even when you aren't in the arena drafting process. This will be fixed ASAP.</b></li>
     <li>Your hearthstone window must be in Windowed mode! If it's not detecting, try changing your resolution to 1024x768.
     </li>
     <li>The reader will not detect cards when the mouse is hovering over them. Just move your mouse off them for a second! Or you can try having hearthstone window lose focus, then regain focus.
     </li>
-    <li>The reader only works when you are logged into both the reader AND the hearthdrafter.com web-site. <b>When not picking cards in Arena, please close down the reader to reduce load on your PC and our servers!</b>
+    <li>The reader only works when you are logged into both the reader AND the hearthdrafter.com web-site.
     </li>
-    <li>Make sure you have a modern web-browser as this technology relies on HTML5 Websockets.
+    <li>Make sure you have a modern web-browser as this technology relies on HTML5 Websockets. If the reader suddenly stops working, try refreshing your browser to reconnect the WebSocket. It's supposed to automatically reconnect, but there's a bug preventing that from working, which will be fixed ASAP.
     </li>
 </ul>
 </div>

@@ -51,7 +51,7 @@ sub select_card {
         return $self->redirect_to('/home');
     } else {
         if (exists($run_details->{end_date})) {
-            return $self->redirect_to('/draft/results/'.$self->stash('arena_id'));
+            return $self->redirect_to('/draft/view_completed_run/'.$self->stash('arena_id'));
         }
         my $cards = $self->model->card->get_cards_by_class($run_details->{class_name});
         $self->stash(cards => $self->model->card->get_cards_by_class($run_details->{class_name}),
