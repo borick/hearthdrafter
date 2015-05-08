@@ -1,5 +1,5 @@
 #view_run {
-    margin-top: 0 !important;
+    /*margin-top: 0 !important;*/
 }
 
 #tabs {
@@ -36,6 +36,8 @@
   border-width: 2px;
   border-style: solid;
   border-color: black;
+  position: absolute;
+  bottom: 50px;
 }
 .buttons a:hover {
   background-color: #979797; background-image: -webkit-gradient(linear, left top, left bottom, from(#979797), to(#1a1a1a));

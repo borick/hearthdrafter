@@ -3,38 +3,35 @@
   <title>HearthDrafter.com</title>
 % end
 
-<span id="main_page">
+<div id="main_page">
 <div id="tabs">
   <ul>
     <li><a href="#tabs-1">Welcome</a></li>
     <li><a href="#tabs-2">About</a></li>
   </ul>
   <div id="tabs-1">
-  <table border="0" width="100%" cellpadding="0" cellspacing="0">
+  <table>
    
-    <h1>Welcome To This Early Alpha Preview!</h1>
-    <p>HearthDrafter is a brand new site which aims to improve upon the hearthstone-arena drafting experience.<p>
-    <p>Are you sick of entering cards manually in other arena sites? HearthDrafter comes with a Reader app (only supports Windows for now.) It can read the Arena choices from the window without you having to type them out.</p>
-    <p>Although this is alpha, HearthDrafter still has a strong Drafting Algorithm that differentiates itself from competitors.</p>
- <h3>About the Reader</h3>
-    <p>
-    The reader does not select any cards for you automatically. You still get to, and have to make the final choice. The app just reads the hearthstone screen to detect the cards, and detects which cards are picked. The app is just a tiny icon that sits in your task-bar - all information is displayed on the HearthDrafter website, the card choices just appear!</p>
-    <br><br><center>
-    <img src="/images/main_1.png"/></center>
+    <h2>Welcome</h2>
+    <p>Although HearthDrafter is still in Alpha, it has a Strong Drafting Algorithm that differentiates itself from competitors!</p>
+    <p>HearthDrafter also provides a Windows-compatible Reader application that can detect the available cards in arena, without you having to tediously type them out or select them from a list!</p>
+    <center><img src="/images/main_1.png"/></center>
   </table>
   </div>
   <div id="tabs-2">
-  <table border="0" width="100%" cellpadding="0" cellspacing="0">
-    <h1>About</h1>
-    <p>Developed by a professional in his FREE TIME since the beginning of 2015!</p>
-    <p>This site is very security minded! All communications are encrypted, and your password is stored using non-reversible encryption.
-    <p>Please e-mail me at admin@hearthdrafter.com with your feed-back and/or questions!</p>
-    <p>This is a very early alpha release. Expect more features and bug fixes incoming!</p>
-    <p><b><font size="0.5pt">Not affiliated with Blizzard or Hearthstone Tracker. All images are trademarked material of Blizzard, inc.</font></b>
+  <table>
+    <h2>About HearthDrafter.com</h2>
+    <ul>
+    <li>Developed by a passionate hearthstone player/ profesional developer, in his free time!</li>
+    <li>This site is very security minded. All communications are encrypted, and your password is stored using non-reversible encryption.</li>
+    <li>Please e-mail me at <b>admin@hearthdrafter.com</b> with your feedback and/or questions.</li>
+    <li>This is a very early alpha release. Expect much more coming soon.</li>
+    </ul>
+    <p><b><font size="2pt">Not affiliated with Blizzard or Hearthstone Tracker. All images are trademarked material of Blizzard, inc.</font></b>
   </table>
   </div>
 </div>
-</span>
+</div>
 
 <script type="text/javascript">
 //tab it up

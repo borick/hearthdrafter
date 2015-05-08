@@ -12,17 +12,15 @@
 <p>You will need to provide your credentials to the reader. You can save your password, Windows Managed Data Protection is used to save and store your password securely.</p>
 <p><a href="/files/HearthDrafterReader.zip">Click here</a> to download the reader application in Zipped format.</p>
 
-
 <h1>Tips for Usage</h1>
 <ul>
-    <li> <b>Important Message: When not picking cards in Arena, please close down the reader! There's an issue where the reader continues to read cards, even when you aren't in the arena drafting process. This will be fixed ASAP.</b></li>
-    <li>Your hearthstone window must be in Windowed mode! If it's not detecting, try changing your resolution to 1024x768.
-    </li>
-    <li>The reader will not detect cards when the mouse is hovering over them. Just move your mouse off them for a second! Or you can try having hearthstone window lose focus, then regain focus.
-    </li>
-    <li>The reader only works when you are logged into both the reader AND the hearthdrafter.com web-site.
-    </li>
-    <li>Make sure you have a modern web-browser as this technology relies on HTML5 Websockets. If the reader suddenly stops working, try refreshing your browser to reconnect the WebSocket. It's supposed to automatically reconnect, but there's a bug preventing that from working, which will be fixed ASAP.
-    </li>
+    <li><b>The reader does not select any cards for you automatically. You still get to, and have to make the final choice. You must be logged into HearthDrafter.com,
+    to use the reader, as all the cards appear on the HearthDrafter.com website.</b></li>
+    <li>Your hearthstone window must be in Windowed mode! If it's not detecting in your resolution, try changing it to 1024x768.</li>
+    <li>When not picking cards in Arena, please close down the reader! There's an issue where the reader continues to read cards, even when you aren't in the arena drafting process. This will be fixed ASAP.</li>    
+    <li>The reader will not detect cards when the mouse is hovering over them. Just move your mouse off them for a second! Or you can try having hearthstone window lose focus, then regain focus.</li>
+    <li>Make sure you have a modern web-browser!</li>
 </ul>
+
+<br><a href="/home">Back</a>
 </div>

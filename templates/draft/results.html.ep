@@ -24,6 +24,8 @@
     }
 </script>
 
+<div class="maincontent">
+
 <form id='results' method='POST' accept-charset='UTF-8'>
 <fieldset >
 <legend>Arena Results</legend>
@@ -114,4 +116,5 @@ $(function() {
 </fieldset>
 </form>
 
-<a href="/home">Back</a>
+<br><a href="/home">Back</a>
+</div>

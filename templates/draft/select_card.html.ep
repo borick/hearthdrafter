@@ -37,7 +37,7 @@
     <li><a href="#tabs-1">Mana Counts</a></li>
   </ul>
   <div id="tabs-1">
-  <table border="0" width="100%" id="cards_chosen" cellpadding="0" cellspacing="0">
+  <table id="cards_chosen">
      % for my $card (sort(keys($run_details->{card_counts}))) {
         <tr>
             <td id="card_name"><span class="capital"><%== $card %></span></td>

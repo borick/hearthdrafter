@@ -22,7 +22,7 @@
 </head>
 <body>
 <div class="header">
-<a href="/"><img height="98px" src="/images/hearthdrafter_logo.png"/></a>
+<a href="/"><img height="98" src="/images/hearthdrafter_logo.png" alt="HearthDrafter Logo"/></a>
     <%= content 'title_bar' %>
     %= include '/home/login'
 </div>

@@ -1,19 +1,19 @@
 % layout 'default';
 <div class="maincontent">
-
+<h2>Home</h2>
 <a href="/draft/select_class">Start New Draft</a><br>
 % my $runs = stash 'runs';
 % my $runs_no_results = stash 'runs_no_results';
 % for my $run (@$runs) {
 
-<span class="<%= $run->{class_name} %>"><a href="/draft/select_card/<%= $run->{_id} %>/">Continue <span class='capital'><%= $run->{class_name} %> <%= exists($run->{region})?'('.$run->{region}.')':'' %></span> Run </a></span>
+<span class="<%= $run->{class_name} %>"><a href="/draft/select_card/<%= $run->{_id} %>/">Continue <span class='capital <%== $run->{class_name}%>'><%= $run->{class_name} %> <%= exists($run->{region})?'('.$run->{region}.')':'' %></span> Run </a></span>
 or <a href="/draft/arena_action/abandon_arena_<%= $run->{_id} %>/">Abandon This Run.</a> <br>
 
 % }
 
 % for my $run (@$runs_no_results) {
 
-<a href="/draft/results/<%= $run->{_id} %>/">Confirm Result for <span class='capital'><%= $run->{class_name} %></span> Run </a><br>
+<a href="/draft/results/<%= $run->{_id} %>/">Confirm Result for <span class='capital <%== $run->{class_name}%>'><%= $run->{class_name} %></span> Run </a><br>
 
 % }
 

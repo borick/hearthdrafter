@@ -53,6 +53,17 @@ sub register {
     my $results = $self->es->search(
         index => 'hearthdrafter',
         type => 'user',
+        body  => {
+            query => {
+                match => { email => $email },
+            }
+        }
+    );
+    
+    die 'That e-mail address is already registered. Please choose another.' if $results->{hits}->{total} > 0;
+    $results = $self->es->search(
+        index => 'hearthdrafter',
+        type => 'user',
         search_type => 'count',
         body  => {
             query => {
@@ -60,7 +71,7 @@ sub register {
             }
         }
     );
-    die 'Sorry, this site has reached the maximum number of users. Please try again tomorrow or go complain on reddit. Thanks.' if ($results->{hits}->{total} > MAX_USERS);
+    die 'Sorry, this site has reached the maximum number of users. Please try again tomorrow.' if ($results->{hits}->{total} > MAX_USERS);
     #make it.
     my $valid_code = $du->create_str();
     $self->es->index(
@@ -283,5 +294,7 @@ sub settings {
 #     );
     return 1;
 }
+
+
 
 1;

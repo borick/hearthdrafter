@@ -5,6 +5,8 @@
   <script src='https://www.google.com/recaptcha/api.js'></script>
 % end
 
+<div class="maincontent">
+<a href="/resend">Resend Validation Code</a><br><br>
 <form id='register' method='POST' accept-charset='UTF-8'>
 <fieldset >
 <legend>Register</legend>
@@ -32,3 +34,4 @@
 
 <%== stash('captcha') %>
 </form>
+</div>

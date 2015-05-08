@@ -206,66 +206,6 @@ sub list_runs_no_results {
     return $out;
 }
 
-sub list_runs_completed {
-    my ($self, $user_name, $from, $size) = @_;
-    my $out = [];
-    $size = 10 if !$size;
-    $from = 0 if !$from;    
-    my $results = $self->es->search(
-        index => 'hearthdrafter',
-        type => 'arena_run',
-        size => $size,
-        from => $from,
-        body  => {
-            query => {
-                filtered => {
-                    query => {
-                        match => { user_name => $user_name }
-                    },
-                    filter => {
-                        bool => {
-                            must_not => {
-                                missing => { field => 'results' },
-                            },
-                            must_not => {
-                                missing => { field => 'end_date' },
-                            },
-                        }
-                    }
-                }
-            }
-        }
-    );
-    
-    for my $result (@{$results->{hits}->{hits}}) {
-        $result->{_source}->{_id} = $result->{_id};
-        push(@$out, $result->{_source});
-    }
-    #print STDERR 'Out: ' . Dumper($out);
-    return $out;
-}
-
-sub provide_results {
-    my ($self, $arena_id, $data) = @_;
-    my $hash = $data->to_hash;
-    delete($hash->{Submit});
-    delete($hash->{rarity});
-    delete($hash->{set});
-    my $doc = $self->es->get(
-        index => 'hearthdrafter',
-        type => 'arena_run',
-        id => $arena_id,
-    );
-    $doc->{_source}->{'results'} = $hash;
-    print STDERR "Providing results: " . Dumper($hash);
-    my $results = $self->es->index(
-        index => 'hearthdrafter',
-        type => 'arena_run',
-        id => $arena_id,
-        body => $doc->{_source},
-    );
-    return 0; #success
-}
 
 sub undo_last_card {
     my ($self, $arena_id, $user) = @_;
@@ -347,5 +287,70 @@ sub view_completed_run {
 #     $out_data->{synergy} = \%synergies;
     
 }
+
+sub list_runs_completed {
+    my ($self, $user_name, $from, $size) = @_;
+    my $out = [];
+    $size = 10 if !$size;
+    $from = 0 if !$from;    
+    my $results = $self->es->search(
+        index => 'hearthdrafter',
+        type => 'arena_run',
+        size => $size,
+        from => $from,
+        body  => {
+            query => {
+                filtered => {
+                    query => {
+                        match => { user_name => $user_name }
+                    },
+                    filter => {
+                        bool => {
+                            must_not => {
+                                missing => { field => 'results.wins' },
+                            },
+                            must_not => {
+                                missing => { field => 'results.losses' },
+                            },
+                            must_not => {
+                                missing => { field => 'end_date' },
+                            },
+                        }
+                    }
+                }
+            }
+        }
+    );
+    
+    for my $result (@{$results->{hits}->{hits}}) {
+        $result->{_source}->{_id} = $result->{_id};
+        push(@$out, $result->{_source});
+    }
+    #print STDERR 'Out: ' . Dumper($out);
+    return $out;
+}
+
+sub provide_results {
+    my ($self, $arena_id, $data) = @_;
+    my $hash = $data->to_hash;
+    delete($hash->{Submit});
+    delete($hash->{rarity});
+    delete($hash->{set});
+    my $doc = $self->es->get(
+        index => 'hearthdrafter',
+        type => 'arena_run',
+        id => $arena_id,
+    );
+    $doc->{_source}->{'results'} = $hash;
+    print STDERR "Providing results: " . Dumper($hash);
+    my $results = $self->es->index(
+        index => 'hearthdrafter',
+        type => 'arena_run',
+        id => $arena_id,
+        body => $doc->{_source},
+    );
+    return 0; #success
+}
+
 
 1;

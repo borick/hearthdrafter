@@ -7,9 +7,6 @@
 % end
 
 % my $run_details = stash('run');
-<span class="buttons">
-<a href="/draft/view_completed_runs">Back</a>
-</span>
 <div id="view_run">
     <div id="tabs">
         <ul>
@@ -18,7 +15,7 @@
             <li><a href="#tabs-1">Mana Counts</a></li>
         </ul>
         <div id="tabs-1">
-        <table border="0" width="100%" id="cards_chosen" cellpadding="0" cellspacing="0">
+        <table id="cards_chosen">
             % for my $card (sort(keys($run_details->{card_counts}))) {
                 <tr>
                     <td id="card_name"><span class="capital"><%== $card %></span></td>
@@ -100,6 +97,10 @@
             % }
         </div>
     </div>
+</div>
+
+<div class="buttons">
+    <a href="/draft/view_completed_runs">Back</a>
 </div>
 
 <script type="text/javascript">
