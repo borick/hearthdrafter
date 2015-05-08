@@ -10,17 +10,12 @@
     <li><a href="#tabs-2">About</a></li>
   </ul>
   <div id="tabs-1">
-  <table>
-   
     <h2>Welcome</h2>
     <p>Although HearthDrafter is still in Alpha, it has a Strong Drafting Algorithm that differentiates itself from competitors!</p>
     <p>HearthDrafter also provides a Windows-compatible Reader application that can detect the available cards in arena, without you having to tediously type them out or select them from a list!</p>
     <center><img src="/images/main_1.png"/></center>
-  </table>
   </div>
   <div id="tabs-2">
-  <table>
-    <h2>About HearthDrafter.com</h2>
     <ul>
     <li>Developed by a passionate hearthstone player/ profesional developer, in his free time!</li>
     <li>This site is very security minded. All communications are encrypted, and your password is stored using non-reversible encryption.</li>
@@ -28,7 +23,6 @@
     <li>This is a very early alpha release. Expect much more coming soon.</li>
     </ul>
     <p><b><font size="2pt">Not affiliated with Blizzard or Hearthstone Tracker. All images are trademarked material of Blizzard, inc.</font></b>
-  </table>
   </div>
 </div>
 </div>
