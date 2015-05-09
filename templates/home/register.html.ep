@@ -31,7 +31,6 @@
 
 <center><input type='submit' name='Submit' value='Submit' /></center>
 </fieldset>
-
-<%== stash('captcha') %>
+<div class="g-recaptcha" data-sitekey="6LfOPQYTAAAAAAZkmVtyWMAWWN-sKo_FaRRSusHM"></div>
 </form>
 </div>

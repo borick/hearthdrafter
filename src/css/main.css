@@ -685,3 +685,12 @@ h2 {
 .fixed_win {
     width: 800px;
 }
+.bright {
+    color: #009DE5 !important;
+}
+.lime {
+    color: lime !important;
+}
+.small {
+    font-size: 75%;
+}

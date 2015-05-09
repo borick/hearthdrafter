@@ -10,10 +10,11 @@ use Data::Dumper;
 use Data::UUID;
 my $du = Data::UUID->new();
 use Mail::Sendmail;
-use Captcha::reCAPTCHA;
 use Regexp::Profanity::US;
 use RFC::RFC822::Address qw /valid/;
- 
+use Mojo::UserAgent;
+use JSON;
+  
 use constant URL => 'https://www.hearthdrafter.com';
 use constant VALIDATION_TIMEOUT_SECONDS => 60*60*24*14; #14 days expiry on validation code.
 use constant MAX_USERS => 5000;
@@ -27,15 +28,28 @@ my $pbkdf2 = Crypt::PBKDF2->new(
     salt_len => 10,
 );
 
+my $ua = Mojo::UserAgent->new;
+
 # Write
 sub register {
-    my ($self, $mojo, $user_name, $email, $email_confirm, $fname, $lname, $password, $c) = @_;
-    my $challenge = $mojo->req->body_params->param('recaptcha_challenge_field');
-    my $response = $mojo->req->body_params->param('recaptcha_response_field');
-    my $result = $c->check_answer('6LfOPQYTAAAAAAnNr5UHwU39XIPALsSQhqbgthNq', $mojo->tx->remote_address, $challenge, $response);
+    my ($self, $mojo, $user_name, $email, $email_confirm, $fname, $lname, $password) = @_;
     die "Profanity in user name" if profane($user_name);
+    my $response = $mojo->req->body_params->param('g-recaptcha-response');
+    #print STDERR Dumper($mojo->req->body_params);
+    #print STDERR "Response: $response\n";
+    my $tx = $ua->post('https://www.google.com/recaptcha/api/siteverify' => form => {response => $response,
+                                                                                     secret => '6LfOPQYTAAAAAAnNr5UHwU39XIPALsSQhqbgthNq', 
+                                                                                     remoteip => $mojo->tx->remote_address} );
+    my $res = 0;
+    if ($res = $tx->success) {  print STDERR "Captcha success: $res\n"; }
+    else {
+        my $err = $tx->error;
+        print STDERR "Error: " . Dumper($err);
+    }
+    my $data = decode_json($res->body);
+    $res = $data->{success};
     die "Captcha error"
-            if ( !$result->{is_valid} ) && ($mojo->req->url->to_abs->host !~ /local/);
+            if ( !$res ) && ($mojo->req->url->to_abs->host !~ /local/);
     die "E-mails dont match" if $email ne $email_confirm;
     die "Bad characters in user name'$user_name'" if ($user_name) !~ /^\w+$/;
     die "E-mail invalid" if !valid($email);

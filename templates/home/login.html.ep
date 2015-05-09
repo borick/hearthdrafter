@@ -11,7 +11,7 @@
 <input type='password' name='password' id='password' maxlength="50" />
 <input type='submit' name='Login' value='Login' />
 </form>
-<br><a href="/register">Sign Up</a>
+<br><span class="small">Don't have an account? </span><a href="/register">Sign Up Now!</a>
 % }
 % if (my $message = flash 'login_message') {
 <font color='red'><span class='capital'>

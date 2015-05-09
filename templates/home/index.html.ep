@@ -1,6 +1,6 @@
 % layout 'default';
 % content_for header => begin
-  <title>HearthDrafter.com Main Page</title>
+  <title>HearthDrafter - The Future of Arena</title>
 % end
 
 <div id="main_page">
@@ -11,13 +11,16 @@
     <li><a href="#tabs-2">About</a></li>
   </ul>
   <div id="tabs-1">
-    <h2>Welcome</h2>
+    <h2>the future of arena!</h2>
     <div class="left_aligned">
     <noscript>
     <p><b>This site requires javascript and a modern browser. Please enable javascript or this site will not be functional.<b></p>
     </noscript>
-    <p>Although HearthDrafter is still in alpha, it has a Strong Drafting Algorithm that differentiates itself from competitors!</p>
-    <p>HearthDrafter also provides a Windows-compatible Reader application that can detect the available cards in arena, without you having to tediously type them out or select them from a list!</p>
+    <p>We have Cutting Edge Technology, to help you even the playing field for Hearthstone Arena! Use the <span class="bright">Hearth Drafter Algorithm</span>, to make the right choice!</p>
+    <p>We have a massive database off card synergies, tags, stats and power levels, all compiled to ensure you reach your peak performance level in the arena.</p>
+    <p>Track your wins and losses, and measure your improvement over time!</p>
+    <p>Sick of tediously typing in all the cards in other arena drafting sites? Download the Windows-compatible
+    <span class="bright">Reader application</span>, to help detect cards in Arena, without you having to type them in.</p> 
     </div>
     <center><img src="/images/main_1.png" alt="drafting_sample_image"/></center>
   </div>
