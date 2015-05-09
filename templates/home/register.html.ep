@@ -6,7 +6,6 @@
 % end
 
 <div class="maincontent">
-<a href="/resend">Resend Validation Code</a><br><br>
 <form id='register' method='POST' accept-charset='UTF-8'>
 <fieldset >
 <legend>Register</legend>
@@ -31,6 +30,8 @@
 
 <center><input type='submit' name='Submit' value='Submit' /></center>
 </fieldset>
-<div class="g-recaptcha" data-sitekey="6LfOPQYTAAAAAAZkmVtyWMAWWN-sKo_FaRRSusHM"></div>
+<center><div class="g-recaptcha" data-sitekey="6LfOPQYTAAAAAAZkmVtyWMAWWN-sKo_FaRRSusHM"></div></center>
+<br>
+<a href="/resend">Resend Lost Validation Code</a>
 </form>
 </div>
