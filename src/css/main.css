@@ -691,6 +691,12 @@ h2 {
 .lime {
     color: lime !important;
 }
+.big {
+    font-size: 130%;
+}
 .small {
     font-size: 75%;
+}
+.changes {
+    font-size: 80%;
 }

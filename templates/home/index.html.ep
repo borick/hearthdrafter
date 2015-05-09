@@ -7,7 +7,6 @@
 <div id="tabs">
   <ul>
     <li><a href="#tabs-1">Welcome</a></li>
-    <li><a href="#tabs-3">Changes</a></li>
     <li><a href="#tabs-2">About</a></li>
   </ul>
   <div id="tabs-1">
@@ -16,18 +15,17 @@
     <noscript>
     <p><b>This site requires javascript and a modern browser. Please enable javascript or this site will not be functional.<b></p>
     </noscript>
-    <p>We have Cutting Edge Technology, to help you even the playing field for Hearthstone Arena! Use the <span class="bright">Hearth Drafter Algorithm</span>, to make the right choice!</p>
-    <p>We have a massive database off card synergies, tags, stats and power levels, all compiled to ensure you reach your peak performance level in the arena.</p>
-    <p>Track your wins and losses, and measure your improvement over time!</p>
-    <p>Sick of tediously typing in all the cards in other arena drafting sites? Download the Windows-compatible
-    <span class="bright">Reader application</span>, to help detect cards in Arena, without you having to type them in.</p> 
+    <p>This is the *ONLY* site with a powerful <span class="bright">Hearth Drafter Algorithm</span> to help you even the playing field for Hearthstone Arena.</p>
+    <ul><li>We have a massive database off card synergies, tags, stats and power levels, all compiled to ensure you reach your maximum potential!</li>
+    <li>Track your wins and losses, and measure your improvement over time.</li>
+    <li>Less typing, more playing! Download the Windows-compatible <span class="bright">Reader App</span>, which follows your action during the drafting process. No more typing in cards!<br><span class="small">Note: You still have to make all the choices, the reader app will NEVER automatically make a choice for you.</span></li>
+    </ul>
     </div>
+    <span class="big bright">Good Luck in the the Arena!!!</span>
     <center><img src="/images/main_1.png" alt="drafting_sample_image"/></center>
-  </div>
-  <div id="tabs-3">
-    <h2>Changes</h2>
-    <div class="left_aligned">
-        <i>Saturday, May 9, 2015</i>
+    <div class="left_aligned changes">
+    <h3>Change Log</h3>
+        05-09-2015
         <ul>
             <li>New version of the reader application which fixes login problems for some users.</li>
             <li>Added deck grade when viewing completed runs! Runs are now graded from F to A+.</li>
@@ -37,13 +35,13 @@
     </div>
   </div>
   <div id="tabs-2">
-    <h2>About</h2>
     <div class="left_aligned">
+    <h2>About</h2>
     <ul>
-        <li>Developed by a passionate hearthstone player who is also a profesional software developer, in his free time!</li>
-        <li>This site is very security minded. All communications are encrypted, and your password is stored using non-reversible encryption.</li>
-        <li>This is a very early alpha release. Expect much more coming soon.</li>
-        <li>Contact me at admin@hearthdrafter.com or on reddit username hearthdrafter, with any issues or questions.</li>
+        <li>Developed by a passionate hearthstone player who is also a profesional software developer - ALL in his free time!</li>
+        <li>We do our best to keep this site secure. We store your password using non-versible encryption, and all communication uses SSL.</li>
+        <li>Contact me at <a href="mailto:admin@hearthdrafter.com"><span class="bright">admin@hearthdrafter.com</span></a> or on reddit username hearthdrafter, with any issues or questions.</li>
+        <li>This is a very early alpha release. Expect much more coming soon. <a href="/changelog.txt"><span class="bright">Click here</a></a> to see a devopment log of changes.</li>
     </ul>
     </div>
     <p><b><font size="2pt">Not affiliated with Blizzard, inc. All images are trademarked material of Blizzard, inc.</font></b></p>
