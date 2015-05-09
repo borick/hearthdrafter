@@ -65,19 +65,14 @@ sub register_post {
     my $result = undef;
     eval {
         $result = $self->model->user->register($self, $user_name, $email, $email_confirm, $fname, $lname, $password);
+        print STDERR "Result: $result\n";
     };
-    if (!defined($result)) {
+    if ($result || !defined($result)) {
         my $msg = undef;
-        if ($@ =~ /(.*) at .* line \d+.$/) {
-            $msg = $1;
-        } else {
-            $msg = 'User creation failed.';
-        }
-        print STDERR "User Creation Failed...\n";
+        $msg = 'User creation failed' . ($result ? ': ' . $result: '');
         $self->stash(error_message => $msg);
-        $self->render('home/index');
+        $self->render('home/register');
     } else {
-        print STDERR "User Creation Success!\n";
         $self->stash(success_message => 'User created. Please check your e-mail account for the validation link.');
         $self->render('home/index');
     }

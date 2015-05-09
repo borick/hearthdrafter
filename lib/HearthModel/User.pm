@@ -33,7 +33,8 @@ my $ua = Mojo::UserAgent->new;
 # Write
 sub register {
     my ($self, $mojo, $user_name, $email, $email_confirm, $fname, $lname, $password) = @_;
-    die "Profanity in user name" if profane($user_name);
+    return "Name/ID cannot be blank" if $user_name =~ /^\s*$/ or $fname =~ /^\s*$/ or $fname =~ /^\s*$/;
+    return "Profanity in user name" if profane($user_name);
     my $response = $mojo->req->body_params->param('g-recaptcha-response');
     #print STDERR Dumper($mojo->req->body_params);
     #print STDERR "Response: $response\n";
@@ -41,18 +42,20 @@ sub register {
                                                                                      secret => '6LfOPQYTAAAAAAnNr5UHwU39XIPALsSQhqbgthNq', 
                                                                                      remoteip => $mojo->tx->remote_address} );
     my $res = 0;
-    if ($res = $tx->success) {  print STDERR "Captcha success: $res\n"; }
-    else {
-        my $err = $tx->error;
-        print STDERR "Error: " . Dumper($err);
-    }
-    my $data = decode_json($res->body);
-    $res = $data->{success};
-    die "Captcha error"
+    eval {
+        if ($res = $tx->success) {  print STDERR "Captcha success: $res\n"; }
+        else {
+            my $err = $tx->error;
+            print STDERR "Error: " . Dumper($err);
+        }
+        my $data = decode_json($res->body);
+        $res = $data->{success};
+    };
+    return "Captcha error"
             if ( !$res ) && ($mojo->req->url->to_abs->host !~ /local/);
-    die "E-mails dont match" if $email ne $email_confirm;
-    die "Bad characters in user name'$user_name'" if ($user_name) !~ /^\w+$/;
-    die "E-mail invalid" if !valid($email);
+    return "E-mails dont match" if $email ne $email_confirm;
+    return "Bad characters in user name'$user_name'" if ($user_name) !~ /^\w+$/;
+    return "E-mail invalid" if !valid($email);
     
     my $existing = undef;
     eval { 
@@ -62,7 +65,7 @@ sub register {
             id      => $user_name,
         );
     };
-    die 'That user-name is taken. Please choose another.' if defined($existing);
+    return 'That user-name is taken. Please choose another.' if defined($existing);
 
     my $results = $self->es->search(
         index => 'hearthdrafter',
@@ -74,7 +77,7 @@ sub register {
         }
     );
     
-    die 'That e-mail address is already registered. Please choose another.' if $results->{hits}->{total} > 0;
+    return 'That e-mail address is already registered. Please choose another.' if $results->{hits}->{total} > 0;
     $results = $self->es->search(
         index => 'hearthdrafter',
         type => 'user',
@@ -85,7 +88,7 @@ sub register {
             }
         }
     );
-    die 'Sorry, this site has reached the maximum number of users. Please try again tomorrow.' if ($results->{hits}->{total} > MAX_USERS);
+    return 'Sorry, this site has reached the maximum number of users. Please try again tomorrow.' if ($results->{hits}->{total} > MAX_USERS);
     #make it.
     
     my $body_source = {
@@ -117,7 +120,7 @@ sub register {
         );
     print STDERR "Sending e-mail to: $email!\n";
     sendmail(%mail);
-    return 1;
+    return 0;
 }
 
 sub resend_validation_code {
