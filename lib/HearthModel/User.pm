@@ -73,20 +73,26 @@ sub register {
     );
     die 'Sorry, this site has reached the maximum number of users. Please try again tomorrow.' if ($results->{hits}->{total} > MAX_USERS);
     #make it.
-    my $valid_code = $du->create_str();
-    $self->es->index(
-        index   => 'hearthdrafter',
-        type    => 'user',
-        id      => $user_name,
-        body    => {
+    
+    my $body_source = {
             user_name   => $user_name,
             email => $email,
             first_name => $fname,
             last_name => $lname,
-            password => $pbkdf2->generate($password),
-            validation_code => $valid_code,
-            validation_code_time => time,
-        }
+            password => $pbkdf2->generate($password)
+    };
+        
+    my $valid_code = $du->create_str();
+    if ($mojo->req->url->to_abs->host !~ /local/) {
+        #add validation code if not localhost    
+        $body_source->{validation_code} = $valid_code;
+        $body_source->{validation_code_time} = time;
+    }
+    $self->es->index(
+        index   => 'hearthdrafter',
+        type    => 'user',
+        id      => $user_name,
+        body    => $body_source,
     );
     my $valid_path = "/validate_user/$user_name/$valid_code";
     my $message = "Welcome to HearthDrafter.com $fname $lname!\n\nTo validate your account \"$user_name\", please navigate to " . URL . "$valid_path in your browser. Thank you for your patience.";
@@ -203,7 +209,7 @@ sub reset_pw {
 
 sub validate_user {
     my ($self, $user_name, $code) = @_;
-    my $doc;    
+    my $doc;
     eval {
         $doc = $self->es->get(
             index => 'hearthdrafter',
@@ -264,6 +270,21 @@ sub forgotten_pw_check {
         sendmail(%mail);
         return $self->reset_pw($user_name, $fname, $lname, $email);
     }
+    
+}
+
+sub get_user_stats {
+    my ($self) = @_;
+    my $results = $self->es->search(
+        index => 'hearthdrafter',
+        type => 'user',
+        search_type => 'count',
+        body  => {
+            query => {
+                match_all => {},
+            }
+        }
+    );
     
 }
 

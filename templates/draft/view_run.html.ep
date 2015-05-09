@@ -10,26 +10,14 @@
 <div id="view_run">
     <div id="tabs">
         <ul>
-            <li><a href="#tabs-3">Summary</a></li>
+            <li><a href="#tabs-1">Basic</a></li>
             <li><a href="#tabs-2">Choices</a></li>
-            <li><a href="#tabs-1">Mana Counts</a></li>
         </ul>
-        <div id="tabs-1">
-        <table id="cards_chosen">
-            % for my $card (sort(keys($run_details->{card_counts}))) {
-                <tr>
-                    <td id="card_name"><span class="capital"><%== $card %></span></td>
-                    <td id="card_count"><%== $run_details->{card_counts}->{$card} %></td>
-                </tr>
-            % }
-        </table>
-        </div>
         <div id="tabs-2">
-            <table width="100%" id="card_choices" cellpadding="10" cellspacing="0">
+            <table id="card_choices">
                 % my $counter = 0;
                 % for my $card_options (@{$run_details->{card_options}}) {
                 % $counter += 1;
-                
                     <tr>
                         <td class="card_choice"><b><%== $counter %></b></td>
                         <td width=33%>
@@ -42,59 +30,74 @@
                             <span class="capital card_choice <%== $card_options->{card_name_3} eq $card_options->{card_chosen} ? 'selected' : '' %>"><%== $card_options->{card_name_3} %></span>
                         </td>
                     </tr>
-            
                 % }
             </table>
         </div>
-        <div id="tabs-3">
+        <div id="tabs-1">
 % $run_details->{deck_type} =~ s/_/ /g;
-            <h2>Deck score: Coming Soon</h2>
-            <span class="capital"><h1><%== $run_details->{deck_type}; %></h1></span>
-            
-            % if ($run_details->{deck_type} eq 'late game') {
-            <p>
-            You have a late game deck. Your deck has enough value, such that if you can just make it till the end of the game, 
-            you will probably win.
-            </p>
-            <p>
-            Late-game decks need survivability in the form of taunts or heals. Use whatever spells you have to draw out the game!
-            </p>
-            <p>
-            Try and mulligan for any 2 or 3s you may possibly have, and even consider saving onto a value 4 if you already have a turn 2 play.
-            </p>
-            % } elsif ($run_details->{deck_type} eq 'aggro') {
-            <p>
-            You have an aggro deck. Aggro decks consist of many small creatures. You should have tons of stuff to play every turn.
-            Getting initial control of the game should not be a problem.  Save whatever damage bursts you have until you're sure you can get lethal.
-            </p>
-            <p>
-            Aggro decks need card draw, and lots of it.
-            </p>
-            <p>
-            Mana curve is one of your advantages. Mulligan aggressively to ensure you can play a card for each of the first three turns. Ideally you should end up with a 1,2,3, or 2,3,4.
-            </p>
-            % } elsif ($run_details->{deck_type} eq 'control') {
-            <p>
-            You have a control deck. Control decks are your typical mid to late range decks that rely on strong value cards. But in addition, control decks usually have lots of ways to deal with
-            the enemy.
-            </p>
-            <p>
-            Control decks need board clears (AOEs), creature removal, and strong value minions.
-            </p>
-            <p>
-            When it comes to mulligan, use your judgement. Hold onto strong 3s depending on your mana curve, but in general you should be aiming for optimal plays.
-            </p>
-            % } elsif ($run_details->{deck_type} eq 'value') {
-            <p>
-            You have your typical value deck. What I call a "value deck" just relies on strong board minions to secure the game.
-            </p>
-            <p>
-            Use your value minions and whatever spells you have to win.
-            </p>
-            <p>
-            When it comes to mulligan, use your judgement. Hold onto strong 3s depending on your mana curve, but in general you should be aiming for optimal plays.
-            </p>
-            % }
+            <table id="basic">
+                <tr>
+                    <td rowspawn="2" valign="top">
+                        <span class="capital"><h2><%== $run_details->{deck_type}; %></h2></span>
+                        % if ($run_details->{deck_type} eq 'late game') {
+                        <p>
+                        You have a late game deck. Your deck has enough value, such that if you can just make it till the end of the game, 
+                        you will probably win.
+                        </p>
+                        <p>
+                        Late-game decks need survivability in the form of taunts or heals. Use whatever spells you have to draw out the game!
+                        </p>
+                        <p>
+                        Try and mulligan for any 2 or 3s you may possibly have, and even consider saving onto a value 4 if you already have a turn 2 play.
+                        </p>
+                        % } elsif ($run_details->{deck_type} eq 'aggro') {
+                        <p>
+                        You have an aggro deck. Aggro decks consist of many small creatures. You should have tons of stuff to play every turn.
+                        Getting initial control of the game should not be a problem.  Save whatever damage bursts you have until you're sure you can get lethal.
+                        </p>
+                        <p>
+                        Aggro decks need card draw, and lots of it.
+                        </p>
+                        <p>
+                        Mana curve is one of your advantages. Mulligan aggressively to ensure you can play a card for each of the first three turns. Ideally you should end up with a 1,2,3, or 2,3,4.
+                        </p>
+                        % } elsif ($run_details->{deck_type} eq 'control') {
+                        <p>
+                        You have a control deck. Control decks are your typical mid to late range decks that rely on strong value cards. But in addition, control decks usually have lots of ways to deal with
+                        the enemy.
+                        </p>
+                        <p>
+                        Control decks need board clears (AOEs), creature removal, and strong value minions.
+                        </p>
+                        <p>
+                        When it comes to mulligan, use your judgement. Hold onto strong 3s depending on your mana curve, but in general you should be aiming for optimal plays.
+                        </p>
+                        % } elsif ($run_details->{deck_type} eq 'value') {
+                        <p>
+                        You have your typical value deck. What I call a "value deck" just relies on strong board minions to secure the game.
+                        </p>
+                        <p>
+                        Use your value minions and whatever spells you have to win.
+                        </p>
+                        <p>
+                        When it comes to mulligan, use your judgement. Hold onto strong 3s depending on your mana curve, but in general you should be aiming for optimal plays.
+                        </p>
+                        % }
+                    </td>
+                    <td valign="top" align="right">
+                        <h2>Deck Grade: <%== $run_details->{deck_grade} ? $run_details->{deck_grade} : '?' %></h2>
+                        <h2>Deck List</h2>
+                        <table id="cards_chosen">
+                            % for my $card (sort(keys($run_details->{card_counts}))) {
+                                <tr>
+                                    <td id="card_name"><span class="capital"><%== $card %></span></td>
+                                    <td id="card_count"><%== $run_details->{card_counts}->{$card} %></td>
+                                </tr>
+                            % }
+                        </table>
+                    </td>
+                </tr>
+            </table>
         </div>
     </div>
 </div>

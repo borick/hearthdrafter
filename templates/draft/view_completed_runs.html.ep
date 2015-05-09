@@ -3,12 +3,16 @@
   <title>HearthDrafter - Viewing Completed Runs</title>
 % end
 <div class="maincontent">
+<h2>Arena Runs</h2>
 <table>
 % if (my $runs = stash 'completed_runs') {
 %     for my $run (@$runs) {
 <tr><td>
          <a href="/draft/view_completed_run/<%== $run->{_id} %>">View <%== $run->{results}->{wins}%>/<%== $run->{results}->{losses}%> <span class='capital <%== $run->{class_name}%>'><%== $run->{class_name}%></span> Run </a> </td> <td> Ended On <%== $run->{end_date} %>     
 </td></tr>
+%     }
+%     if (@$runs == 0) {
+      <br><p>None yet!</p>
 %     }
 % }
 </table>

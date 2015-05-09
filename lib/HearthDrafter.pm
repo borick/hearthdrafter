@@ -81,9 +81,11 @@ sub startup {
     $auth_bridge->get('/view_completed_run/:arena_id')->to('draft#view_completed_run');
     $auth_bridge->get('/reader_card_choice/:card1/:card2/:card3')->to('reader#card_choice');
     $auth_bridge->get('/reader_confirm_card_choice/:index')->to('reader#confirm_card_choice');
-    
     $auth_bridge->websocket('/reader_socket')->to('reader#connect'); #cant figure out how to get rid of this extra one.
     $auth_bridge->websocket('/reader_socket/:arena_id')->to('reader#connect');
+    
+    #admin
+    my $admin_bridge = $r->under('/admin')->to('admin#check');
+    $admin_bridge->get('/')->to('admin#index');    
 }
-
 1;

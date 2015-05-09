@@ -306,20 +306,15 @@ sub list_runs_completed {
                     },
                     filter => {
                         bool => {
-                            must_not => {
-                                missing => { field => 'results.wins' },
-                            },
-                            must_not => {
-                                missing => { field => 'results.losses' },
-                            },
-                            must_not => {
-                                missing => { field => 'end_date' },
-                            },
-                        }
-                    }
-                }
-            }
-        }
+                        must_not => [ 
+                                { missing => { field => 'results.wins' } },
+                                { missing => { field => 'end_date' } },
+                            ],
+                        },
+                    },
+                },
+            },
+        },
     );
     
     for my $result (@{$results->{hits}->{hits}}) {

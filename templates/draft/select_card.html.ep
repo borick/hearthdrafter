@@ -14,6 +14,7 @@
 % content_for title_bar => begin
 <span class="title_label <%= lc($run_details->{class_name}) %>"><%= $run_details->{class_name} %> Run</span>
 % end
+<div id="select_card_pane">
 <div id="top_bar">
     <div id="message_panel">
     </div>
@@ -34,7 +35,7 @@
 </div>
 <div id="tabs">
   <ul>
-    <li><a href="#tabs-1">Mana Counts</a></li>
+    <li><a href="#tabs-1">Basic</a></li>
   </ul>
   <div id="tabs-1">
   <table id="cards_chosen">
@@ -46,6 +47,7 @@
      % }
   </table>
   </div>
+</div>
 </div>
 <script type="text/javascript">
 var cards = [
@@ -93,7 +95,10 @@ function connectWebSocket () {
 }
 
 //do the card selection stuff inside hearthdrafter.js
-$(document).ready(function() {    
+$(document).ready(function() {
+    if (!Modernizr.websockets) {
+        alert("Warning: Your browser is out-dated. You will not be able to connect the Reader Application. Upgrade to any modern browser that supports HTML5 WebSockets.");
+    }
     //load the card reader :D
     $('body').addClass(class_name + '_bg');
     var connect = function() {

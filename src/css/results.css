@@ -18,7 +18,9 @@ label {
     font-weight: bold;
     width: 100px;
 }
-
+#card_awards {
+    width: 100%;
+}
 #slider {
     width:100%;
 }
@@ -26,10 +28,12 @@ label {
     border: 1px solid;
     position: relative;
     height: 75px;
+    color: black;
 }
 #empty {
     z-index: 10;
     position: absolute;
+    left: 5px;
 }
 select {
     position: absolute;
@@ -38,6 +42,7 @@ select {
     width:200px;
 }
 #results {
+    width: 420px;
     display: block;
     background: rgba(0, 0, 0, 0.8);
     color: white;
@@ -52,4 +57,7 @@ select {
 }
 input[type='checkbox'],input[type='radio'] {
     width: 25px;
+}
+input[type'button'] {
+    width: auto;
 }

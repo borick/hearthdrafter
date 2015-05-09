@@ -1,13 +1,13 @@
 #view_run {
-    /*margin-top: 0 !important;*/
+  /*margin-top: 0 !important;*/
 }
 
 #tabs {
-    margin-top: 0;
-    height: 60%;
-}
-.ui-tabs-panel {
-    height: 80% !important;
+  margin-top: 0;
+  margin-left: auto;
+  margin-right: auto;
+  width: 800px;
+  height: 70% !important;
 }
 
 /* main page button */
@@ -36,8 +36,8 @@
   border-width: 2px;
   border-style: solid;
   border-color: black;
-  position: absolute;
-  bottom: 50px;
+  /*position: absolute;
+  bottom: 50px;*/
 }
 .buttons a:hover {
   background-color: #979797; background-image: -webkit-gradient(linear, left top, left bottom, from(#979797), to(#1a1a1a));
@@ -48,5 +48,12 @@
 }
 p {
   padding: 10px;
-  font-size: 120%;
+  font-size: 105%;
+}
+input {
+  width: auto !important;
+}
+#basic {
+  width: 100% !important;
+  padding: 10px;
 }

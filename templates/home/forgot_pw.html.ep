@@ -1,4 +1,6 @@
 % layout 'default';
+<div id="maincontent">
+
 <form id='forgot_pw' method='POST' accept-charset='UTF-8'>
 <fieldset >
 <legend>Forgotten Password</legend>
@@ -20,3 +22,5 @@
 <input type='submit' name='Submit' value='Submit' />
 </fieldset>
 </form>
+
+</div>

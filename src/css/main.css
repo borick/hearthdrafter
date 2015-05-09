@@ -13,16 +13,16 @@
   font-size: 115%;
 }
 #tabs {
-  position: absolute;
-  width: 761px;
+  /*position: absolute;
+  width: 761px;*/
   border-bottom-left-radius: 16px;
   border-bottom-right-radius: 16px;
   margin-top: 361px;
   background: rgba(0,0,0,0.75);
 }
 .ui-tabs-panel {
-  overflow-y: scroll;
-  height: 150px;
+  /*overflow-y: scroll;
+  height: 65% !important;*/
 }
 #tabs-1 {
   /*background: rgba(0,0,0,0.75) !important;*/
@@ -88,8 +88,8 @@ p {
 input {
   border:solid 1px #ccc;
   border-radius: 5px;
-  padding:7px 14px;
-  margin-bottom:10px
+  margin-bottom:10px;
+  padding: 3px;
 }
 input:focus {
   outline:none;
@@ -108,8 +108,6 @@ body {
   margin: 0;
   background: #000;
   background-image: url('../images/bgs/default.jpg');  
-  background-size:  cover;                      /* <------ */
-  background-position-y: 0px;
 }
 form {
   display: inline;
@@ -144,9 +142,9 @@ form {
   width: 300px;
 }
 .content {
+  text-align: center;
   margin-top: 100px;
   color: #000;
-  width: 789px;
   height: 95%;
   margin-left: auto;
   margin-right: auto;
@@ -253,11 +251,10 @@ td {
   margin-right: 0px;
 }
 #card_number {
-  margin-top: 303px;
-  margin-left: 766px;
+  margin-top: 312px;
+  margin-left: 765px;
   position: absolute;
   padding-top: 8px;
-  padding-right:14px;
   color: #000;
   font-weight: bold;
   overflow: none;
@@ -268,12 +265,11 @@ td {
   margin-top: 362px;
   position: absolute;
   margin-left: auto;
-  margin-right: 9px;
   font-weight: bold;
 }
 #undo_last_card a {
   color: #00D6F3;
-  margin-left: 768px;
+  margin-left: 772px;
   text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
 }
 #undo_last_card a:hover {
@@ -330,14 +326,15 @@ td {
   height: 95%;
 }
 .maincontent {
-  /*background-color: #B0B0B0; background-image: -webkit-gradient(linear, left top, left bottom, from(#57a4db), to(#28353F));*/
+  text-align: center;
+  display: inline-block;
+  width: auto;
   color: white;
   margin: 2px;
   background-color: rgba(0,0,0,0.75);
   border: 2px solid #28353f;
   border-radius: 12px;
-  padding: 7px 7px 7px 7px;
-  width: 810px;
+  padding: 14px;
 }
 /* main page button */
 .maincontent a {
@@ -364,6 +361,9 @@ td {
   border-style: solid;
   border-color: black;
   display: inline-block;
+  min-width: 50px;
+  margin-top: 3px;
+  margin-bottom: 3px;
 }
 .maincontent a:hover {
   background-color: #979797; background-image: -webkit-gradient(linear, left top, left bottom, from(#979797), to(#1a1a1a));
@@ -479,11 +479,6 @@ a:visited {
   color: #F0E442 !important;
 }
 
-#minimize {
-  width: 18px;
-  height: 22px;
-}
-
 #message_panel_bg {
   position: absolute;
   width: 747px;
@@ -579,7 +574,6 @@ a:visited {
   v-align: bottom;
   font-weight: bold;
 }
-
 #register label {
   width: 240px;
   display: inline-block;
@@ -598,24 +592,31 @@ a:visited {
     display: block;
     text-align: center;
 }
-
 .selected {
     font-weight: bold;
     color: #3FDCF0;
 }
 #card_choices table, #card_choices td, #card_choices th {
-    border: 5px solid black;
+    border: 2px solid black;
 }
-#card_choices table {
+#card_choices {
+    border-spacing: 0px;
     border-collapse: collapse;
-    padding: 5px;
 }
 
 /** home **/
 #main_page img {
+    margin: 20px;
     border: 5px solid black;
+    margin-left: auto;
+    margin-right: auto;
+    display: inline-block;
+    
 }
 #main_page #tabs {
+    margin-left: auto;
+    margin-right: auto;
+    width: 800px;
     margin-top: 0px;
     height: 80%;
     font-size: 130%;
@@ -628,6 +629,11 @@ a:visited {
 #main_page p {
     margin: 10px;
 }
+#main_page {
+    margin-left: auto;
+    margin-right: auto;
+    margin: 35px;
+}
 #resend {
     display: block;
     background: rgba(0, 0, 0, 0.8);
@@ -635,4 +641,47 @@ a:visited {
 }
 .range_slider {
     width: 150px;
+}
+
+h2 {
+    /*margin-top: 7px;
+    margin-bottom: 7px;*/
+    color: #fff;
+    font-weight: bold;
+    font-size: 24px;
+    text-transform: uppercase;
+    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+}
+#choices_table {
+    padding: 0px;
+    margin: 0px;
+}
+.left_aligned {
+    text-align: left;
+}
+
+#select_card_pane {
+    margin-left: auto;
+    margin-right: auto;
+    display: inline-block;
+}
+.cyan {
+    /*color: cyan !important;
+    border-color: cyan !important;*/
+}
+.special_link {
+    /*font-weight: bold;
+    border-color: lime !important;
+    color: lime !important;*/
+}
+.purple {
+    /*border-color: #FF00FF !important;
+    color: #FF00FF !important;*/
+}
+.red {
+    border-color: maroon !important;
+    color: maroon !important;
+}
+.fixed_win {
+    width: 800px;
 }

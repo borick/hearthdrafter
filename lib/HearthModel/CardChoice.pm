@@ -384,7 +384,29 @@ sub get_advice {
     }
     
     $source->{deck_type} = $deck_type;
-    
+    my $data_out = _get_best_card(\%scores, $out_data);
+    $best_card_after = $data_out->[0];
+    $best_card_score = $data_out->[1];
+      
+    $out_data->{message} = _build_message($best_card_after,$best_card_score,\%scores_hist, $card_data, $deck_type, \%tags_done, $number_of_cards);    
+    if (!exists($source->{total_score}) || !defined($source->{total_score})) {
+        $source->{total_score} = 0;
+    }
+    $source->{total_score} += $best_card_score;
+    my $total_score = $source->{total_score};
+    my $grade = 'F';
+    if ($total_score > 260000) {
+        $grade = 'A+';
+    } elsif ($total_score > 230000) {
+        $grade = 'A';
+    } elsif ($total_score > 170000) {
+        $grade = 'B';
+    } elsif ($total_score > 125000) {
+        $grade = 'C';
+    } elsif ($total_score > 80000) {
+        $grade = 'D';
+    }
+    $source->{deck_grade} = $grade;    
     $self->es->index(
         index => 'hearthdrafter',
         type => 'arena_run',
@@ -392,10 +414,6 @@ sub get_advice {
         body => $source,
     );
     #print STDERR Dumper(\%scores);
-    
-    ($best_card_after,$best_card_score)  = _get_best_card(\%scores, $out_data);
-    $out_data->{message} = _build_message($best_card_after,\%scores_hist, $card_data, $deck_type, \%tags_done, $number_of_cards);
-    
     for my $card (@$cards) {
         print STDERR "[$card] " . Dumper($scores_hist{$card}), "\n" if $debug =~ 'score';
     }
@@ -447,9 +465,7 @@ sub _get_score_msg {
 }
 
 sub _build_message {
-    my ($best_n,$scores_hist, $card_data, $deck_type, $tags_done, $number) = @_;
-    my $best_s = $best_n->[1];
-    $best_n = $best_n->[0];
+    my ($best_n,$best_s, $scores_hist, $card_data, $deck_type, $tags_done, $number) = @_;
     my $message = '';
     #print STDERR Dumper($scores_hist);
     my @cards = keys(%$scores_hist);
@@ -541,10 +557,12 @@ sub _get_best_card {
         if (defined($out_data)) {
             $out_data->{'scores'}->{$card_name} = $score*1.234;
         }
-        #$out_data->{'math'}->{$card_name} = $math{$card_name};
+        #$out_data->{'math'}->{$card_name} = $math{$card_name};heroin
     }
     $out_data->{'best_card'} = $best_card_n if defined($out_data);
-    return [$best_card_n,$best_card_score];
+    my $return_data = [$best_card_n,$best_card_score];
+    #print STDERR "Return data: " . Dumper($return_data) . "\n";
+    return $return_data;
 }
 
 1;

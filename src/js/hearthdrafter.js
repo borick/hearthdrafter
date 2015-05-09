@@ -116,7 +116,7 @@ function loadCardSelection() {
     updateNumber(card_number);
     
     cancel_link = createElement($("#top_bar"), 'undo_last_card', {});
-    cancel_link.html('<a href="#" onclick="undoLastCard(); return false;">Undo last card</a>');
+    cancel_link.html('<a href="#" onclick="undoLastCard(); return false;">undo</a>');
     
     //keep the search focused, where we type card names
     $(document).click(function(event) {
@@ -494,6 +494,8 @@ function finishConfirm(data) {
 }
 
 function undoLastCard() {
+    if (card_number == 0) 
+        return;
     if (window.confirm("Are you sure you want to undo the last card choice? There is no redo.")) {
         var url = '/draft/arena_action/undo_last_card_'+arena_id;
         var _gaq = _gaq || [];
@@ -511,7 +513,6 @@ function undoLastCard() {
             removeUndo();
             removeHighlight(); 
             updateChosenCardsTab(data);
-            updateUndoLink();
         });
     }
 }
@@ -523,7 +524,6 @@ function confirmCard(selindex,auto) {
         _gaq.push(['_trackPageview', url]);
         $.get(url, function( data ) {
             finishConfirm(data);
-            updateUndoLink();
         });
     } else {
         finishConfirm(auto);
@@ -546,14 +546,6 @@ function updateChosenCardsTab (data) {
         $('#cards_chosen').append(new_div);
     }
     updateManaCostChosenCards();//from select_card.html.ep.
-}
-
-function updateUndoLink() {
-    if (card_number > 0) {
-        $("#undo_last_card").show();
-    } else {
-        $("#undo_last_card").hide();
-    }
 }
 
 function createSynergiesDiv(id) {

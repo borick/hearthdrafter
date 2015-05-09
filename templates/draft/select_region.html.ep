@@ -7,4 +7,5 @@
 <a href="/draft/arena_action/set_region_europe_<%== stash('arena_id') %>">Europe</a>
 <a href="/draft/arena_action/set_region_asia_<%== stash('arena_id') %>">Asia</a>
 <a href="/draft/select_card/<%== stash('arena_id') %>">skip</a>
+<br><br><a href="/home">Back</a>
 </div>

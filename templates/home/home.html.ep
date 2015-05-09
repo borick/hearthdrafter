@@ -1,13 +1,13 @@
 % layout 'default';
 <div class="maincontent">
 <h2>Home</h2>
-<a href="/draft/select_class">Start New Draft</a><br>
+<a href="/draft/select_class" class="cyan">Start New Draft</a><br>
 % my $runs = stash 'runs';
 % my $runs_no_results = stash 'runs_no_results';
 % for my $run (@$runs) {
 
 <span class="<%= $run->{class_name} %>"><a href="/draft/select_card/<%= $run->{_id} %>/">Continue <span class='capital <%== $run->{class_name}%>'><%= $run->{class_name} %> <%= exists($run->{region})?'('.$run->{region}.')':'' %></span> Run </a></span>
-or <a href="/draft/arena_action/abandon_arena_<%= $run->{_id} %>/">Abandon This Run.</a> <br>
+or <a href="/draft/arena_action/abandon_arena_<%= $run->{_id} %>/" class="red">Abandon This Run.</a> <br>
 
 % }
 
@@ -17,8 +17,8 @@ or <a href="/draft/arena_action/abandon_arena_<%= $run->{_id} %>/">Abandon This 
 
 % }
 
-<a href="/draft/view_completed_runs">View Completed Runs</a><br>
+<a href="/draft/view_completed_runs" class="purple">View Completed Runs</a><br>
 
-<a href="/draft/download">Download Reader</a><br>
+<a class="special_link" href="/draft/download"><b>Download Reader</b></a><br>
 
 </div>

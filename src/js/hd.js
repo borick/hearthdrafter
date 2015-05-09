@@ -6,7 +6,7 @@ function preload(arrayOfImages) {
 //console.log(card_data);
 function updateManaCostChosenCards() {
     //add the cost to the list of cards
-    rows = $('#tabs-1 table tr');
+    rows = $('#cards_chosen tr');
     for (i = 0; i < rows.length; i++) {
         jrows = jQuery(rows[i]);
         text = jrows.find('[id=card_name]').text();
@@ -14,7 +14,7 @@ function updateManaCostChosenCards() {
             jrows.prepend($('<td id="cost">'+card_data[text]['cost']+'</td>'));
         } else {
             //TODO: find the hax0r.
-            jrows.prepend($('<td id="cost">?</td>'));
+            //jrows.prepend($('<td id="cost">?</td>'));
         }
     }
     sortTable();
