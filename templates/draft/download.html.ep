@@ -8,7 +8,7 @@
 <div class="fixed_win">
 <h2>HearthDrafter Reader Download</h2>
 <div class="left_aligned">
-    <p>The reader currently only supports Windows. It requires .Net framework installed.</p>
+    <p>The reader currently only supports Windows. It requires .Net framework installed. This is an early Beta version of the app. We're looking for user feedback for which to help us greatly improve the App.</p>
     <p><a href="/files/HearthDrafterReader.zip">Click here</a> to download the latest HearthDrafter Reader application in a Zip file.</p>
 </div>
 
@@ -22,6 +22,17 @@
         <li>The reader will never select a card for you automatically. It simply detects the 3 available cards, and detects which card you have selected.</li>
     </ul>
 </div>
+
+<h2>Known Issues</h2>
+<div class="left_aligned">
+    <p>These issues will be fixed in the next release. If you have any other problems not listed here, please contact me at e-mail admin@hearthdrafter.com or on reddit username hearthdrafter and let me know!
+    <ul>
+        <li>The reader continues to run after an arena is complete. To work around this, simply close the reader when you are done drafting.</li>
+        <li>If you have any of the settings menu open on top of the cards during the drafting process, the reader may accidentally detect cards as being picked! Try to avoid using the menus during the drafting process.</li>
+        <li>Users may have to uncheck the save password box at least one time to get their logins to work, if they failed to login in the previous version.</li>
+    </ul>
+</div>
+
 <br><a href="/home">Back</a>
 </div>
 </div>

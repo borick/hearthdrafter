@@ -16,9 +16,11 @@
     <p><b>This site requires javascript and a modern browser. Please enable javascript or this site will not be functional.<b></p>
     </noscript>
     <p>This is the *ONLY* site with a powerful <span class="bright">Hearth Drafter Algorithm</span> to help you even the playing field for Hearthstone Arena.</p>
-    <ul><li>We have a massive database off card synergies, tags, stats and power levels, all compiled to ensure you reach your maximum potential!</li>
+    <span class="small">
+    <ul><li>We have a massive database of card synergies, tags, stats and power levels available behind an intuitive interface - No more painful manual searches of spreadsheets or online tier-lists!</li>
+    <li>Less typing, more playing! Download a beta-version of the Windows-compatible <span class="bright">Reader App</span>, which follows your action during the drafting process. No more tediously typing in cards!<br><span class="small">Note: You still have to make all the choices, the reader app will NEVER automatically make a choice for you.</span></li>
     <li>Track your wins and losses, and measure your improvement over time.</li>
-    <li>Less typing, more playing! Download the Windows-compatible <span class="bright">Reader App</span>, which follows your action during the drafting process. No more typing in cards!<br><span class="small">Note: You still have to make all the choices, the reader app will NEVER automatically make a choice for you.</span></li>
+    </span>
     </ul>
     </div>
     <span class="big bright">Good Luck in the the Arena!!!</span>
