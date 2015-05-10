@@ -442,6 +442,7 @@ sub user_maintenance {
     my $users = $self->es->search(
         index => 'hearthdrafter',
         type => 'user',
+        size => 999999999999,
         body  => {
             query => {
                 match_all => {},
