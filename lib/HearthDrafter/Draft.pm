@@ -61,12 +61,6 @@ sub select_card {
     }
 }
 
-sub cancel_card {
-    my $self = shift;
-    
-    
-}
-
 sub card_choice {
     my $self = shift;
     my $result = $self->model->card_choice->get_advice($self->stash('card1'),

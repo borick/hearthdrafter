@@ -35,6 +35,11 @@ sub register {
     my ($self, $mojo, $user_name, $email, $email_confirm, $fname, $lname, $password) = @_;
     return "Name/ID cannot be blank" if $user_name =~ /^\s*$/ or $fname =~ /^\s*$/ or $fname =~ /^\s*$/;
     return "Profanity in user name" if profane($user_name);
+    
+    $user_name = lc($user_name);
+    $email = lc($email);
+    $email_confirm = lc($email_confirm);
+    
     my $response = $mojo->req->body_params->param('g-recaptcha-response');
     #print STDERR Dumper($mojo->req->body_params);
     #print STDERR "Response: $response\n";
@@ -54,8 +59,10 @@ sub register {
     return "Captcha error"
             if ( !$res ) && ($mojo->req->url->to_abs->host !~ /local/);
     return "E-mails dont match" if $email ne $email_confirm;
-    return "Bad characters in user name'$user_name'" if ($user_name) !~ /^\w+$/;
+    return "Bad characters in user name" if ($user_name) !~ /^[a-zA-Z_0-9-]+$/;
     return "E-mail invalid" if !valid($email);
+    
+    
     
     my $existing = undef;
     eval { 

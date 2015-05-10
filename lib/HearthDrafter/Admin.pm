@@ -7,7 +7,11 @@ use Mojo::Base 'Mojolicious::Controller';
 use Data::Dumper;
 
 sub index {
-    shift->render('admin/index');
+    my $self = shift;
+    
+    $self->render('admin/index');
+    
+    
 }
 
 sub check {

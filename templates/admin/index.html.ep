@@ -5,7 +5,6 @@
 
 <div class="maincontent">
     Total number of validated users: <%== stash('total_validated') %><br>
-    Total number of unvalidated users: <%== stash('total_unvalidated') %><br>
     Total number of arena runs: <%== stash('total_arenas') %><br>
     <a href="admin/users">User Management</a>
 </div>
