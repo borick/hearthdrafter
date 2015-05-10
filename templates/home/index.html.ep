@@ -25,16 +25,6 @@
     </div>
     <span class="big bright">Good Luck in the the Arena!!!</span>
     <center><img src="/images/main_1.png" alt="drafting_sample_image"/></center>
-    <div class="left_aligned changes">
-    <h3>Change Log</h3>
-        05-09-2015
-        <ul>
-            <li>New version of the reader application which fixes login problems for some users.</li>
-            <li>Added deck grade when viewing completed runs! Runs are now graded from F to A+.</li>
-            <li>Site will now display alerts if your browser isn't "Modern" enough for certain pages.</li>
-            <li>Minor layout/site graphics tweaks.</li>
-        </ul>
-    </div>
   </div>
   <div id="tabs-2">
     <div class="left_aligned">
