@@ -78,6 +78,7 @@ sub startup {
     $auth_bridge->get('/results/:arena_id/')->to('draft#results');
     $auth_bridge->post('/results/:arena_id/')->to('draft#results_post');
     $auth_bridge->get('/view_completed_runs')->to('draft#view_completed_runs');
+    $auth_bridge->get('/view_completed_runs/:from/:size')->to('draft#view_completed_runs');
     $auth_bridge->get('/view_completed_run/:arena_id')->to('draft#view_completed_run');
     $auth_bridge->get('/reader_card_choice/:card1/:card2/:card3')->to('reader#card_choice');
     $auth_bridge->get('/reader_confirm_card_choice/:index')->to('reader#confirm_card_choice');
@@ -87,5 +88,9 @@ sub startup {
     #admin
     my $admin_bridge = $r->under('/admin')->to('admin#check');
     $admin_bridge->get('/')->to('admin#index');    
+    $admin_bridge->get('/users')->to('admin#users');
+    $admin_bridge->get('/delete_user/:id')->to('admin#delete_user');
+    $admin_bridge->get('/lower_id/:id')->to('admin#lower_id');
+    $admin_bridge->get('/delete_old_invalid_users')->to('admin#delete_old_invalid_users');
 }
 1;

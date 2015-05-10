@@ -2,9 +2,20 @@
 % content_for header => begin
   <title>HearthDrafter - Admin Panel</title>
 % end
-
+% my $stats = stash('stats');
 <div class="maincontent">
-    Total number of validated users: <%== stash('total_validated') %><br>
-    Total number of arena runs: <%== stash('total_arenas') %><br>
-    <a href="admin/users">User Management</a>
+    <table>
+    <tr>
+    <td>
+    Total number of validated users: <span class="lime"><%== $stats->{'total_validated'} %></span>
+    </td>
+    </tr><tr>
+    <td>
+    Total number of finished arenas: <span class="lime"><%== $stats->{'total_arenas'} %></span>
+    </td>
+    </table>
+    <br>
+    <a href="/admin/users">User Management</a>
+    <br>
+    <a href="/home">Back to Home</a>
 </div>

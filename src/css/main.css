@@ -372,7 +372,7 @@ td {
   background-image: -ms-linear-gradient(top, #979797, #1a1a1a);
   background-image: -o-linear-gradient(top, #979797, #1a1a1a);
 }
-.maincontent table td {
+.maincontent table td, .maincontent table th {
   color: white;
   font-weight: bold;
   text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
@@ -664,19 +664,6 @@ h2 {
     margin-left: auto;
     margin-right: auto;
     display: inline-block;
-}
-.cyan {
-    /*color: cyan !important;
-    border-color: cyan !important;*/
-}
-.special_link {
-    /*font-weight: bold;
-    border-color: lime !important;
-    color: lime !important;*/
-}
-.purple {
-    /*border-color: #FF00FF !important;
-    color: #FF00FF !important;*/
 }
 .red {
     border-color: maroon !important;

@@ -8,10 +8,36 @@ use Data::Dumper;
 
 sub index {
     my $self = shift;
-    
+    $self->stash( stats => $self->model->user->get_user_stats() );
     $self->render('admin/index');
-    
-    
+}
+
+sub users {
+    my $self = shift;
+    $self->stash( users => $self->model->user->get_valid_users() ,
+                  invalid_users => $self->model->user->get_invalid_users() );
+    $self->render('admin/users');
+}
+
+sub delete_user {
+    my $self = shift;
+    eval { $self->model->user->delete_user($self->stash('id')); };
+    select undef,undef,undef,0.75;
+    return $self->redirect_to("/admin/users");
+}
+
+sub lower_id {
+    my $self = shift;
+    eval { $self->model->user->lower_id($self->stash('id')); };
+    select undef,undef,undef,0.75;
+    return $self->redirect_to("/admin/users");
+}
+
+sub delete_old_invalid_users {
+    my $self = shift;
+    eval { $self->model->user->delete_old_invalid_users($self->stash('id')); };
+    select undef,undef,undef,0.75;
+    return $self->redirect_to("/admin/users");
 }
 
 sub check {

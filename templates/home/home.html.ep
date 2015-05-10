@@ -1,7 +1,7 @@
 % layout 'default';
 <div class="maincontent">
 <h2>Home</h2>
-<a href="/draft/select_class" class="cyan">Start New Draft</a><br>
+<a href="/draft/select_class">Start New Draft</a><br>
 % my $runs = stash 'runs';
 % my $runs_no_results = stash 'runs_no_results';
 % for my $run (@$runs) {
@@ -17,8 +17,13 @@ or <a href="/draft/arena_action/abandon_arena_<%= $run->{_id} %>/" class="red">A
 
 % }
 
-<a href="/draft/view_completed_runs" class="purple">View Completed Runs</a><br>
+<a href="/draft/view_completed_runs">View Completed Runs</a><br>
 
-<a class="special_link" href="/draft/download"><b>Download Reader</b></a><br>
+<a href="/draft/download"><b>Download Reader</b></a><br>
+
+% my $user = user;
+% if ($user->{user}->{user_name} eq 'boris') {
+<a class="lime" href="/admin"><b>Admin</b></a><br>
+% }
 
 </div>

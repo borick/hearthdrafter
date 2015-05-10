@@ -36,7 +36,7 @@ sub register {
     return "Name/ID cannot be blank" if $user_name =~ /^\s*$/ or $fname =~ /^\s*$/ or $fname =~ /^\s*$/;
     return "Profanity in user name" if profane($user_name);
     
-    $user_name = lc($user_name);
+    #$user_name = lc($user_name);
     $email = lc($email);
     $email_confirm = lc($email_confirm);
     
@@ -132,7 +132,7 @@ sub register {
 
 sub resend_validation_code {
     my ($self, $user_name) = @_;
-    
+    $user_name = lc($user_name);
     my $existing = undef;
     eval {
         $existing = $self->es->get(
@@ -169,7 +169,7 @@ sub resend_validation_code {
 # Read
 sub load {
     my ($self, $user_name) = @_;
-
+    $user_name = lc($user_name);
     my $doc;
     eval {
         $doc = $self->es->get(
@@ -187,6 +187,7 @@ sub load {
 
 sub check_password {
     my ($self, $user_name, $password) = @_;
+    $user_name = lc($user_name);
     my $doc;    
     eval {
         $doc = $self->es->get(
@@ -208,6 +209,7 @@ sub check_password {
 
 sub reset_pw {
     my ($self, $user_name, $pw, $code) = @_;
+    $user_name = lc($user_name);
     my $doc;    
     eval {
         $doc = $self->es->get(
@@ -233,6 +235,7 @@ sub reset_pw {
 
 sub validate_user {
     my ($self, $user_name, $code) = @_;
+    $user_name = lc($user_name);
     my $doc;
     eval {
         $doc = $self->es->get(
@@ -304,12 +307,98 @@ sub get_user_stats {
         type => 'user',
         search_type => 'count',
         body  => {
-            query => {
-                match_all => {},
-            }
+            filter => {
+                bool => {
+                    must => { missing => { field => 'validation_code' } },
+                },
+            },
         }
     );
+    my $arenas = $self->es->search(
+        index => 'hearthdrafter',
+        type => 'arena_run',
+        search_type => 'count',
+        body  => {
+            filter => {
+                bool => {
+                must_not => [ 
+                        { missing => { field => 'results.wins' } },
+                        { missing => { field => 'end_date' } },
+                    ],
+                },
+            },
+        },
+    );
+    my $stats = {};
+    $stats->{total_validated} = $results->{hits}->{total};
+    $stats->{total_arenas} = $arenas->{hits}->{total};
+    return $stats;
+}
+
+sub get_valid_users {
+    my ($self) = @_;
+    my $all_users = $self->es->search(
+        index => 'hearthdrafter',
+        type => 'user',
+        size => 999999999,
+        body  => {
+            filter => {
+                bool => {
+                    must => { missing => { field => 'validation_code' } },
+                },
+            },
+        }
+    );
+    return $all_users->{hits}->{hits};
+}
+sub get_invalid_users {
+    my ($self) = @_;
+    my $all_users = $self->es->search(
+        index => 'hearthdrafter',
+        type => 'user',
+        size => 999999999,
+        body  => {
+            filter => {
+                bool => {
+                    must_not => { missing => { field => 'validation_code' } },
+                },
+            },
+        }
+    );
+    return $all_users->{hits}->{hits};
+}
+
+sub delete_user {
+    my ($self, $id) = @_;
     
+    $self->es->delete(
+        index => 'hearthdrafter',
+        type => 'user',
+        id => $id,
+    );
+    return;
+}
+
+sub lower_id {
+    my ($self, $old_id) = @_;
+    die "id already lowercase" if ($old_id eq lc($old_id));
+    
+    my $existing = undef;
+    eval { 
+        $existing = $self->es->get(
+            index   => 'hearthdrafter',
+            type    => 'user',
+            id      => $old_id,
+        );
+    };
+    die "no user" if !defined($existing);
+    $self->delete_user($old_id);
+    $self->es->index(
+        index   => 'hearthdrafter',
+        type    => 'user',
+        id      => lc($old_id),
+        body    => $existing->{_source},
+    );
 }
 
 sub settings {
@@ -340,6 +429,17 @@ sub settings {
     return 1;
 }
 
+sub delete_old_invalid_users {
+    my ($self) = @_;
+    my $users = $self->get_invalid_users();
+    print STDERR Dumper($users);
+    for my $user (@$users) {
+        if (time - $user->{_source}->{validation_code_time} > VALIDATION_TIMEOUT_SECONDS) {
+            print STDERR "Deleting old user $user->{_id}\n";
+            #$self->delete_user($user->{_id});
+        }
+    }
+}
 
 
 1;

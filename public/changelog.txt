@@ -1,8 +1,8 @@
 05-10-2015
-- Integrated new Captcha from Google, since it looks much better.
+- Integrated new Captcha from Google.
 05-09-2015
 - New version of the reader application which fixes login problems for some users.
 - Added deck grade when viewing completed runs! Runs are now graded from F to A+.
-- Site will now display alerts if your browser isn't "Modern" enough for certain pages.
+- Site will now display alerts if your browser isn't modern enough for certain pages.
 - Minor layout/site graphics tweaks.
 - Made undo link always appear to fix a problem with it dissapearing in certain cases.
