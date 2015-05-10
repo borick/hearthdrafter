@@ -452,7 +452,7 @@ sub user_maintenance {
     for my $user (@$user_list) {
         if ($user->{_id} ne lc($user->{_id})) {
             print STDERR "Lowering ID for: $user->{_id}\n";
-            $self->lower_id($user->{_id});
+            eval { $self->lower_id($user->{_id}) };
         }
     }
 }
