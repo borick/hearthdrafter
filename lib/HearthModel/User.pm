@@ -432,7 +432,6 @@ sub settings {
 sub user_maintenance {
     my ($self) = @_;
     my $users = $self->get_invalid_users();
-    print STDERR Dumper($users);
     for my $user (@$users) {
         if (time - $user->{_source}->{validation_code_time} > VALIDATION_TIMEOUT_SECONDS) {
             print STDERR "Deleting old user $user->{_id}\n";
@@ -449,9 +448,8 @@ sub user_maintenance {
         }
     );
     for my $user (@$users) {
-        print STDERR Dumper($user) if ($user->{_id} ne lc($user->{_id}));
+        $self->lower_id($user->{_id});
     }
 }
-
 
 1;
