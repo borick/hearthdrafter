@@ -26,9 +26,9 @@ sub delete_user {
     return $self->redirect_to("/admin/users");
 }
 
-sub delete_old_invalid_users {
+sub user_maintenance {
     my $self = shift;
-    eval { $self->model->user->delete_old_invalid_users($self->stash('id')); };
+    eval { $self->model->user->user_maintenance($self->stash('id')); };
     select undef,undef,undef,0.75;
     return $self->redirect_to("/admin/users");
 }
