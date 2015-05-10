@@ -431,14 +431,15 @@ sub settings {
 
 sub user_maintenance {
     my ($self) = @_;
-    my $users = $self->get_invalid_users();
-    for my $user (@$users) {
-        if (time - $user->{_source}->{validation_code_time} > VALIDATION_TIMEOUT_SECONDS) {
-            print STDERR "Deleting old user $user->{_id}\n";
-            #$self->delete_user($user->{_id});
-        }
-    }
-    $users = $self->es->search(
+    print STDERR "IN User Maintenance...\n";
+#     my $users = $self->get_invalid_users();
+#     for my $user (@$users) {
+#         if (time - $user->{_source}->{validation_code_time} > VALIDATION_TIMEOUT_SECONDS) {
+#             print STDERR "Deleting old user $user->{_id}\n";
+#             #$self->delete_user($user->{_id});
+#         }
+#     }
+    my $users = $self->es->search(
         index => 'hearthdrafter',
         type => 'user',
         body  => {
@@ -448,7 +449,10 @@ sub user_maintenance {
         }
     );
     for my $user (@$users) {
-        $self->lower_id($user->{_id});
+        if ($user->{_id} eq lc($user->{_id})) {
+            print STDERR "Lowering ID for: $user->{_id}\n";
+            $self->lower_id($user->{_id});
+        }
     }
 }
 
