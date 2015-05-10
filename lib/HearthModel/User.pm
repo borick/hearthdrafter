@@ -448,7 +448,8 @@ sub user_maintenance {
             },
         }
     );
-    for my $user (@$users) {
+    my $user_list = $users->{hits}->{hits};
+    for my $user (@$user_list) {
         if ($user->{_id} eq lc($user->{_id})) {
             print STDERR "Lowering ID for: $user->{_id}\n";
             $self->lower_id($user->{_id});
