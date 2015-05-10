@@ -15,7 +15,7 @@
 <td><%==$source->{email}%></td>
 <td><%==$source->{first_name}%></td>
 <td><%==$source->{last_name}%></td>
-<td><a onclick="return confirm('Are you sure?')" href="/admin/delete_user/<%== $user->{_id} %>">Delete</a><a onclick="return confirm('Are you sure?')" href="/admin/lower_id/<%== $user->{_id} %>">ID Lowercase</a>
+<td><a onclick="return confirm('Are you sure?')" href="/admin/delete_user/<%== $user->{_id} %>">Delete</a>
 </tr>
 % }
 % if (@$users == 0) {
@@ -42,7 +42,7 @@
 % }
 </table>
 <br>
-<a onclick="return confirm('Are you sure?')" href="/admin/delete_old_invalid_users">Delete Old Invalid Users</a>
+<a onclick="return confirm('Are you sure?')" href="/admin/user_maintenance">Perform User Maintenance</a>
 
 <br><a href="/admin">Back</a>
 </div>

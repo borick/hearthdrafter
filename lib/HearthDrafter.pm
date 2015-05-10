@@ -90,7 +90,6 @@ sub startup {
     $admin_bridge->get('/')->to('admin#index');    
     $admin_bridge->get('/users')->to('admin#users');
     $admin_bridge->get('/delete_user/:id')->to('admin#delete_user');
-    $admin_bridge->get('/lower_id/:id')->to('admin#lower_id');
-    $admin_bridge->get('/delete_old_invalid_users')->to('admin#delete_old_invalid_users');
+    $admin_bridge->get('/user_maintenance')->to('admin#user_maintenance');
 }
 1;

@@ -36,7 +36,7 @@ sub register {
     return "Name/ID cannot be blank" if $user_name =~ /^\s*$/ or $fname =~ /^\s*$/ or $fname =~ /^\s*$/;
     return "Profanity in user name" if profane($user_name);
     
-    #$user_name = lc($user_name);
+    $user_name = lc($user_name);
     $email = lc($email);
     $email_confirm = lc($email_confirm);
     
@@ -429,7 +429,7 @@ sub settings {
     return 1;
 }
 
-sub delete_old_invalid_users {
+sub user_maintenance {
     my ($self) = @_;
     my $users = $self->get_invalid_users();
     print STDERR Dumper($users);
@@ -438,6 +438,18 @@ sub delete_old_invalid_users {
             print STDERR "Deleting old user $user->{_id}\n";
             #$self->delete_user($user->{_id});
         }
+    }
+    $users = $self->es->search(
+        index => 'hearthdrafter',
+        type => 'user',
+        body  => {
+            query => {
+                match_all => {},
+            },
+        }
+    );
+    for my $user (@$users) {
+        print STDERR Dumper($user) if ($user->{_id} ne lc($user->{_id}));
     }
 }
 
