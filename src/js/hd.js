@@ -12,10 +12,14 @@ function updateManaCostChosenCards() {
         text = jrows.find('[id=card_name]').text();
         if (typeof(card_data[text]) !== 'undefined') {
             jrows.prepend($('<td id="cost">'+card_data[text]['cost']+'</td>'));
+            $("#no_cards").remove();
         } else {
             //TODO: find the hax0r.
             //jrows.prepend($('<td id="cost">?</td>'));
         }
+    }
+    if (rows.length == 0) {
+        $('<span id="no_cards"><i>no cards chosen yet</i></span>').appendTo($('#cards_chosen'));
     }
     sortTable();
 }

@@ -379,105 +379,51 @@ sub delete_user {
     return;
 }
 
-sub lower_id {
-    my ($self, $old_id) = @_;
-    die "id already lowercase" if ($old_id eq lc($old_id));
+sub settings {
+    my ($self, $user_name, $email, $fname, $lname, $currentpassword, $newpassword) = @_;
     
-    my $existing = undef;
+    $user_name = lc($user_name);
+    my $doc = undef;
     eval { 
-        $existing = $self->es->get(
+        $doc = $self->es->get(
             index   => 'hearthdrafter',
             type    => 'user',
-            id      => $old_id,
+            id      => $user_name,
         );
     };
-    die "no user" if !defined($existing);
-    $self->delete_user($old_id);
+    die 'username does not exist' if !defined($doc);
+    
+    my $hash = $doc->{_source}->{password};
+    die 'bad pssword' if (!$pbkdf2->validate($hash, $currentpassword));
+    my $source = $doc->{_source};
+    
     $self->es->index(
         index   => 'hearthdrafter',
         type    => 'user',
-        id      => lc($old_id),
-        body    => $existing->{_source},
+        id      => $user_name,
+        body    => $source,
     );
-}
-
-sub settings {
-    my ($self, $email, $fname, $lname, $password) = @_;
-    
-    my $existing = undef;
-    print STDERR Dumper($self->user);
-#     eval { 
-#         $existing = $self->es->get(
-#             index   => 'hearthdrafter',
-#             type    => 'user',
-#             id      => $user_name,
-#         );
-#     };
-#     die 'username already exists' if defined($existing);
-#     $self->es->index(
-#         index   => 'hearthdrafter',
-#         type    => 'user',
-#         id      => $user_name,
-#         body    => {
+    return 1;
+#     {
 #             user_name   => $user_name,
 #             email => $email,
 #             first_name => $fname,
 #             last_name => $lname,
-#             password => $pbkdf2->generate($password),
+#             password => $pbkdf2->generate($newpassword),
 #         }
-#     );
-    return 1;
 }
 
 sub user_maintenance {
     my ($self) = @_;
     print STDERR "IN User Maintenance...\n";
-#     my $users = $self->get_invalid_users();
-#     for my $user (@$users) {
-#         if (time - $user->{_source}->{validation_code_time} > VALIDATION_TIMEOUT_SECONDS) {
-#             print STDERR "Deleting old user $user->{_id}\n";
-#             #$self->delete_user($user->{_id});
-#         }
-#     }
-    my $users = $self->es->search(
-        index => 'hearthdrafter',
-        type => 'user',
-        size => 999999999,
-        body  => {
-            query => {
-                match_all => {},
-            },
-        }
-    );
+    
+    #remove old users.
+    my $users = $self->get_invalid_users();
     my $user_list = $users->{hits}->{hits};
     for my $user (@$user_list) {
-        if ($user->{_id} ne lc($user->{_id})) {
-            print STDERR "Lowering ID for: $user->{_id}\n";
-            eval { $self->lower_id($user->{_id}) };
-        }
-    }
-    my $arenas = $self->es->search(
-        index => 'hearthdrafter',
-        type => 'arena_run',
-        size => 999999999,
-        body  => {
-            query => {
-                match_all => {},
-            },
-        }
-    );
-    my $arena_list = $arenas->{hits}->{hits};
-    for my $arena (@$arena_list) {
-        my $source = $arena->{_source};
-        if ($source->{user_name} ne lc($source->{user_name})) {
-            print STDERR "Re-indexing arena with ID: " . $arena->{_id} . "\n";
-            $source->{user_name} = lc($source->{user_name});
-            $self->es->index(
-                index   => 'hearthdrafter',
-                type    => 'arena_run',
-                id      => $arena->{_id},
-                body    => $source,
-            );        
+        if (time - $user->{_source}->{validation_code_time} > VALIDATION_TIMEOUT_SECONDS) {
+            print STDERR "Deleting old user $user->{_id}\n";
+            $self->delete_user($user->{_id});
         }
     }
 }

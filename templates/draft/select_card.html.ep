@@ -35,7 +35,7 @@
 </div>
 <div id="tabs">
   <ul>
-    <li><a href="#tabs-1">Basic</a></li>
+    <li><a href="#tabs-1">Deck Details</a></li>
   </ul>
   <div id="tabs-1">
   <table id="cards_chosen">
@@ -96,9 +96,7 @@ function connectWebSocket () {
 
 //do the card selection stuff inside hearthdrafter.js
 $(document).ready(function() {
-    if (!Modernizr.websockets) {
-        alert("Warning: Your browser is out-dated. You will not be able to connect the Reader Application. Upgrade to any modern browser that supports HTML5 WebSockets.");
-    }
+
     //load the card reader :D
     $('body').addClass(class_name + '_bg');
     var connect = function() {
@@ -137,9 +135,12 @@ $(document).ready(function() {
             console.log('Oh no! an error occured: ' + err);
         }
     };
-    connect();
     loadCardSelection();
-    updateUndoLink();
     updateManaCostChosenCards();
+    connect();
+    
+    if (!Modernizr.websockets) {
+        alert("Warning: Your browser is out-dated. You will not be able to connect the Reader Application. Upgrade to any modern browser that supports HTML5 WebSockets.");
+    }
 });
 </script>

@@ -1,0 +1,35 @@
+
+% layout 'default';
+
+% content_for header => begin
+  <title>HearthDrafter - Account Details</title>
+% end
+
+<div class="maincontent">
+<form id='settings' method='POST' accept-charset='UTF-8'>
+<fieldset >
+<legend>Account Details</legend>
+
+% print dumper(stash('user'));
+<label for='name' >User Name: </label>
+<input type='text' name='user_name' id='user_name' maxlength="50" /><br>
+
+<label for='email' >Email Address:</label>
+<input type='text' name='email' id='email' maxlength="50" /><br>
+ 
+<label for='username' >First Name:</label>
+<input type='text' name='first_name' id='first_name' maxlength="50" /><br>
+
+<label for='username' >Last Name:</label>
+<input type='text' name='last_name' id='last_name' maxlength="50" /><br>
+ 
+<label for='password' >Existing Password:</label>
+<input type='password' name='old_password' id='old_password' maxlength="50" /><br>
+
+<label for='password' >Password:</label>
+<input type='password' name='new_password' id='new_password' maxlength="50" /><br>
+
+<center><input type='submit' name='Submit' value='Submit' /></center>
+</fieldset>
+</form>
+</div>

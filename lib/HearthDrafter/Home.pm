@@ -129,6 +129,10 @@ sub validate_user {
     $self->render('home/index');
 }
 
+sub settings {
+    my $self = shift;
+    $self->render('home/settings');
+}
 
 sub reset_pw {
     shift->render('home/reset_pw');
