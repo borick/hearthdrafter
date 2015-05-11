@@ -4,8 +4,12 @@
 % end
 % my $users = stash('users');
 <div class="maincontent">
+<a onclick="return confirm('Are you sure?')" href="/admin/user_maintenance">Perform User Maintenance</a>
+<br><a href="/admin">Back</a>
+<br>
+
 <h2>Valid Users</h2>
-<table>
+<table width="100%">
 <tr><th>ID</th><th>User Name</th><th>E-Mail</th><th>First Name</th><th>Last Name</th><th>Actions</th></tr>
 % for my $user (@$users) {
 % my $source = $user->{_source};
@@ -24,7 +28,7 @@
 </table>
 % $users = stash('invalid_users');
 <h2>INValid Users</h2>
-<table>
+<table width="100%">
 <tr><th>ID</th><th>User Name</th><th>E-Mail</th><th>First Name</th><th>Last Name</th><th>Actions</th></tr>
 % for my $user (@$users) {
 % my $source = $user->{_source};
@@ -41,8 +45,4 @@
 <tr><td colspan=6>Nothing here.</td></tr>
 % }
 </table>
-<br>
-<a onclick="return confirm('Are you sure?')" href="/admin/user_maintenance">Perform User Maintenance</a>
-
-<br><a href="/admin">Back</a>
 </div>

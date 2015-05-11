@@ -456,6 +456,30 @@ sub user_maintenance {
             eval { $self->lower_id($user->{_id}) };
         }
     }
+    my $arenas = $self->es->search(
+        index => 'hearthdrafter',
+        type => 'arena_run',
+        size => 999999999,
+        body  => {
+            query => {
+                match_all => {},
+            },
+        }
+    );
+    my $arena_list = $arenas->{hits}->{hits};
+    for my $arena (@$arena_list) {
+        my $source = $arena->{_source};
+        if ($source->{user_name} ne lc($source->{user_name})) {
+            print STDERR "Re-indexing arena with ID: " . $arena->{_id} . "\n";
+            $source->{user_name} = lc($source->{user_name});
+            $self->es->index(
+                index   => 'hearthdrafter',
+                type    => 'arena_run',
+                id      => $arena->{_id},
+                body    => $source,
+            );        
+        }
+    }
 }
 
 1;
