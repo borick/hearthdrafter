@@ -23,7 +23,7 @@ sub arena_action {
     } elsif ($action =~ /abandon_arena_([a-zA-Z0-9_-]+)/ ){
         my $arena_id = $1;
         $self->model->arena->abandon_run($arena_id, $self->user->{'user'}->{'user_name'});
-        select undef,undef,undef 0.3; #TODO:hideious timing bodge
+        select undef,undef,undef,0.75; #TODO:hideious timing bodge
         return $self->redirect_to('/home');
     } elsif ($action =~ /undo_last_card_([a-zA-Z0-9_-]+)/ ){
         my $arena_id = $1;
@@ -86,7 +86,7 @@ sub results_post {
     my $result = $self->model->arena->provide_results($self->stash('arena_id'), $self->req->body_params);
     if (!$result) {
         $self->stash(message=>'Arena results updated successfully.');
-        select undef,undef,undef 0.3; #TODO:hideious timing bodge
+        select undef,undef,undef,0.75; #TODO:hideious timing bodge
         return $self->redirect_to('/');
     } else {
         $self->stash(error=>"There was a problem updating the arena result: $result\n");
