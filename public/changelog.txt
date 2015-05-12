@@ -1,5 +1,5 @@
 05-11-2015
-- Ability to change your user settings like e-mail, by clicking on your name.
+- Ability to change your name, and password by clicking on your name.
 05-10-2015
 - Integrated new Captcha from Google.
 05-09-2015
