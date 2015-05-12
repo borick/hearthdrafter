@@ -73,10 +73,11 @@ sub get_cards {
 
 sub get_tags {
     my ($self, $array) = @_;
+    #print STDERR "Get tags: " . Dumper($array) . "\n";
     my $results = $self->es->search(
         index => 'hearthdrafter',
         type => 'card_tag',
-        size => 9999, 
+        size => 99999, 
         body => {
             query => {
                 terms => {

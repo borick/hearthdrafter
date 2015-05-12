@@ -5,10 +5,13 @@
   <script src="/js/libs/rangeslider.js"></script>
   <script src="/js/hearthdrafter.min.js"></script>
   <script src="/js/hd.min.js"></script>
+  <script src="/js/libs/owl-carousel/owl.carousel.js"></script>
   <script src="/js/libs/odometer/odometer.js"></script>
   <script src="/js/libs/list.js"></script>
   <link rel="stylesheet" type="text/css" media="screen" href="/js/libs/odometer/odometer-theme-minimal.css" />
   <link rel="stylesheet" type="text/css" media="screen" href="/js/libs/rangeslider.css" />
+  <link rel="stylesheet" type="text/css" media="screen" href="/js/libs/owl-carousel/owl.carousel.css" />
+  <link rel="stylesheet" type="text/css" media="screen" href="/js/libs/owl-carousel/owl.theme.css" />
   
 % end
 % content_for title_bar => begin
@@ -35,9 +38,13 @@
 </div>
 <div id="tabs">
   <ul>
-    <li><a href="#tabs-1">Deck Details</a></li>
+    <li><a href="#tabs-1">Breakdown</a></li>
+    <li><a href="#tabs-2">List of Cards</a></li>
   </ul>
   <div id="tabs-1">
+    <%== dumper($run_details->{tags}) %>
+  </div>
+  <div id="tabs-2">
   <table id="cards_chosen">
      % for my $card (sort(keys($run_details->{card_counts}))) {
         <tr>

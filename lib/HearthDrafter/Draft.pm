@@ -54,9 +54,14 @@ sub select_card {
             return $self->redirect_to('/draft/view_completed_run/'.$self->stash('arena_id'));
         }
         my $cards = $self->model->card->get_cards_by_class($run_details->{class_name});
-        $self->stash(cards => $self->model->card->get_cards_by_class($run_details->{class_name}),
-                     card_number => $self->model->arena->get_next_index($run_details),
-                     run_details => $run_details);
+        my @chosen = keys(%{$run_details->{card_counts}});
+        my $data = {cards => $self->model->card->get_cards_by_class($run_details->{class_name}),
+                    card_number => $self->model->arena->get_next_index($run_details),
+                    run_details => $run_details};
+        if (@chosen != 0) {
+            $data->{tags} = $self->model->card->get_tags(\@chosen);
+        }             
+        $self->stash($data);
         return $self->render('draft/select_card');
     }
 }

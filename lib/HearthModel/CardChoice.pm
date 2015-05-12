@@ -382,12 +382,14 @@ sub get_advice {
         push($scores_hist{$card_name}, ['synergy', $scores{$card_name}]);
         $i += 1;
     }
-    
     $source->{deck_type} = $deck_type;
     my $data_out = _get_best_card(\%scores, $out_data);
     $best_card_after = $data_out->[0];
     $best_card_score = $data_out->[1];
-      
+     
+    push(@unique_cards, $best_card_after);
+    $source->{tags} = $c->model->card->get_tags(\@unique_cards);
+    
     $out_data->{message} = _build_message($best_card_after,$best_card_score,\%scores_hist, $card_data, $deck_type, \%tags_done, $number_of_cards);    
     if (!exists($source->{total_score}) || !defined($source->{total_score})) {
         $source->{total_score} = 0;
