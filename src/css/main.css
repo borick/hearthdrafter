@@ -583,10 +583,10 @@ a:visited {
   background: rgba(0, 0, 0, 0.75);
   color: white;
 }
-#register,#settings input {
+#register input,#settings input {
   width: 150px;
 }
-input:read-only { background: #aaa !important };
+/*input:read-only { background: #aaa !important };*/
 
 /* card choices */
 .card_choice {
@@ -684,6 +684,10 @@ h2 {
 }
 .small {
     font-size: 75%;
+}
+.teeny {
+    font-size: 70%;
+    font-weight: normal;
 }
 .changes {
     font-size: 80%;
