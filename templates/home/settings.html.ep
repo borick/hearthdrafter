@@ -18,7 +18,7 @@
 <input type='text' name='user_name' id='user_name' maxlength="50" value="<%== $user->{user}->{user_name} %>" readonly/><br>
 
 <label for='email' >Email Address:</label>
-<input type='text' name='email' id='email' maxlength="50" value="<%== $user->{user}->{email} %>"/><br>
+<input type='text' name='email' id='email' maxlength="50" value="<%== $user->{user}->{email} %>" readonly/><br>
  
 <label for='first_name' >First Name:</label>
 <input type='text' name='first_name' id='first_name' maxlength="50" value="<%== $user->{user}->{first_name} %>"/><br>

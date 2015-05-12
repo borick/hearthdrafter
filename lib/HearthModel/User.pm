@@ -31,14 +31,11 @@ my $pbkdf2 = Crypt::PBKDF2->new(
 my $ua = Mojo::UserAgent->new;
 
 sub settings {
-    my ($self, $mojo, $user_name, $old_email, $email, $fname, $lname, $currentpassword, $newpassword) = @_;
+    my ($self, $mojo, $user_name, $fname, $lname, $currentpassword, $newpassword) = @_;
     
     return "Bad characters in user name" if ($user_name) !~ /^[a-zA-Z_0-9-]+$/;
-    return "E-mail invalid" if !valid($email);
     
     $user_name = lc($user_name);
-    $old_email = lc($old_email);
-    $email = lc($email);
     
     my $doc = undef;
     eval { 
@@ -53,23 +50,8 @@ sub settings {
     return 'wrong current password' if (!$pbkdf2->validate($hash, $currentpassword));
     
     my $source = $doc->{_source};    
-    if ($email ne $old_email) {
-        my $results = $self->es->search(
-            index => 'hearthdrafter',
-            type => 'user',
-            body  => {
-                query => {
-                    match => { email => $email },
-                }
-            }
-        );    
-        return 'That e-mail address is already registered. Please choose another.' if $results->{hits}->{total} > 0;
-    }
-    
-    $source->{email} = $email;
     $source->{first_name} = $fname;
     $source->{last_name} = $lname;
-    $source->{email} = $email;
     $source->{password} = $pbkdf2->generate($newpassword) if defined($newpassword) and $newpassword !~ /^\s*$/;
     $self->es->index(
         index   => 'hearthdrafter',

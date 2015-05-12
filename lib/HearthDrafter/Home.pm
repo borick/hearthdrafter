@@ -97,9 +97,7 @@ sub settings_post {
     my $user = $self->user();
     print STDERR Dumper($user);
     eval {
-        $result = $self->model->user->settings($self, $user->{user}->{user_name}, 
-                                                      $user->{user}->{email},
-                                                      $email,
+        $result = $self->model->user->settings($self, $user->{user}->{user_name},
                                                       $fname,
                                                       $lname,
                                                       $old_password,
