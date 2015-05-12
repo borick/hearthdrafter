@@ -2,6 +2,10 @@
 % content_for header => begin
   <title>HearthDrafter - Admin Panel</title>
 % end
+% content_for title_bar => begin
+<span class="title_label">Admin</span>
+% end
+
 % my $stats = stash('stats');
 <div class="maincontent">
     <table>

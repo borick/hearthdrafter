@@ -1,9 +1,11 @@
 % layout 'default';
 % content_for header => begin
-  <title>HearthDrafter - Viewing Completed Runs</title>
+  <title>HearthDrafter - Arena History</title>
+% end
+% content_for title_bar => begin
+<span class="title_label">Arena History</span>
 % end
 <div class="maincontent">
-<h2>Arena Runs</h2>
 <table>
 % if (my $runs = stash 'completed_runs') {
 %     for my $run (@$runs) {

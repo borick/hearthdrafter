@@ -63,6 +63,8 @@ sub startup {
     
     #drafting
     my $auth_bridge = $r->under('/draft')->to('home#auth_check');
+    $auth_bridge->get('/settings')->to('home#settings');
+    $auth_bridge->post('/settings')->to('home#settings_post');
     $auth_bridge->get('/download')->to('draft#download');
     $auth_bridge->get('/settings')->to('home#settings');
     $auth_bridge->post('/settings')->to('home#settings_post');

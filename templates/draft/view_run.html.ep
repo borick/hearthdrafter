@@ -5,6 +5,9 @@
   <link rel="stylesheet" type="text/css" media="screen" href="/css/libs/jquery-ui.css" />
   <link rel="stylesheet" type="text/css" media="screen" href="/css/view_run.css" />
 % end
+% content_for title_bar => begin
+<span class="title_label">Arena Run</span>
+% end
 
 % my $run_details = stash('run');
 <div id="view_run">

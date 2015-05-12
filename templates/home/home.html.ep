@@ -1,6 +1,12 @@
 % layout 'default';
+% content_for header => begin
+  <title>HearthDrafter - Home</title>
+% end
+% content_for title_bar => begin
+<span class="title_label">Home</span>
+% end
+
 <div class="maincontent">
-<h2>Home</h2>
 <a href="/draft/select_class">Start New Draft</a><br>
 % my $runs = stash 'runs';
 % my $runs_no_results = stash 'runs_no_results';

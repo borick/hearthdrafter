@@ -116,6 +116,7 @@ sub abandon_run {
     return;
 }
 
+# return a hash ref
 sub continue_run {
     my ($self, $arena_id) = @_;
     my $doc = $self->es->get(
@@ -143,6 +144,28 @@ sub continue_run {
     return $doc->{_source};
 }
 
+# return an array of hashrefs
+sub get_all_runs {
+    my ($self, $user_name) = @_;
+    my $out = [];
+    my $results = $self->es->search(
+        index => 'hearthdrafter',
+        type => 'arena_run',
+        size => 999999999,
+        body  => {
+            query => {
+                match => { user_name => $user_name },
+            }
+        }
+    );
+    for my $result (@{$results->{hits}->{hits}}) {
+        $result->{_source}->{_id} = $result->{_id};
+        push(@$out, $result->{_source});
+    }
+    return $out;
+}
+
+# return an array of hashrefs
 sub list_open_runs {
     my ($self, $user_name, $size) = @_;
     my $out = [];
@@ -171,6 +194,7 @@ sub list_open_runs {
     return $out;
 }
 
+# return an array of hashrefs
 sub list_runs_no_results {
     my ($self, $user_name) = @_;
     my $out = [];
@@ -205,7 +229,6 @@ sub list_runs_no_results {
     }
     return $out;
 }
-
 
 sub undo_last_card {
     my ($self, $arena_id, $user) = @_;
@@ -288,6 +311,7 @@ sub view_completed_run {
     
 }
 
+# returns an array of hashrefs.
 sub list_runs_completed {
     my ($self, $user_name, $from, $size) = @_;
     my $out = [];

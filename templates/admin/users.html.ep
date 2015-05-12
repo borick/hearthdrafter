@@ -2,6 +2,10 @@
 % content_for header => begin
   <title>HearthDrafter - Admin Panel - User Management</title>
 % end
+% content_for title_bar => begin
+<span class="title_label">User Management</span>
+% end
+
 % my $users = stash('users');
 <div class="maincontent">
 <a onclick="return confirm('Are you sure?')" href="/admin/user_maintenance">Perform User Maintenance</a>

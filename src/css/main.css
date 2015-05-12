@@ -574,18 +574,19 @@ a:visited {
   v-align: bottom;
   font-weight: bold;
 }
-#register label {
+#register label, #settings label{
   width: 240px;
   display: inline-block;
 }
-#register {
+#register,#settings {
   display: inline-block;
   background: rgba(0, 0, 0, 0.75);
   color: white;
 }
-#register input {
-  width: 200px;
+#register,#settings input {
+  width: 150px;
 }
+input:read-only { background: #aaa !important };
 
 /* card choices */
 .card_choice {

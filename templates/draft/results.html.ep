@@ -4,6 +4,9 @@
   <script src="/js/libs/rangeslider.js"></script>
   <link rel="stylesheet" type="text/css" media="screen" href="/js/libs/rangeslider.css" />
 % end
+% content_for title_bar => begin
+<span class="title_label">Results Entry</span>
+% end
 <script type="text/javascript">
     function removeCard() {
         $("#card_awards option:last-child").remove();

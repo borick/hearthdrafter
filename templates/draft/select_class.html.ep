@@ -1,4 +1,10 @@
 % layout 'default';
+% content_for header => begin
+  <title>HearthDrafter - Select Class</title>
+% end
+% content_for title_bar => begin
+<span class="title_label">Select Class</span>
+% end
 <div class="maincontent">
 <a class='druid' href="/draft/arena_action/new_arena_druid">Druid</a>
 <a class='hunter' href="/draft/arena_action/new_arena_hunter">Hunter</a>

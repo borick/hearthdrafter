@@ -5,6 +5,7 @@ use warnings;
 
 use Mojo::Base 'Mojolicious::Controller';
 use Mail::Sendmail;
+use Data::Dumper;
 
 sub index {
     my $self = shift;
@@ -79,6 +80,44 @@ sub register_post {
     
 }
 
+sub settings {
+    my $self = shift;
+    $self->render('home/settings');
+}
+
+sub settings_post {
+    my $self = shift;
+    my $email = $self->req->body_params->param('email');
+    my $fname = $self->req->body_params->param('first_name');
+    my $lname = $self->req->body_params->param('last_name');
+    my $old_password = $self->req->body_params->param('old_password');
+    my $new_password = $self->req->body_params->param('new_password');
+    
+    my $result = undef;
+    my $user = $self->user();
+    print STDERR Dumper($user);
+    eval {
+        $result = $self->model->user->settings($self, $user->{user}->{user_name}, 
+                                                      $user->{user}->{email},
+                                                      $email,
+                                                      $fname,
+                                                      $lname,
+                                                      $old_password,
+                                                      $new_password);
+        print STDERR "Result: $result\n";
+    };
+    if ($result || !defined($result)) {
+        my $msg = undef;
+        $msg = 'Could not update: ' . ($result ? ': ' . $result: '');
+        $self->stash(error_message => $msg);
+        $self->render('home/settings');
+    } else {
+        $self->stash(success_message => 'Account details updated successfully.');
+        $self->render('home/home');
+    }
+    
+}
+
 sub resend {
     my ($self) = @_;
     $self->render('home/resend');
@@ -127,11 +166,6 @@ sub validate_user {
         $self->stash(error_message => $result->[1]);
     }
     $self->render('home/index');
-}
-
-sub settings {
-    my $self = shift;
-    $self->render('home/settings');
 }
 
 sub reset_pw {

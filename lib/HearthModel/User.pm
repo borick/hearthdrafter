@@ -30,6 +30,56 @@ my $pbkdf2 = Crypt::PBKDF2->new(
 
 my $ua = Mojo::UserAgent->new;
 
+sub settings {
+    my ($self, $mojo, $user_name, $old_email, $email, $fname, $lname, $currentpassword, $newpassword) = @_;
+    
+    return "Bad characters in user name" if ($user_name) !~ /^[a-zA-Z_0-9-]+$/;
+    return "E-mail invalid" if !valid($email);
+    
+    $user_name = lc($user_name);
+    $old_email = lc($old_email);
+    $email = lc($email);
+    
+    my $doc = undef;
+    eval { 
+        $doc = $self->es->get(
+            index   => 'hearthdrafter',
+            type    => 'user',
+            id      => $user_name,
+        );
+    };
+    return 'username does not exist' if !defined($doc);
+    my $hash = $doc->{_source}->{password};
+    return 'wrong current password' if (!$pbkdf2->validate($hash, $currentpassword));
+    
+    my $source = $doc->{_source};    
+    if ($email ne $old_email) {
+        my $results = $self->es->search(
+            index => 'hearthdrafter',
+            type => 'user',
+            body  => {
+                query => {
+                    match => { email => $email },
+                }
+            }
+        );    
+        return 'That e-mail address is already registered. Please choose another.' if $results->{hits}->{total} > 0;
+    }
+    
+    $source->{email} = $email;
+    $source->{first_name} = $fname;
+    $source->{last_name} = $lname;
+    $source->{email} = $email;
+    $source->{password} = $pbkdf2->generate($newpassword) if defined($newpassword) and $newpassword !~ /^\s*$/;
+    $self->es->index(
+        index   => 'hearthdrafter',
+        type    => 'user',
+        id      => $user_name,
+        body    => $source,
+    );
+    return 0;
+}
+
 # Write
 sub register {
     my ($self, $mojo, $user_name, $email, $email_confirm, $fname, $lname, $password) = @_;
@@ -61,8 +111,6 @@ sub register {
     return "E-mails dont match" if $email ne $email_confirm;
     return "Bad characters in user name" if ($user_name) !~ /^[a-zA-Z_0-9-]+$/;
     return "E-mail invalid" if !valid($email);
-    
-    
     
     my $existing = undef;
     eval { 
@@ -377,40 +425,6 @@ sub delete_user {
         id => $id,
     );
     return;
-}
-
-sub settings {
-    my ($self, $user_name, $email, $fname, $lname, $currentpassword, $newpassword) = @_;
-    
-    $user_name = lc($user_name);
-    my $doc = undef;
-    eval { 
-        $doc = $self->es->get(
-            index   => 'hearthdrafter',
-            type    => 'user',
-            id      => $user_name,
-        );
-    };
-    die 'username does not exist' if !defined($doc);
-    
-    my $hash = $doc->{_source}->{password};
-    die 'bad pssword' if (!$pbkdf2->validate($hash, $currentpassword));
-    my $source = $doc->{_source};
-    
-    $self->es->index(
-        index   => 'hearthdrafter',
-        type    => 'user',
-        id      => $user_name,
-        body    => $source,
-    );
-    return 1;
-#     {
-#             user_name   => $user_name,
-#             email => $email,
-#             first_name => $fname,
-#             last_name => $lname,
-#             password => $pbkdf2->generate($newpassword),
-#         }
 }
 
 sub user_maintenance {
