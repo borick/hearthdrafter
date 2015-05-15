@@ -27,7 +27,7 @@ sub CardScanner::TagBuilder::create_custom_tags {
         my ($name, $text, $type, $cost, $race, $attack, $health, $blizz_tag_ref) = CardScanner::get_vars_from_card($card);
         $text =~ s/<b>//g;
         $text =~ s/<\/b>//g;
-        my $cost_tag = $cost >= MAX_BIG_DROP ? 'big' : $cost;
+        my $cost_tag = $cost; #$cost >= MAX_BIG_DROP ? 'big' : $cost;
         my $drop_tag = 'drop_' . $cost_tag;
         my %blizz_tags = %{$blizz_tag_ref};
         #AOE Damage/Board Clears.

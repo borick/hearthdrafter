@@ -3,7 +3,7 @@
   <title>HearthDrafter - Draft Summary Run</title>
   <script src="/js/hd.min.js"></script>
   <link rel="stylesheet" type="text/css" media="screen" href="/css/libs/jquery-ui.css" />
-  <link rel="stylesheet" type="text/css" media="screen" href="/css/view_run.css" />
+  <link rel="stylesheet" type="text/css" media="screen" href="/css/view_run.min.css" />
 % end
 % content_for title_bar => begin
 <span class="title_label">Arena Run</span>

@@ -4,14 +4,12 @@
   <title>HearthDrafter - <%= $run_details->{class_name} %> Run</title>
   <script src="/js/libs/rangeslider.js"></script>
   <script src="/js/hearthdrafter.min.js"></script>
-  <script src="/js/hd.min.js"></script>
-  <script src="/js/libs/owl-carousel/owl.carousel.js"></script>
   <script src="/js/libs/odometer/odometer.js"></script>
   <script src="/js/libs/list.js"></script>
+  <script src="/js/libs/d3.v3.js"></script>
   <link rel="stylesheet" type="text/css" media="screen" href="/js/libs/odometer/odometer-theme-minimal.css" />
-  <link rel="stylesheet" type="text/css" media="screen" href="/js/libs/rangeslider.css" />
-  <link rel="stylesheet" type="text/css" media="screen" href="/js/libs/owl-carousel/owl.carousel.css" />
-  <link rel="stylesheet" type="text/css" media="screen" href="/js/libs/owl-carousel/owl.theme.css" />
+  <link rel="stylesheet" type="text/css" media="screen" href="/js/libs/rangeslider.min.css" />
+  <link rel="stylesheet" type="text/css" media="screen" href="/css/graphs.min.css" />
   
 % end
 % content_for title_bar => begin
@@ -36,13 +34,27 @@
         </div>
     </div>
 </div>
+<script type="text/javascript">
+var cards = [
+% # has to match the format defined in hearthdrafter.js
+% my $card_name_to_id = {};
+% for my $card (@$cards) {
+% $card_name_to_id->{$card->{name}} = $card->{id};
+     {name:"<%== $card->{name} %>",
+      id: "<%== $card->{id} %>",
+      type: "<%== $card->{type} %>",
+      cost: "<%== $card->{cost} %>",
+      rarity: "<%== $card->{rarity} %>"},
+% }
+];
+</script>
 <div id="tabs">
   <ul>
     <li><a href="#tabs-1">Breakdown</a></li>
     <li><a href="#tabs-2">List of Cards</a></li>
   </ul>
   <div id="tabs-1">
-    <%== dumper($run_details->{tags}) %>
+    
   </div>
   <div id="tabs-2">
   <table id="cards_chosen">
@@ -57,18 +69,6 @@
 </div>
 </div>
 <script type="text/javascript">
-var cards = [
-% # has to match the format defined in hearthdrafter.js
-% my $cards = stash 'cards';
-% for my $card (@$cards) {
-     {name:"<%== $card->{name} %>",
-      id: "<%== $card->{id} %>",
-      type: "<%== $card->{type} %>",
-      cost: "<%== $card->{cost} %>",
-      rarity: "<%== $card->{rarity} %>"},
-% }
-];
-
 var card_number = <%= $card_number %>;
 var card_ids = {};
 var card_rarity = {};

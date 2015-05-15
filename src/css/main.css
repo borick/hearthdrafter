@@ -74,7 +74,7 @@ input {
 }
 img {
   /*max-width: 100%;*/
-  display: block;
+  /*display: block;*/
 }
 h3 {
   font-size: 16px;
@@ -692,4 +692,13 @@ h2 {
 }
 .changes {
     font-size: 80%;
+}
+
+#drops_med {
+    /*position: absolute;*/
+    width: 383px;
+}
+#drops_high {
+    /*position: absolute;*/
+    width: 383px;
 }

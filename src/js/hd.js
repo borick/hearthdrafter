@@ -24,6 +24,9 @@ function updateManaCostChosenCards() {
     sortTable();
 }
 
+function updateBreakdown() {
+}
+
 function sortTable(){
     var tbl = document.getElementById("cards_chosen").tBodies[0];
     if (tbl == null)
@@ -42,3 +45,4 @@ function sortTable(){
     }
     store = null;
 }
+

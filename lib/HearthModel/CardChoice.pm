@@ -388,7 +388,7 @@ sub get_advice {
     $best_card_score = $data_out->[1];
      
     push(@unique_cards, $best_card_after);
-    $source->{tags} = $c->model->card->get_tags(\@unique_cards);
+    #$source->{tags} = $c->model->card->get_tags(\@unique_cards);
     
     $out_data->{message} = _build_message($best_card_after,$best_card_score,\%scores_hist, $card_data, $deck_type, \%tags_done, $number_of_cards);    
     if (!exists($source->{total_score}) || !defined($source->{total_score})) {
