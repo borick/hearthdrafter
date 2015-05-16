@@ -116,10 +116,6 @@ sub abandon_run {
     return;
 }
 
-sub get_drop_curve {
-
-}
-
 # return a hash ref
 sub continue_run {
     my ($self, $arena_id) = @_;

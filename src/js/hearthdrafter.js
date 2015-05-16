@@ -412,7 +412,7 @@ function layoutCardChosen (text, id) {
 
 function loadChosenCards(data) {
     //GOT DATA!!!!! (scores n stuff.)
-    console.log(data);
+    //console.log(data);
     $('.waiting').remove();
     buildConfirmChoices(arena_id);
     buildScoreUI(data);

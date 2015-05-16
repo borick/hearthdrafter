@@ -31,36 +31,36 @@ sub _print_scores {
 }
 
 
-my $syn_const          = 200.00; #the power of synergies....
-my $mana_const_minions = 5.00; #percentage increase per "mana diff" point for minions in general.
+my $syn_const          = 175.00; #the power of synergies....
+my $mana_const_minions = 7.00; #percentage increase per "mana diff" point for minions in general.
 my $mana_const_spells  = 3.00; #spells in general.
-my $missing_drop_const = 250.00; #just drops. const
+my $missing_drop_const = 500.00; #just drops. const
 my $duplicate_constant = 0.05; #percent amount decrease / 1
 my $tag_needed_mult    = 0.10; #percent amt dmt increase / 1
 my $control_vs_tempo_threshold = 0.15;
                         #0,1,2,3,4,5,6,7+
-my $max_cost       = 7; #for the last column
+my $max_cost           = 7; #for the last column
 
-#my @max_drops      = (2,3,8,5,5,4,3,2);
+#my @max_drops         = (2,3,8,5,5,4,3,2);
 
 # bunch of global stuff
 
 my $deck_type = "value";                           #0, 1, 2, 3, 4, 5, 6, 7 +              
-my $ideal_curves    = { value => {      minions => [0, 0, 5, 3, 5, 4, 3, 2],
+my $ideal_curves    = { value => {      minions => [0, 1, 5, 3, 5, 4, 3, 2],
                                         spells =>  [0, 0, 4, 1, 1, 1, 1, 0],
-                                        drops =>   [0, 0, 4, 2, 3, 2, 1, 1],},
+                                        drops =>   [0, 1, 4, 2, 3, 2, 1, 1],},
                                         
-                        late_game => {  minions => [0, 0, 6, 6, 2, 5, 5, 1], 
+                        late_game => {  minions => [0, 1, 6, 6, 2, 5, 5, 2], 
                                         spells =>  [0, 1, 2, 0, 1, 0, 0, 1],
-                                        drops =>   [0, 0, 4, 2, 3, 2, 1, 1],},
+                                        drops =>   [0, 1, 3, 3, 3, 2, 1, 1],},
                                         
                         aggro => {      minions => [0, 1, 9, 6, 4, 4, 0, 1],
-                                        spells =>  [1, 2, 1, 0, 0, 0, 0, 1],
-                                        drops =>   [0, 0, 6, 3, 2, 1, 1, 1],},
+                                        spells =>  [1, 2, 1, 1, 0, 0, 0, 1],
+                                        drops =>   [0, 1, 6, 3, 2, 1, 1, 1],},
                                         
-                        control => {    minions => [0, 3, 2, 4, 4, 4, 3, 2], 
-                                        spells =>  [0, 4, 1, 1, 1, 0, 1, 0],
-                                        drops =>   [0, 0, 4, 2, 4, 2, 1, 1],},};
+                        control => {    minions => [0, 1, 2, 4, 4, 4, 3, 2], 
+                                        spells =>  [0, 2, 3, 2, 1, 1, 1, 0],
+                                        drops =>   [0, 1, 3, 3, 4, 2, 1, 1],},};
                                         
 my $tags_wanted = { value => [ 'draw', 'aoe', 'removal', 'ping' ],
                     late_game => [ 'survivability', 'aoe', 'removal', 'ping'],
@@ -119,19 +119,19 @@ sub get_advice {
     my $card_data_tags = $c->model->card->get_tags(\@data_for);
     #print STDERR Dumper($card_data_tags);
     #die "bad card specified $card_1, $card_2, $card_3" if !exists($card_data_tags->{$card_1}) || !exists($card_data_tags->{$card_2}) || !exists($card_data_tags->{$card_3});
-    
-    
     my %tags_data = ();
     # build a "drop__" curve.
     my @drop_curve =    (0,0,0,0,0,0,0,0);
-    my $num_drops = 0;#one,meh,soit doesn't illegal by zero?
+    my $num_drops = 0;
     my $total_drop_cost = 0;
     for my $card_name_key (keys(%card_counts)) {
         my $count = $card_counts{$card_name_key};
         for my $card_tag (keys(%{$card_data_tags->{$card_name_key}})) {
             $tags_data{$card_tag} += 1;
             if ($card_tag =~ /drop_(\d+)/) {
-                $drop_curve[$1] += $count;
+                my $num = $1;
+                $num = 7 if $num >= 7;
+                $drop_curve[$num] += $count;
                 $total_drop_cost += $card_data->{$card_name_key}->{cost} * $count;
                 $num_drops += $count;
             }
@@ -274,7 +274,7 @@ sub get_advice {
     $out_data->{card_choices} = \@card_choices;
     $out_data->{card_counts} = \%card_counts;
     $out_data->{current_cards} = $cards; 
-    
+    $out_data->{drop_curve} = \@drop_curve;
     #get tier score for each card.
     my $class = $source->{class_name};
     my $scores_result = $self->es->search(
@@ -493,7 +493,7 @@ sub _build_message {
                     
                 } elsif ($key eq 'dups' && (exists($scores->{$card}) && $new_score < $scores->{$card})) {
                 
-                    print STDERR "Yes, $new_score < $scores->{$card} for $card, $key\n";
+                    #print STDERR "Yes, $new_score < $scores->{$card} for $card, $key\n";
                     $tmp_message = 'we dont want too many of';
                     $scores->{$card} = $new_score;
                     
