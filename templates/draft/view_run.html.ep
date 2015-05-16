@@ -4,18 +4,27 @@
   <script src="/js/hearthdrafter.min.js"></script>
   <link rel="stylesheet" type="text/css" media="screen" href="/css/libs/jquery-ui.css" />
   <link rel="stylesheet" type="text/css" media="screen" href="/css/view_run.min.css" />
+  <link rel="stylesheet" type="text/css" media="screen" href="/css/graphs.min.css" />
+  
 % end
 % content_for title_bar => begin
 <span class="title_label">Arena Run</span>
 % end
-
+    
 % my $run_details = stash('run');
 <div id="view_run">
     <div id="tabs">
         <ul>
             <li><a href="#tabs-1">Basic</a></li>
             <li><a href="#tabs-2">Choices</a></li>
+            <li><a href="#tabs-3">Breakdown</a></li>
         </ul>
+        <div id="tabs-3">
+            <div id="drops_tooltip" class="hidden">
+            <p><strong>Drops</strong></p>
+            <p><span id="value">100</span></p>
+            </div>
+        </div>
         <div id="tabs-2">
             <table id="card_choices">
                 % my $counter = 0;
@@ -129,6 +138,7 @@ for (i = 0; i < cards.length; i++) {
     card_data[cards[i]['name']] = cards[i];
 }
 updateManaCostChosenCards();
+addDropsGraph();
 //tab it up
 $(function() {
     var tabs = $( "#tabs" ).tabs();

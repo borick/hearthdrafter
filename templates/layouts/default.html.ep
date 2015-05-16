@@ -1,15 +1,22 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">       
+    <meta charset="utf-8">
+    <script src="/js/libs/jquery-1.11.2.min.js"></script>
+    <script src="/js/libs/jquery-ui.min.js"></script>
+    <script type="text/javascript">
+        window.onerror=function(msg){
+            document.body.setAttribute("jserror", msg);
+            return true;
+        };
+    </script>
     <link rel="icon" href="/favicon.ico" sizes="64x64" type="image/vnd.microsoft.icon">
-    <link rel="stylesheet" type="text/css" media="screen" href="/css/normalize.min.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="/css/normalize.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="/css/main.min.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="/css/results.min.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="/css/hearth.min.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="/css/libs/jquery-ui.css" />
-    <script src="/js/libs/jquery-1.11.2.min.js"></script>
-    <script src="/js/libs/jquery-ui.min.js"></script>
+    <script src="/js/libs/d3.v3.js"></script>
     <script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

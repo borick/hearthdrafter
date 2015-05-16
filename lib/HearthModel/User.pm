@@ -102,7 +102,7 @@ sub register {
             id      => $user_name,
         );
     };
-    return 'That user-name is taken. Please choose another.' if defined($existing);
+    #return 'That user-name is taken. Please choose another.' if defined($existing);
 
     my $results = $self->es->search(
         index => 'hearthdrafter',

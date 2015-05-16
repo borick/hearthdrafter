@@ -274,7 +274,6 @@ sub get_advice {
     $out_data->{card_choices} = \@card_choices;
     $out_data->{card_counts} = \%card_counts;
     $out_data->{current_cards} = $cards; 
-    $out_data->{drop_curve} = \@drop_curve;
     #get tier score for each card.
     my $class = $source->{class_name};
     my $scores_result = $self->es->search(
@@ -408,6 +407,7 @@ sub get_advice {
     } elsif ($total_score > 80000) {
         $grade = 'D';
     }
+    $source->{drop_curve} = \@drop_curve;
     $source->{deck_grade} = $grade;    
     $self->es->index(
         index => 'hearthdrafter',

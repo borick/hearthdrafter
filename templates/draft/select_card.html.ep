@@ -9,7 +9,6 @@
   <script src="/js/libs/d3.v3.js"></script>
   <link rel="stylesheet" type="text/css" media="screen" href="/js/libs/odometer/odometer-theme-minimal.css" />
   <link rel="stylesheet" type="text/css" media="screen" href="/js/libs/rangeslider.min.css" />
-  <link rel="stylesheet" type="text/css" media="screen" href="/css/graphs.min.css" />
   
 % end
 % content_for title_bar => begin

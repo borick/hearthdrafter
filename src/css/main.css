@@ -216,7 +216,6 @@ form {
   height: 98px;
   display: table-cell;
   font-size: 12pt;
-  
   position: absolute;
   margin-left: 9px;
   margin-top: 12px;
@@ -231,6 +230,7 @@ td {
   display: none;
   position: absolute;
   height: 228px;
+  width: inherit;
   overflow: auto;
 }
 .card1, .card2, .card3 {

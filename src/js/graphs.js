@@ -1,10 +1,13 @@
+function addDropsGraph (dataset_in) {
+    
     //Width and height
-    /*
     var w = 600;
     var h = 250;
     
-    var dataset = [ 5, 10, 13, 19, 21, 25, 22, 18, 15, 13,
-                    11, 12, 15, 20, 18, 17, 16, 18, 23, 25 ];
+    var dataset = [ 1,2,3 ];
+    if (dataset_in) {
+        dataset = dataset_in;
+    }
 
     var xScale = d3.scale.ordinal()
                     .domain(d3.range(dataset.length))
@@ -15,7 +18,7 @@
                     .range([0, h]);
     
     //Create SVG element
-    var svg = d3.select("body")
+    var svg = d3.select("#tabs-3")
                 .append("svg")
                 .attr("width", w)
                 .attr("height", h);
@@ -35,9 +38,10 @@
         .attr("height", function(d) {
             return yScale(d);
         })
-        .attr("fill", function(d) {
-            return "rgb(0, 0, " + (d * 10) + ")";
-        })
+        .attr("fill", "#009DE5")
+//         .attr("fill", function(d) {
+//             return "rgb(" + (d*3) + ", " + (d*3) + ", " + (d * 4+100) + ")";
+//         })
         .on("mouseover", function(d) {
 
             //Get this bar's x/y values, then augment for the tooltip
@@ -45,20 +49,20 @@
             var yPosition = parseFloat(d3.select(this).attr("y")) / 2 + h / 2;
 
             //Update the tooltip position and value
-            d3.select("#tooltip")
+            d3.select("#drops_tooltip")
                 .style("left", xPosition + "px")
                 .style("top", yPosition + "px")                     
                 .select("#value")
                 .text(d);
         
             //Show the tooltip
-            d3.select("#tooltip").classed("hidden", false);
+            d3.select("#drops_tooltip").classed("hidden", false);
 
         })
         .on("mouseout", function() {
         
             //Hide the tooltip
-            d3.select("#tooltip").classed("hidden", true);
+            d3.select("#drops_tooltip").classed("hidden", true);
             
         })
         .on("click", function() {
@@ -92,4 +96,4 @@
             });
 
     };
-    */
+}
