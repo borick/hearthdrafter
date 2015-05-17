@@ -199,7 +199,6 @@
     var card_data = [];
     var img = "/images/cards_medium/";
     var images = [];
-    updateManaCostChosenCards();
     var cards = [
     % # has to match the format defined in hearthdrafter.js
     % my $cards = stash 'cards';
@@ -241,6 +240,8 @@ $(function() {
     if ($("#card_awards option").length != 0) {
         $("#empty").hide();
     }
+    
+    updateManaCostChosenCards();
 });
 </script>
 <script type="text/javascript">
