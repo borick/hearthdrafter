@@ -15,6 +15,7 @@
     <link rel="stylesheet" type="text/css" media="screen" href="/css/main.min.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="/css/results.min.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="/css/hearth.min.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="/css/c3.min.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="/css/libs/jquery-ui.css" />
     <script src="/js/libs/d3.v3.js"></script>
     <script>

@@ -57,3 +57,9 @@ input {
   width: 100% !important;
   padding: 10px;
 }
+#cards_chosen {
+  display: block;
+  height: 600px;
+  overflow-y: scroll;
+  background:transparent;
+}

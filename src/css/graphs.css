@@ -1,11 +1,14 @@
 rect:hover {
     fill: orange;
 }
+rect {
+    color: white;
+}
 
 #drops_tooltip {
     color: black;
     position: absolute;
-    width: 200px;
+    width: auto;
     height: auto;
     padding: 10px;
     background-color: white;

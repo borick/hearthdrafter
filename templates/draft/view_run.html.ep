@@ -122,7 +122,7 @@
 % $run_details->{deck_type} =~ s/_/ /g;
             <table id="basic">
                 <tr>
-                    <td rowspawn="2" valign="top">
+                    <td valign="top">
                         <span class="capital"><h2><%== $run_details->{deck_type}; %></h2></span>
                         % if ($run_details->{deck_type} eq 'late game') {
                         <p>
@@ -169,18 +169,22 @@
                         </p>
                         % }
                     </td>
-                    <td valign="top" align="right">
-                        <h2>Deck Grade: <%== $run_details->{deck_grade} ? $run_details->{deck_grade} : '?' %></h2>
+                    <td valign="top" rowspan="2">
                         <h2>Deck List</h2>
                         <table id="cards_chosen">
                             % for my $card (sort(keys($run_details->{card_counts}))) {
-                                <tr>
+                                <tr align="left">
                                     <td id="card_name"><span class="capital"><%== $card %></span></td>
                                     <td id="card_count"><%== $run_details->{card_counts}->{$card} %></td>
                                 </tr>
                             % }
                         </table>
                     </td>
+                </tr>
+                <tr>
+                <td>
+                    <h2>Deck Grade: <span class="bright"><font size="200%"><%== $run_details->{deck_grade} ? $run_details->{deck_grade} : '?' %></font></span></h2>
+                </td>
                 </tr>
             </table>
         </div>
@@ -192,36 +196,26 @@
 </div>
 
 <script type="text/javascript">
-var img = "/images/cards_medium/";
-var cards = [
-% # has to match the format defined in hearthdrafter.js
-% my $cards = stash 'cards';
-% for my $card (@$cards) {
-     {name:"<%== $card->{name} %>",
-      id: "<%== $card->{id} %>",
-      type: "<%== $card->{type} %>",
-      cost: "<%== $card->{cost} %>",
-      rarity: "<%== $card->{rarity} %>"},
-% }
-];
-var card_data = [];
-var images = [];
-for (i = 0; i < cards.length; i++) {
-    images.push(img + cards[i]['id'] + '.png');
-    card_data[cards[i]['name']] = cards[i];
-}
-updateManaCostChosenCards();
-addDropsGraph();
-//tab it up
-$(function() {
-    var tabs = $( "#tabs" ).tabs();
-    tabs.find( ".ui-tabs-nav" ).sortable({
-        axis: "x",
-        stop: function() {
-        tabs.tabs( "refresh" );
-        }
-    });
-});
+    var card_data = [];
+    var img = "/images/cards_medium/";
+    var images = [];
+    updateManaCostChosenCards();
+    var cards = [
+    % # has to match the format defined in hearthdrafter.js
+    % my $cards = stash 'cards';
+    % for my $card (@$cards) {
+        {name:"<%== $card->{name} %>",
+        id: "<%== $card->{id} %>",
+        type: "<%== $card->{type} %>",
+        cost: "<%== $card->{cost} %>",
+        rarity: "<%== $card->{rarity} %>"},
+    % }
+    ];
+    for (i = 0; i < cards.length; i++) {
+        images.push(img + cards[i]['id'] + '.png');
+        card_data[cards[i]['name']] = cards[i];
+    }
+    doBreakdown([<%== join(", ", @{$run_details->{drop_curve}}) %>]);
 </script>
 <script type="text/javascript">
 $(function() {

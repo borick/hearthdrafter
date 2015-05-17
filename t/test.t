@@ -11,8 +11,6 @@ use Selenium::Remote::WDKeys;
 
 use constant MAX_LOAD_TIME => 1000;
 
-
-
 my $sel = Test::WWW::Selenium->new( host => "localhost",
                                     port => 4444,
                                     browser => "*firefox",
