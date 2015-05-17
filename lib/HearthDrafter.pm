@@ -77,11 +77,10 @@ sub startup {
     $auth_bridge->get('/select_card/:arena_id')->to('draft#select_card');
     $auth_bridge->get('/card_choice/:card1/:card2/:card3/:arena_id/')->to('draft#card_choice');
     $auth_bridge->get('/confirm_card_choice/:card_name/:arena_id/')->to('draft#confirm_card_choice');
-    $auth_bridge->get('/results/:arena_id/')->to('draft#results');
-    $auth_bridge->post('/results/:arena_id/')->to('draft#results_post');
     $auth_bridge->get('/view_completed_runs')->to('draft#view_completed_runs');
     $auth_bridge->get('/view_completed_runs/:from/:size')->to('draft#view_completed_runs');
     $auth_bridge->get('/view_completed_run/:arena_id')->to('draft#view_completed_run');
+    $auth_bridge->post('/view_completed_run/:arena_id')->to('draft#results_post');
     $auth_bridge->get('/reader_card_choice/:card1/:card2/:card3')->to('reader#card_choice');
     $auth_bridge->get('/reader_confirm_card_choice/:index')->to('reader#confirm_card_choice');
     $auth_bridge->websocket('/reader_socket')->to('reader#connect'); #cant figure out how to get rid of this extra one.

@@ -82,17 +82,13 @@ sub confirm_card_choice {
     $self->render(json => $result);
 }
 
-sub results {
-    my $self = shift;
-    $self->render('draft/results');
-}
 sub results_post {
     my $self = shift;
     my $result = $self->model->arena->provide_results($self->stash('arena_id'), $self->req->body_params);
     if (!$result) {
         $self->stash(message=>'Arena results updated successfully.');
-        select undef,undef,undef,0.75; #TODO:hideious timing bodge
-        return $self->redirect_to('/');
+        select undef,undef,undef,1.00; #TODO:hideious timing bodge
+        return $self->redirect_to('/draft/view_completed_runs');
     } else {
         $self->stash(error=>"There was a problem updating the arena result: $result\n");
     }

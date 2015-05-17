@@ -2,9 +2,11 @@
 % content_for header => begin
   <title>HearthDrafter - Draft Summary Run</title>
   <script src="/js/hearthdrafter.min.js"></script>
+  <script src="/js/libs/rangeslider.js"></script>
   <link rel="stylesheet" type="text/css" media="screen" href="/css/libs/jquery-ui.css" />
   <link rel="stylesheet" type="text/css" media="screen" href="/css/view_run.min.css" />
   <link rel="stylesheet" type="text/css" media="screen" href="/css/graphs.min.css" />
+  <link rel="stylesheet" type="text/css" media="screen" href="/js/libs/rangeslider.min.css" />
   
 % end
 % content_for title_bar => begin
@@ -18,7 +20,78 @@
             <li><a href="#tabs-1">Basic</a></li>
             <li><a href="#tabs-2">Choices</a></li>
             <li><a href="#tabs-3">Breakdown</a></li>
+            <li><a href="#results_tab">Results</a></li>
         </ul>
+        <div id="results_tab">
+            <form id='results' method='POST' accept-charset='UTF-8'>
+            <fieldset >
+            <legend>Arena Results</legend>
+            <%== defined(stash('error')) ? stash('error') : '' %>
+            <div id="slider">
+                <h3># of Wins:</h3>
+                <br>
+                <input class="range_slider" type="range" min="0" max="12" step="1" value="<%== $run_details->{results}->{wins} %>" name="wins" data-rangeslider>
+                <output></output>
+            </div>
+            <div id="slider">
+                <h3># of Losses:</h3>
+                <br>
+                <input class="range_slider" type="range" min="0" max="3" step="1" value="<%== $run_details ? $run_details->{results}->{losses} : 3 %>" name="losses" data-rangeslider>
+                <output></output>
+            </div>
+            <div id="slider">
+                <h3>Gold Received:</h3>
+                <br>
+                <input class="range_slider" type="range" min="0" max="610" step="5" value="<%== $run_details->{results}->{gold} %>" name="gold" data-rangeslider>
+                <output></output>
+            </div>
+            <div id="slider">
+                <h3>Dust Received:</h3>
+                <br>
+                <input class="range_slider" type="range" min="0" max="100" step="5" value="<%== $run_details->{results}->{dust} %>" name="dust" data-rangeslider>
+                <output></output>
+            </div>
+            <div id="slider">
+                <h3>Packs Received:</h3>
+                <br>
+                <input class="range_slider" type="range" min="1" max="2" step="1" value="<%== $run_details ? $run_details->{results}->{packs} : 1 %>" name="packs" data-rangeslider>
+                <output></output>
+            </div>
+            <br />
+            <fieldset>
+                <legend>Cards Received:</legend>
+                <div id="cards_list">
+                    <span id="empty"><i>Cards list is empty.</i></span>
+                    <select name="cards" id="card_awards" multiple="multiple" readonly>
+% for my $option (@{$run_details->{results}->{cards}}) {
+                    <option selected readonly value="<%== $option %>"><%== $option %></option>
+% }
+                    </select>
+                </div>
+                
+                <span class="results_heading">Golden</span><input type="checkbox" name="golden" id="golden" value="Golden"/>
+                <br>
+                <span class="results_heading">Rarity</span>
+                <br>
+                <span class="results_subheading">Common</span><input type="radio" name="rarity" id="rarity" value="Common" checked>
+                <span class="results_subheading">Rare</span><input type="radio" name="rarity" id="rare" value="Rare">
+                <span class="results_subheading">Epic</span><input type="radio" name="rarity" id="epic" value="Epic">
+                <span class="results_subheading">Legendary</span><input type="radio" name="rarity" id="elite" value="Legendary">
+                <br>
+                <span class="results_heading">Set</span>
+                <br>
+                <span class="results_subheading">Classic</span><input type="radio" name="set" id="set" value="Classic" checked>
+                <span class="results_subheading">GvG</span><input type="radio" name="set" id="set" value="GvG">
+                <br>
+                <input type='button' name='AddCard' value='Add Card' onClick='javascript: addCard();'/>
+                <input type='button' name='RemoveCard' value='Remove Card' onClick='javascript: removeCard();'/>
+            </fieldset>
+
+            <br />
+            <input type='submit' name='Submit' value='Submit' />
+            </fieldset>
+            </form>
+        </div>
         <div id="tabs-3">
             <div id="drops_tooltip" class="hidden">
             <p><strong>Drops</strong></p>
@@ -149,4 +222,49 @@ $(function() {
         }
     });
 });
+</script>
+<script type="text/javascript">
+$(function() {
+    var $document   = $(document),
+        selector    = '[data-rangeslider]',
+        $inputRange = $(selector);
+            
+    function valueOutput(element) {
+        var value = element.value,
+            output = element.parentNode.getElementsByTagName('output')[0];
+        output.innerHTML = value;
+    }
+    for (var i = $inputRange.length - 1; i >= 0; i--) {
+        valueOutput($inputRange[i]);
+    };
+    $document.on('input', selector, function(e) {
+        valueOutput(e.target);
+    });
+        
+    $('input[type="range"]').rangeslider({polyfill: false});
+    
+    $("#card_awards").mousedown(function(e){ return false; });
+    if ($("#card_awards option").length != 0) {
+        $("#empty").hide();
+    }
+});
+</script>
+<script type="text/javascript">
+    function removeCard() {
+        $("#card_awards option:last-child").remove();
+        if ($("#card_awards option").length == 0) {
+            $("#empty").show();
+        }
+    }
+    function addCard() {
+        if ($("#card_awards option").length > 3) {
+            //more than 3 cards as a reward?
+            return;
+        }
+        var golden = $('#golden').prop('checked');
+        var rarity = $("input[name=rarity]:checked").val();
+        var set    = $("input[name=set]:checked").val();
+        $("<option selected readonly>"+(golden?'Golden ':'')+' '+set+' '+rarity+ " Card</option>").appendTo($("#card_awards"));
+        $("#empty").hide();
+    }
 </script>

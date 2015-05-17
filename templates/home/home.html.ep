@@ -19,7 +19,7 @@ or <a href="/draft/arena_action/abandon_arena_<%= $run->{_id} %>/" class="red">A
 
 % for my $run (@$runs_no_results) {
 
-<a href="/draft/results/<%= $run->{_id} %>/">Confirm Result for <span class='capital <%== $run->{class_name}%>'><%= $run->{class_name} %></span> Run </a><br>
+<a href="/draft/view_completed_run/<%= $run->{_id} %>/#results_tab">Confirm Result for <span class='capital <%== $run->{class_name}%>'><%= $run->{class_name} %></span> Run </a><br>
 
 % }
 

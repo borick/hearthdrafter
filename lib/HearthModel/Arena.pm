@@ -274,41 +274,7 @@ sub view_completed_run {
     my ($self, $arena_id, $user) = @_;
     my $source = $self->continue_run($arena_id);
     die 'not your arena' if $user ne $source->{_source}->{user_name};
-    
     my $data = {};
-    print STDERR $source;
-    
-    # find synergies between the existing card choices (@card_choices) and the currently available cards ($card_1, card_2, etc.)
-#     my %synergies = ();
-#     for my $card (@$cards) {
-#         my $synergies_tmp = $self->es->search(
-#             index => 'hearthdrafter',
-#             type => 'card_synergy',
-#             size => 9999,
-#             body => {
-#                 query => {
-#                     filtered => {
-#                         query => {
-#                             match => { card_name_2 => $card },
-#                         },
-#                         filter => {
-#                             terms => {
-#                                 card_name => \@card_choices,
-#                             },
-#                         },   
-#                     },
-#                 },
-#             },
-#         );
-#         $synergies{$card} = [];
-#         for my $synergy (@{$synergies_tmp->{hits}->{hits}}) {
-#             $synergy = $synergy->{_source};
-#             delete($synergy->{card_name_2}); 
-#             push($synergies{$card}, $synergy);
-#         }
-#     }
-#     $out_data->{synergy} = \%synergies;
-    
 }
 
 # returns an array of hashrefs.

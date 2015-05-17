@@ -1,6 +1,8 @@
 % layout 'default';
 % content_for header => begin
   <title>HearthDrafter - Arena History</title>
+  <script src="/js/libs/rangeslider.js"></script>
+  <link rel="stylesheet" type="text/css" media="screen" href="/js/libs/rangeslider.min.css" />
 % end
 % content_for title_bar => begin
 <span class="title_label">Arena History</span>
