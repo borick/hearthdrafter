@@ -5,6 +5,7 @@ use warnings;
 
 use Mojo::Base 'Mojolicious::Controller';
 use Data::Dumper;
+use JSON;
 
 sub arena_action {
     my $self = shift;
@@ -115,7 +116,11 @@ sub view_completed_run {
             return $self->redirect_to('/draft/select_card/'.$self->stash('arena_id'));
         }
         my $cards = $self->model->card->get_cards_by_class($run_details->{class_name});
-        $self->stash(run=>$run_details, cards=>$cards);
+        my $json = '';
+        if (exists($run_details->{drops_data})) {
+            $json = to_json($run_details->{drops_data});
+        }
+        $self->stash(run=>$run_details, cards=>$cards, drops_json => $json);
         $self->render('draft/view_run');
     }
 }

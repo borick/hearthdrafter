@@ -369,6 +369,11 @@ function getCardFile (text) {
     return bg_img;
 }
 
+function getCardFileSmall (text) {
+    var bg_img = img_small + card_ids[text] + '.png';
+    return bg_img;
+}
+
 function addWaiting (id) {
     var card_option = getCardElement(id);
     var waiting = $('<div class="waiting"/>');

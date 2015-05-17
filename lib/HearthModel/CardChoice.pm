@@ -16,6 +16,7 @@ use Time::Piece;
 use Data::Dumper;
 #$Data::Dumper::Indent = 0;
 use List::Util qw(sum);
+use JSON qw(encode_json to_json);
 
 sub get_next_index {
     my ($self,$source) = @_;
@@ -124,6 +125,7 @@ sub get_advice {
     my @drop_curve =    (0,0,0,0,0,0,0,0);
     my $num_drops = 0;
     my $total_drop_cost = 0;
+    my $drops_data = {};
     for my $card_name_key (keys(%card_counts)) {
         my $count = $card_counts{$card_name_key};
         for my $card_tag (keys(%{$card_data_tags->{$card_name_key}})) {
@@ -131,6 +133,8 @@ sub get_advice {
             if ($card_tag =~ /drop_(\d+)/) {
                 my $num = $1;
                 $num = 7 if $num >= 7;
+                $drops_data->{$num} = [] if !exists($drops_data->{$num});
+                push($drops_data->{$num},{$card_name_key => $count});
                 $drop_curve[$num] += $count;
                 $total_drop_cost += $card_data->{$card_name_key}->{cost} * $count;
                 $num_drops += $count;
@@ -407,6 +411,8 @@ sub get_advice {
     } elsif ($total_score > 80000) {
         $grade = 'D';
     }
+    
+    $source->{drops_data} = $drops_data;
     $source->{drop_curve} = \@drop_curve;
     $source->{deck_grade} = $grade;    
     $self->es->index(

@@ -14,6 +14,8 @@
 % end
     
 % my $run_details = stash('run');
+% my $json_drops = stash('drops_json');
+<!-- <%== $json_drops %> -->
 <div id="view_run">
     <div id="tabs">
         <ul>
@@ -195,12 +197,12 @@
     <a href="/draft/view_completed_runs">Back</a>
 </div>
 
-<script type="text/javascript">
+<script>
     var card_data = [];
+    var card_ids = {};
     var img = "/images/cards_medium/";
     var images = [];
     var cards = [
-    % # has to match the format defined in hearthdrafter.js
     % my $cards = stash 'cards';
     % for my $card (@$cards) {
         {name:"<%== $card->{name} %>",
@@ -212,12 +214,14 @@
     ];
     for (i = 0; i < cards.length; i++) {
         images.push(img + cards[i]['id'] + '.png');
+        card_ids[cards[i]['name']] = cards[i]['id'];
         card_data[cards[i]['name']] = cards[i];
     }
-    doBreakdown([<%== join(", ", @{$run_details->{drop_curve}}) %>]);
 </script>
-<script type="text/javascript">
+<script>
 $(function() {
+    doBreakdown([<%== join(", ", @{$run_details->{drop_curve}}) %>], <%== $json_drops ? $json_drops : 'null' %>);
+    
     var $document   = $(document),
         selector    = '[data-rangeslider]',
         $inputRange = $(selector);
@@ -244,7 +248,7 @@ $(function() {
     updateManaCostChosenCards();
 });
 </script>
-<script type="text/javascript">
+<script>
     function removeCard() {
         $("#card_awards option:last-child").remove();
         if ($("#card_awards option").length == 0) {

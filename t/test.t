@@ -41,19 +41,24 @@ $hm->connect();
 
 for (my $counter = 0; $counter < 30; $counter += 1) {
     my $cards3 = get_three_random();
+    select undef, undef, undef, 0.1;
     $sel->key_press_native(10);#enter key
     select undef, undef, undef, 0.1;
     $sel->type(q{xpath=//input[@class='search']}, $cards3->[0]);
     $sel->type_keys(q{xpath=//input[@class='search']}, $cards3->[0]);
+    select undef, undef, undef, 0.1;
     $sel->key_press_native(10);#enter key
     select undef, undef, undef, 0.1;
     $sel->type(q{xpath=//input[@class='search']}, $cards3->[1]);
     $sel->type_keys(q{xpath=//input[@class='search']}, $cards3->[1]);
+    select undef, undef, undef, 0.1;
     $sel->key_press_native(10);#enter key
     select undef, undef, undef, 0.1;
     $sel->type(q{xpath=//input[@class='search']}, $cards3->[2]);
     $sel->type_keys(q{xpath=//input[@class='search']}, $cards3->[2]);
+    select undef, undef, undef, 0.1;
     $sel->key_press_native(10);#enter key
+    select undef, undef, undef, 0.1;
     sleep 1;
     $sel->click_at(q{xpath=//a[text()='I Picked This Card']}, 5, 5);
     select undef, undef, undef, 0.1;
