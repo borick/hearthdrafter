@@ -12,8 +12,8 @@ function doBreakdown(drops_array) {
         bindto: "#tabs-3"
     });
     chart.axis.labels({
-    x: 'Number of Drops',
-    y: 'Turn Played'
+    y: 'Number of Drops',
+    x: 'Turn Played'
     });
     
     //tab it up
